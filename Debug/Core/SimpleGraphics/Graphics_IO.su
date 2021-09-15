@@ -1,0 +1,7 @@
+Graphics_IO.c:15:6:swap	0	static
+Graphics_IO.c:23:6:Init_Graphics_System	152	static
+Graphics_IO.c:131:6:Fill_all	16	static
+Graphics_IO.c:145:6:Fill_rectangle	40	static
+Graphics_IO.c:175:6:MemPoint	4	static
+Graphics_IO.c:180:6:Show	16	static
+Graphics_IO.c:210:6:Backlight	8	static
