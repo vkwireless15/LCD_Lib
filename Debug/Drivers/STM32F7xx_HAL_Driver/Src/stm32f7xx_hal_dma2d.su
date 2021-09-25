@@ -4,8 +4,8 @@ stm32f7xx_hal_dma2d.c:238:19:HAL_DMA2D_Init	8	static
 stm32f7xx_hal_dma2d.c:422:13:HAL_DMA2D_MspDeInit	0	static
 stm32f7xx_hal_dma2d.c:678:19:HAL_DMA2D_Start	16	static
 stm32f7xx_hal_dma2d.c:714:19:HAL_DMA2D_Start_IT	16	static
-stm32f7xx_hal_dma2d.c:751:19:HAL_DMA2D_BlendingStart	24	static
-stm32f7xx_hal_dma2d.c:788:19:HAL_DMA2D_BlendingStart_IT	24	static
+stm32f7xx_hal_dma2d.c:751:19:HAL_DMA2D_BlendingStart	16	static
+stm32f7xx_hal_dma2d.c:788:19:HAL_DMA2D_BlendingStart_IT	16	static
 stm32f7xx_hal_dma2d.c:822:19:HAL_DMA2D_Abort	16	static
 stm32f7xx_hal_dma2d.c:871:19:HAL_DMA2D_Suspend	16	static
 stm32f7xx_hal_dma2d.c:920:19:HAL_DMA2D_Resume	0	static
@@ -16,7 +16,7 @@ stm32f7xx_hal_dma2d.c:1102:19:HAL_DMA2D_CLUTLoad	24	static
 stm32f7xx_hal_dma2d.c:1159:19:HAL_DMA2D_CLUTLoad_IT	24	static
 stm32f7xx_hal_dma2d.c:1217:19:HAL_DMA2D_CLUTLoading_Abort	16	static
 stm32f7xx_hal_dma2d.c:316:19:HAL_DMA2D_DeInit	16	static
-stm32f7xx_hal_dma2d.c:1274:19:HAL_DMA2D_CLUTLoading_Suspend	16	static
+stm32f7xx_hal_dma2d.c:1274:19:HAL_DMA2D_CLUTLoading_Suspend	24	static
 stm32f7xx_hal_dma2d.c:1339:19:HAL_DMA2D_CLUTLoading_Resume	0	static
 stm32f7xx_hal_dma2d.c:1382:19:HAL_DMA2D_PollForTransfer	24	static
 stm32f7xx_hal_dma2d.c:1680:13:HAL_DMA2D_LineEventCallback	0	static

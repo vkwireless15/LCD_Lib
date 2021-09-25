@@ -121,6 +121,7 @@ int main(void)
   MX_SDMMC1_SD_Init();
   /* USER CODE BEGIN 2 */
 
+  uint16_t l = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */

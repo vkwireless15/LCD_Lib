@@ -1,5 +1,6 @@
 #include "Graphics_IO.h"
 
+
 //Пользовательские include and define
 #include "main.h"
 #define TransferDelay 100
@@ -12,7 +13,7 @@ extern DMA2D_HandleTypeDef hdma2d;
 unsigned int Height = 0, Width = 0, LCD_FRAME_BUFFER0 = 0, LCD_FRAME_BUFFER1 = 0, LCD_FRAME_BUFFER2 = 0;
 
 //Пользовательские функции и др.
-void swap (unsigned int *d1, unsigned int *d2)
+void swap (uint32 *d1, uint32 *d2)
 {
 	unsigned int t = *d1;
 	*d2 = *d1;
@@ -20,7 +21,7 @@ void swap (unsigned int *d1, unsigned int *d2)
 }
 //------------------------
 
-void Init_Graphics_System(unsigned int H, unsigned int W, unsigned int LCD_RAM_START_ADDRESS, char Layers) //Инициализация драйвера дисплея, графического ускорителя и т.п.
+void Init_Graphics_System(uint32 H, uint32 W, uint32 LCD_RAM_START_ADDRESS, uint8 Layers, uint8 ColorType) //Инициализация драйвера дисплея, графического ускорителя и т.п.
 {
 	LTDC_LayerCfgTypeDef pLayerCfg = {0};
 	LTDC_LayerCfgTypeDef pLayerCfg1 = {0};
@@ -128,7 +129,7 @@ void Init_Graphics_System(unsigned int H, unsigned int W, unsigned int LCD_RAM_S
 
 }
 
-void Fill_all(unsigned int Color) //Заливка всего дисплея цветом
+void Fill_all(uint32 Color) //Заливка всего дисплея цветом
 {
 	hdma2d.Init.Mode = DMA2D_R2M;
 	hdma2d.Init.OutputOffset = 0;
@@ -142,7 +143,7 @@ void Fill_all(unsigned int Color) //Заливка всего дисплея ц�
 	}
 }
 
-void Fill_rectangle(unsigned int Color, unsigned int StartX, unsigned int StopX, unsigned int StartY, unsigned int StopY) //Заливка прямоугольной формы
+void Fill_rectangle(uint32 Color, uint32 StartX, uint32 StopX, uint32 StartY, uint32 StopY) //Заливка прямоугольной формы
 {
 	StartX--;
 	StartY--;
@@ -172,12 +173,12 @@ void Fill_rectangle(unsigned int Color, unsigned int StartX, unsigned int StopX,
 	}
 }
 
-void MemPoint(unsigned int Address, unsigned int x, unsigned int y, unsigned int Color) //Отрисовка одного пикселя
+void MemPoint(uint32 Address, uint32 x, uint32 y, uint32 Color) //Отрисовка одного пикселя
 {
 	*(__IO unsigned int*) (Address + (4*(y*Width + x))) = Color;
 }
 
-void Show(char Layer) // Отобразить содержимое на выбранный слой экрана
+void Show(uint8 Layer) // Отобразить содержимое на выбранный слой экрана
 {
 	unsigned int RAddr = 0;
 	if(Layer == 0)
@@ -207,7 +208,7 @@ void Show(char Layer) // Отобразить содержимое на выбр
 	}
 }
 
-void Backlight(unsigned int Brightness, char State) //Управление подсветкой
+void Backlight(uint32 Brightness, uint8 State) //Управление подсветкой
 {
 	if(State == LOW)
 	{

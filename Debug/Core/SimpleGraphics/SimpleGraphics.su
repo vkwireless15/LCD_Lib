@@ -1,9 +1,7 @@
-SimpleGraphics.c:7:6:Graphics_Init	8	static
-SimpleGraphics.c:11:6:Set_Backlight	8	static
-SimpleGraphics.c:16:14:Color_565	0	static
-SimpleGraphics.c:20:14:Color_888_	0	static
-SimpleGraphics.c:24:14:Color_A888_	0	static
-SimpleGraphics.c:28:14:FontHParameter	0	static
-SimpleGraphics.c:34:6:Fill_Display	8	static
-SimpleGraphics.c:38:6:Fill_Rectangle	16	static
-SimpleGraphics.c:44:6:Show_to_layer	8	static
+SimpleGraphics.c:9:6:Graphics_Init	16	static
+SimpleGraphics.c:16:6:Set_Backlight	8	static
+SimpleGraphics.c:21:14:Color_A888_	0	static
+SimpleGraphics.c:25:14:FontHParameter	0	static
+SimpleGraphics.c:31:6:Fill_Display	8	static
+SimpleGraphics.c:35:6:Fill_Rectangle	16	static
+SimpleGraphics.c:41:6:Show_to_layer	8	static

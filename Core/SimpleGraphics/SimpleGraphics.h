@@ -1,10 +1,12 @@
 #ifndef _SIMPLEGRAPHICS_H_
 #define _SIMPLEGRAPHICS_H_
 
-#define Unclicked 2
-#define Horisontal 3
-#define Vertical 4
-
+typedef unsigned char uint8;
+typedef signed char int8;
+typedef unsigned short int uint16;
+typedef short int int16;
+typedef unsigned int uint32;
+typedef int int32;
 
 //argb цвета
 
@@ -152,13 +154,21 @@
 #define white 0xFFFFFF
 
 // ---------------------------
+
+#define Color565 0
+#define Color888 1
+#define Color_A888 2
+
 typedef struct
 {
-	unsigned int Start_RAM_Address;
-	unsigned int Display_Height;
-	unsigned int Display_Width;
-	char Layers_count;
+	uint32 Start_RAM_Address;
+	uint32 Display_Height;
+	uint32 Display_Width;
+	uint8 Color_Type;
+	uint8 Layers;
 } DisplayConfig;
+
+/*
 typedef struct
 {
 	unsigned int Color;
@@ -524,23 +534,15 @@ typedef struct
 	unsigned int Thickness;
 	char Unvisible;
 } D_GraphLine;
-
-
-void Get1251(char Str[]);
-
-unsigned int Color_565(unsigned int Color);
-
-unsigned int Color_888_(unsigned int Color);
-
-unsigned int Color_A888_(unsigned int Color, char Alpha);
+*/
 
 void Graphics_Init(DisplayConfig *dcf);
-void Set_Backlight(char State, unsigned int Brightness);
+void Set_Backlight(uint8 State, uint32 Brightness);
 
-void Fill_Display(unsigned int Color);
-void Fill_Rectangle(unsigned int Color, unsigned int StartX, unsigned int StopX, unsigned int StartY, unsigned int StopY);
+void Fill_Display(uint32 Color);
+void Fill_Rectangle(uint32 Color, uint32 StartX, uint32 StopX, uint32 StartY, uint32 StopY);
 
 
-void Show_to_layer(char Layer);
+void Show_to_layer(uint8 Layer);
 
 #endif

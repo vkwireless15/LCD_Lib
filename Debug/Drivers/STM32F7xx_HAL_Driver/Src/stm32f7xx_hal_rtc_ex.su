@@ -25,7 +25,7 @@ stm32f7xx_hal_rtc_ex.c:1221:6:HAL_RTCEx_WakeUpTimerIRQHandler	8	static
 stm32f7xx_hal_rtc_ex.c:1267:19:HAL_RTCEx_PollForWakeUpTimerEvent	16	static
 stm32f7xx_hal_rtc_ex.c:1337:6:HAL_RTCEx_BKUPWrite	0	static
 stm32f7xx_hal_rtc_ex.c:1360:10:HAL_RTCEx_BKUPRead	0	static
-stm32f7xx_hal_rtc_ex.c:1394:19:HAL_RTCEx_SetSmoothCalib	24	static
+stm32f7xx_hal_rtc_ex.c:1394:19:HAL_RTCEx_SetSmoothCalib	32	static
 stm32f7xx_hal_rtc_ex.c:1464:19:HAL_RTCEx_SetSynchroShift	24	static
 stm32f7xx_hal_rtc_ex.c:1559:19:HAL_RTCEx_SetCalibrationOutPut	4	static
 stm32f7xx_hal_rtc_ex.c:1598:19:HAL_RTCEx_DeactivateCalibrationOutPut	0	static
