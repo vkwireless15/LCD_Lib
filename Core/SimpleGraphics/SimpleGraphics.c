@@ -76,16 +76,29 @@ void Fill_Display(uint32 Color)
 }
 void Fill_Rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32 StopY)
 {
-	if(is_Disp_Res(StartX, StopX, StartY, StopY) == Ok)
+	if(((StartX > 0) && (StartX <= DispWidth)) || ((StopX > 0) && (StopX <= DispWidth)))
 	{
-		if(ColorType == Color565)
-		{ Fill_rectangle(Get565Color(Color), StartX, StopX, StartY, StopY); }
+		if(((StartY > 0) && (StartY <= DispHeight)) || ((StopY > 0) && (StopY <= DispHeight)))
+		{
+			if(StartX <= 0)
+			{ StartX = 1;}
+			if(StopX > DispWidth)
+			{ StartX = DispWidth;}
 
-		if(ColorType == Color888)
-		{ Fill_rectangle(Color | 0xFF << 24, StartX, StopX, StartY, StopY); }
+			if(StartY <= 0)
+			{ StartY = 1;}
+			if(StopY > DispHeight)
+			{ StartY = DispHeight;}
 
-		if(ColorType == Color_A888)
-		{ Fill_all(Color); }
+			if(ColorType == Color565)
+			{ Fill_rectangle(Get565Color(Color), StartX, StopX, StartY, StopY); }
+
+			if(ColorType == Color888)
+			{ Fill_rectangle(Color | 0xFF << 24, StartX, StopX, StartY, StopY); }
+
+			if(ColorType == Color_A888)
+			{ Fill_all(Color); }
+		}
 	}
 }
 
