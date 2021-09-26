@@ -121,7 +121,6 @@ int main(void)
   MX_SDMMC1_SD_Init();
   /* USER CODE BEGIN 2 */
 
-  uint16_t l = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -162,9 +161,9 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
   RCC_OscInitStruct.PLL.PLLM = 25;
-  RCC_OscInitStruct.PLL.PLLN = 432;
+  RCC_OscInitStruct.PLL.PLLN = 400;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 9;
+  RCC_OscInitStruct.PLL.PLLQ = 8;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -184,7 +183,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
 
-  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_7) != HAL_OK)
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_6) != HAL_OK)
   {
     Error_Handler();
   }
@@ -224,10 +223,10 @@ static void MX_DMA2D_Init(void)
   /* USER CODE END DMA2D_Init 1 */
   hdma2d.Instance = DMA2D;
   hdma2d.Init.Mode = DMA2D_M2M;
-  hdma2d.Init.ColorMode = DMA2D_OUTPUT_ARGB8888;
+  hdma2d.Init.ColorMode = DMA2D_OUTPUT_RGB565;
   hdma2d.Init.OutputOffset = 0;
   hdma2d.LayerCfg[1].InputOffset = 0;
-  hdma2d.LayerCfg[1].InputColorMode = DMA2D_INPUT_ARGB8888;
+  hdma2d.LayerCfg[1].InputColorMode = DMA2D_INPUT_RGB565;
   hdma2d.LayerCfg[1].AlphaMode = DMA2D_NO_MODIF_ALPHA;
   hdma2d.LayerCfg[1].InputAlpha = 0;
   if (HAL_DMA2D_Init(&hdma2d) != HAL_OK)
@@ -260,7 +259,7 @@ static void MX_I2C3_Init(void)
 
   /* USER CODE END I2C3_Init 1 */
   hi2c3.Instance = I2C3;
-  hi2c3.Init.Timing = 0x20404768;
+  hi2c3.Init.Timing = 0x00C0EAFF;
   hi2c3.Init.OwnAddress1 = 224;
   hi2c3.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c3.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
@@ -334,9 +333,9 @@ static void MX_LTDC_Init(void)
   pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_RGB565;
   pLayerCfg.Alpha = 255;
   pLayerCfg.Alpha0 = 0;
-  pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_PAxCA;
-  pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_PAxCA;
-  pLayerCfg.FBStartAdress = 0xC0000000;
+  pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
+  pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;
+  pLayerCfg.FBStartAdress = 0;
   pLayerCfg.ImageWidth = 480;
   pLayerCfg.ImageHeight = 272;
   pLayerCfg.Backcolor.Blue = 0;
@@ -592,7 +591,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : ARDUINO_SCL_D15_Pin ARDUINO_SDA_D14_Pin */
   GPIO_InitStruct.Pin = ARDUINO_SCL_D15_Pin|ARDUINO_SDA_D14_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -926,13 +925,30 @@ static void MX_GPIO_Init(void)
 
 void MPU_Config(void)
 {
+  MPU_Region_InitTypeDef MPU_InitStruct = {0};
 
   /* Disables the MPU */
   HAL_MPU_Disable();
+  /** Initializes and configures the Region and the memory to be protected
+  */
+  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+  MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+  MPU_InitStruct.BaseAddress = 0x20000004;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_256KB;
+  MPU_InitStruct.SubRegionDisable = 0x0;
+  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL0;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_CACHEABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /* Enables the MPU */
   HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 
 }
+
 /**
   * @brief  Period elapsed callback in non blocking mode
   * @note   This function is called  when TIM6 interrupt took place, inside

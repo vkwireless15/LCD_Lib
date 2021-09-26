@@ -12,14 +12,6 @@ extern DMA2D_HandleTypeDef hdma2d;
 
 unsigned int Height = 0, Width = 0, LCD_FRAME_BUFFER0 = 0, LCD_FRAME_BUFFER1 = 0, LCD_FRAME_BUFFER2 = 0;
 
-//Пользовательские функции и др.
-void swap (uint32 *d1, uint32 *d2)
-{
-	unsigned int t = *d1;
-	*d2 = *d1;
-	*d1 = t;
-}
-//------------------------
 
 void Init_Graphics_System(uint32 H, uint32 W, uint32 LCD_RAM_START_ADDRESS, uint8 Layers, uint8 ColorType) //Инициализация драйвера дисплея, графического ускорителя и т.п.
 {
@@ -29,8 +21,50 @@ void Init_Graphics_System(uint32 H, uint32 W, uint32 LCD_RAM_START_ADDRESS, uint
     Width = W;
 
     LCD_FRAME_BUFFER0 = LCD_RAM_START_ADDRESS;
-    LCD_FRAME_BUFFER1 = LCD_FRAME_BUFFER0 + (Height * Width * 4);
-    LCD_FRAME_BUFFER2 = LCD_FRAME_BUFFER1 + (Height * Width * 4);
+    LCD_FRAME_BUFFER1 = LCD_FRAME_BUFFER0 + (Height * Width * 2);
+    LCD_FRAME_BUFFER2 = LCD_FRAME_BUFFER1 + (Height * Width * 2);
+
+
+  /*  hltdc.Instance = LTDC;
+    hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;
+    hltdc.Init.VSPolarity = LTDC_VSPOLARITY_AL;
+    hltdc.Init.DEPolarity = LTDC_DEPOLARITY_AL;
+    hltdc.Init.PCPolarity = LTDC_PCPOLARITY_IPC;
+    hltdc.Init.HorizontalSync = 40;
+    hltdc.Init.VerticalSync = 9;
+    hltdc.Init.AccumulatedHBP = 53;
+    hltdc.Init.AccumulatedVBP = 11;
+    hltdc.Init.AccumulatedActiveW = 533;
+    hltdc.Init.AccumulatedActiveH = 283;
+    hltdc.Init.TotalWidth = 565;
+    hltdc.Init.TotalHeigh = 285;
+    hltdc.Init.Backcolor.Blue = 0;
+    hltdc.Init.Backcolor.Green = 0;
+    hltdc.Init.Backcolor.Red = 0;
+    if (HAL_LTDC_Init(&hltdc) != HAL_OK)
+    {
+      Error_Handler();
+    }
+    pLayerCfg.WindowX0 = 0;
+    pLayerCfg.WindowX1 = 480;
+    pLayerCfg.WindowY0 = 0;
+    pLayerCfg.WindowY1 = 272;
+    pLayerCfg.PixelFormat = LTDC_PIXEL_FORMAT_RGB565;
+    pLayerCfg.Alpha = 255;
+    pLayerCfg.Alpha0 = 0;
+    pLayerCfg.BlendingFactor1 = LTDC_BLENDING_FACTOR1_CA;
+    pLayerCfg.BlendingFactor2 = LTDC_BLENDING_FACTOR2_CA;
+    pLayerCfg.FBStartAdress = LCD_RAM_START_ADDRESS;
+    pLayerCfg.ImageWidth = 480;
+    pLayerCfg.ImageHeight = 272;
+    pLayerCfg.Backcolor.Blue = 0;
+    pLayerCfg.Backcolor.Green = 0;
+    pLayerCfg.Backcolor.Red = 0;
+    if (HAL_LTDC_ConfigLayer(&hltdc, &pLayerCfg, 0) != HAL_OK)
+    {
+      Error_Handler();
+    }
+
 
     hltdc.Instance = LTDC;
     hltdc.Init.HSPolarity = LTDC_HSPOLARITY_AL;
@@ -125,21 +159,15 @@ void Init_Graphics_System(uint32 H, uint32 W, uint32 LCD_RAM_START_ADDRESS, uint
     if (HAL_DMA2D_ConfigLayer(&hdma2d, 1) != HAL_OK)
     {
 
-    }
+    } */
 
 }
 
 void Fill_all(uint32 Color) //Заливка всего дисплея цветом
 {
-	hdma2d.Init.Mode = DMA2D_R2M;
-	hdma2d.Init.OutputOffset = 0;
-
-    if(HAL_DMA2D_Init(&hdma2d) == HAL_OK)
+	for(int i=0; i<480*272; i++)
 	{
-	   if (HAL_DMA2D_Start(&hdma2d, Color, LCD_FRAME_BUFFER1, Width, Height) == HAL_OK)
-	   {
-		   HAL_DMA2D_PollForTransfer(&hdma2d, TransferDelay);
-	   }
+	  *(__IO uint16*) (LCD_FRAME_BUFFER0 + (i*2)) = Color;
 	}
 }
 
@@ -147,8 +175,8 @@ void Fill_rectangle(uint32 Color, uint32 StartX, uint32 StopX, uint32 StartY, ui
 {
 	StartX--;
 	StartY--;
-	if(StartX > StopX) swap(&StartX,&StopX);
-	if(StartY>StopY) swap(&StartY,&StopY);
+	/*//if(StartX > StopX) swap(&StartX,&StopX);
+	//if(StartY>StopY) swap(&StartY,&StopY);
 	unsigned int addr = (LCD_FRAME_BUFFER1) + 4*(StartY * Width + StartX);
 	hdma2d.Init.Mode = DMA2D_R2M;
     hdma2d.Init.OutputOffset = Width-(StopX-StartX);
@@ -162,13 +190,13 @@ void Fill_rectangle(uint32 Color, uint32 StartX, uint32 StopX, uint32 StartY, ui
     	   //HAL_Delay(5);
     	   HAL_DMA2D_PollForTransfer(&hdma2d, TransferDelay);
        }
-    }
+    } */
 
-	for(int i = 180; i < 220; i++)
+	for(int y = StartY; y < StopY; y++)
 	{
-		for(int j = 180; j < 220; j++)
+		for(int x = StartX; x < StopX; x++)
 		{
-			*(__IO uint32_t*) (LCD_FRAME_BUFFER1 + (4*(i*Width + j))) = Color;
+			*(__IO uint16*) (LCD_FRAME_BUFFER0 + (2*(y*Width + x))) = Color;
 		}
 	}
 }

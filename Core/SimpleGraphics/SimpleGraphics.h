@@ -168,6 +168,16 @@ typedef struct
 	uint8 Layers;
 } DisplayConfig;
 
+
+typedef struct
+{
+	uint32 Color;
+	int32 X1;
+	int32 X2;
+	int32 Y1;
+	int32 Y2;
+} D_Fill_Rectangle;
+
 /*
 typedef struct
 {

@@ -6,6 +6,38 @@
 uint32 DispHeight = 0, DispWidth = 0;
 uint8 ColorType = Color565;
 
+uint32 Color_A888_(uint32 Color, uint8 Alpha)
+{
+	return Color | Alpha << 24;
+}
+uint32 FontHParameter()
+{
+	uint8 FontH = calibri[1];
+	return FontH;
+}
+uint16 Get565Color(uint32 Color)
+{
+   uint16 RezColor = 0;
+   uint8 R, G, B;
+   R = (Color >> 16) & 0xff;
+   G = (Color >> 8) & 0xff;
+   B = Color & 0xff;
+
+   R = 31 * R / 255;
+   G = 63 * G / 255;
+   B = 31 * B / 255;
+
+   RezColor |= B;
+   RezColor |= (G << 5);
+   RezColor |= (R << 11);
+
+   return RezColor;
+}
+void Set_Backlight(uint8 State, uint32 Brightness)
+{
+	Backlight(Brightness, State);
+}
+
 void Graphics_Init(DisplayConfig *dcf)
 {
 	DispHeight = dcf->Display_Height;
@@ -13,33 +45,33 @@ void Graphics_Init(DisplayConfig *dcf)
 	ColorType = dcf->Color_Type;
 	Init_Graphics_System(dcf->Display_Height, dcf->Display_Width, dcf->Start_RAM_Address, dcf->Layers, dcf->Color_Type);
 }
-void Set_Backlight(uint8 State, uint32 Brightness)
-{
-	Backlight(Brightness, State);
-}
-
-unsigned int Color_A888_(unsigned int Color, char Alpha)
-{
-	return Color | Alpha << 24;
-}
-unsigned int FontHParameter()
-{
-	char FontH = calibri[1];
-	return FontH;
-}
 
 void Fill_Display(uint32 Color)
 {
-	Fill_all(Color);
+	if(ColorType == Color565)
+	{ Fill_all(Get565Color(Color)); }
+
+	if(ColorType == Color888)
+	{ Fill_all(Color | 0xFF << 24); }
+
+	if(ColorType == Color_A888)
+	{ Fill_all(Color); }
 }
 void Fill_Rectangle(uint32 Color, uint32 StartX, uint32 StopX, uint32 StartY, uint32 StopY)
 {
-	Fill_rectangle(Color, StartX, StopX, StartY, StopY);
+	if(ColorType == Color565)
+	{ Fill_rectangle(Get565Color(Color), StartX, StopX, StartY, StopY); }
+
+	if(ColorType == Color888)
+	{ Fill_rectangle(Color | 0xFF << 24, StartX, StopX, StartY, StopY); }
+
+	if(ColorType == Color_A888)
+	{ Fill_all(Color); }
 }
 
 
-void Show_to_layer(uint8 Layer)
+void LCD_Fill_Rectangle(D_Fill_Rectangle *FR)
 {
-	Show(Layer);
+    Fill_Rectangle(FR->Color, FR->X1, FR->X2, FR->Y1, FR->Y2);
 }
 
