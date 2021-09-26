@@ -37,6 +37,23 @@ void Set_Backlight(uint8 State, uint32 Brightness)
 {
 	Backlight(Brightness, State);
 }
+uint8 is_Disp_Res(int32 x1, int32 x2, int32 y1, int32 y2)
+{
+	if((x1 > 0)&&(x2 <= DispWidth))
+	{
+		if((y1 > 0)&&(y2 <= DispHeight))
+		{
+			return Ok;
+		}
+	}
+
+	if( (x1 > 0) && (x1 <= DispWidth)  )
+	{
+
+	}
+
+	return Error;
+}
 
 void Graphics_Init(DisplayConfig *dcf)
 {
@@ -57,16 +74,19 @@ void Fill_Display(uint32 Color)
 	if(ColorType == Color_A888)
 	{ Fill_all(Color); }
 }
-void Fill_Rectangle(uint32 Color, uint32 StartX, uint32 StopX, uint32 StartY, uint32 StopY)
+void Fill_Rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32 StopY)
 {
-	if(ColorType == Color565)
-	{ Fill_rectangle(Get565Color(Color), StartX, StopX, StartY, StopY); }
+	if(is_Disp_Res(StartX, StopX, StartY, StopY) == Ok)
+	{
+		if(ColorType == Color565)
+		{ Fill_rectangle(Get565Color(Color), StartX, StopX, StartY, StopY); }
 
-	if(ColorType == Color888)
-	{ Fill_rectangle(Color | 0xFF << 24, StartX, StopX, StartY, StopY); }
+		if(ColorType == Color888)
+		{ Fill_rectangle(Color | 0xFF << 24, StartX, StopX, StartY, StopY); }
 
-	if(ColorType == Color_A888)
-	{ Fill_all(Color); }
+		if(ColorType == Color_A888)
+		{ Fill_all(Color); }
+	}
 }
 
 

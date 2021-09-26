@@ -2,7 +2,8 @@ SimpleGraphics.c:9:8:Color_A888_	0	static
 SimpleGraphics.c:13:8:FontHParameter	0	static
 SimpleGraphics.c:18:8:Get565Color	4	static
 SimpleGraphics.c:36:6:Set_Backlight	8	static
-SimpleGraphics.c:41:6:Graphics_Init	16	static
-SimpleGraphics.c:49:6:Fill_Display	8	static
-SimpleGraphics.c:60:6:Fill_Rectangle	32	static
-SimpleGraphics.c:73:6:LCD_Fill_Rectangle	0	static
+SimpleGraphics.c:40:7:is_Disp_Res	0	static
+SimpleGraphics.c:52:6:Graphics_Init	16	static
+SimpleGraphics.c:60:6:Fill_Display	8	static
+SimpleGraphics.c:71:6:Fill_Rectangle	32	static
+SimpleGraphics.c:87:6:LCD_Fill_Rectangle	16	static

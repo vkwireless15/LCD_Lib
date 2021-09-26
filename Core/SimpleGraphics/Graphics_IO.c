@@ -171,7 +171,7 @@ void Fill_all(uint32 Color) //Заливка всего дисплея цвет�
 	}
 }
 
-void Fill_rectangle(uint32 Color, uint32 StartX, uint32 StopX, uint32 StartY, uint32 StopY) //Заливка прямоугольной формы
+void Fill_rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32 StopY) //Заливка прямоугольной формы
 {
 	StartX--;
 	StartY--;
@@ -192,18 +192,18 @@ void Fill_rectangle(uint32 Color, uint32 StartX, uint32 StopX, uint32 StartY, ui
        }
     } */
 
-	for(int y = StartY; y < StopY; y++)
+	for(uint32 y = StartY; y < StopY; y++)
 	{
-		for(int x = StartX; x < StopX; x++)
+		for(uint32 x = StartX; x < StopX; x++)
 		{
 			*(__IO uint16*) (LCD_FRAME_BUFFER0 + (2*(y*Width + x))) = Color;
 		}
 	}
 }
 
-void MemPoint(uint32 Address, uint32 x, uint32 y, uint32 Color) //Отрисовка одного пикселя
+void MemPoint(uint32 Address, int32 x, int32 y, int32 Color) //Отрисовка одного пикселя
 {
-	*(__IO unsigned int*) (Address + (4*(y*Width + x))) = Color;
+	*(__IO uint16*) (Address + (2*(y*Width + x))) = Color;
 }
 
 void Show(uint8 Layer) // Отобразить содержимое на выбранный слой экрана

@@ -8,6 +8,10 @@ typedef short int int16;
 typedef unsigned int uint32;
 typedef int int32;
 
+#define Error 0
+#define Ok 1
+
+
 //argb цвета
 
 //Red
@@ -550,7 +554,7 @@ void Graphics_Init(DisplayConfig *dcf);
 void Set_Backlight(uint8 State, uint32 Brightness);
 
 void Fill_Display(uint32 Color);
-void Fill_Rectangle(uint32 Color, uint32 StartX, uint32 StopX, uint32 StartY, uint32 StopY);
+void Fill_Rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32 StopY);
 
 
 void Show_to_layer(uint8 Layer);
