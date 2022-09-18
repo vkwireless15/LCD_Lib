@@ -6,11 +6,11 @@ stm32f7xx_hal_sdram.c:258:13:HAL_SDRAM_MspDeInit	0	static
 stm32f7xx_hal_sdram.c:209:19:HAL_SDRAM_DeInit	8	static
 stm32f7xx_hal_sdram.c:297:13:HAL_SDRAM_RefreshErrorCallback	0	static
 stm32f7xx_hal_sdram.c:274:6:HAL_SDRAM_IRQHandler	8	static
-stm32f7xx_hal_sdram.c:365:19:HAL_SDRAM_Read_8b	8	static
+stm32f7xx_hal_sdram.c:365:19:HAL_SDRAM_Read_8b	4	static
 stm32f7xx_hal_sdram.c:406:19:HAL_SDRAM_Write_8b	4	static
-stm32f7xx_hal_sdram.c:450:19:HAL_SDRAM_Read_16b	8	static
+stm32f7xx_hal_sdram.c:450:19:HAL_SDRAM_Read_16b	4	static
 stm32f7xx_hal_sdram.c:490:19:HAL_SDRAM_Write_16b	4	static
-stm32f7xx_hal_sdram.c:533:19:HAL_SDRAM_Read_32b	8	static
+stm32f7xx_hal_sdram.c:533:19:HAL_SDRAM_Read_32b	4	static
 stm32f7xx_hal_sdram.c:573:19:HAL_SDRAM_Write_32b	4	static
 stm32f7xx_hal_sdram.c:616:19:HAL_SDRAM_Read_DMA	16	static
 stm32f7xx_hal_sdram.c:657:19:HAL_SDRAM_Write_DMA	16	static

@@ -36,7 +36,7 @@ Core/Src/Code.o: ../Core/Src/Code.c ../Core/Inc/Code.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_sdmmc.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h \
- D:/Repo/GitHub/LCD_Lib/Core/SimpleGraphics/SimpleGraphics.h
+ D:/Lib/LCD_Lib/Core/SimpleGraphics/SimpleGraphics.h
 
 ../Core/Inc/Code.h:
 
@@ -116,4 +116,4 @@ Core/Src/Code.o: ../Core/Src/Code.c ../Core/Inc/Code.h \
 
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h:
 
-D:/Repo/GitHub/LCD_Lib/Core/SimpleGraphics/SimpleGraphics.h:
+D:/Lib/LCD_Lib/Core/SimpleGraphics/SimpleGraphics.h:

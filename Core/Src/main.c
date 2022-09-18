@@ -90,10 +90,10 @@ int main(void)
   MPU_Config();
 
   /* Enable I-Cache---------------------------------------------------------*/
-  SCB_EnableICache();
+  //SCB_EnableICache();
 
   /* Enable D-Cache---------------------------------------------------------*/
-  SCB_EnableDCache();
+ // SCB_EnableDCache();
 
   /* MCU Configuration--------------------------------------------------------*/
 
@@ -118,7 +118,7 @@ int main(void)
   MX_I2C3_Init();
   MX_LTDC_Init();
   MX_RTC_Init();
-  MX_SDMMC1_SD_Init();
+  //MX_SDMMC1_SD_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */

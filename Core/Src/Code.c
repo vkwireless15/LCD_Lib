@@ -15,13 +15,13 @@ void MainFunc ()
 	ds.Layers = 1;
 	ds.Start_RAM_Address = (uint32_t)&RGB;
 
-	HAL_LTDC_SetAddress(&hltdc,(uint32_t)&RGB,0);
-	Graphics_Init(&ds);
+	HAL_LTDC_SetAddress(&hltdc,(uint32_t)&RGB,0);  // запускаем модуль LTDC (железный)
+	Graphics_Init(&ds); //инит библиотеки (из структуры ds)
 
 	Fill_Display(green);
 	HAL_Delay(1000);
 
-	while(1)
+	while(1) // бесконечный цикл
 	{
 		Fill_Display(white);
 		Fill_Rectangle(darkBlue4, 1, 480, 1, 272);
@@ -39,11 +39,6 @@ void MainFunc ()
 		Fill_Rectangle(darkBlue4, 50, 400, 70, 180);
 		HAL_Delay(3000);
 
-		/*HAL_Delay(1000);
-		Fill_Display(green);
-		HAL_Delay(1000);
-		Fill_Display(blue);
-		HAL_Delay(2000); */
 	}
 }
 

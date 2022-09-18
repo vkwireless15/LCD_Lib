@@ -21,8 +21,8 @@ void Init_Graphics_System(uint32 H, uint32 W, uint32 LCD_RAM_START_ADDRESS, uint
     Width = W;
 
     LCD_FRAME_BUFFER0 = LCD_RAM_START_ADDRESS;
-    LCD_FRAME_BUFFER1 = LCD_FRAME_BUFFER0 + (Height * Width * 2);
-    LCD_FRAME_BUFFER2 = LCD_FRAME_BUFFER1 + (Height * Width * 2);
+    //LCD_FRAME_BUFFER1 = LCD_FRAME_BUFFER0 + (Height * Width * 2);
+    //LCD_FRAME_BUFFER2 = LCD_FRAME_BUFFER1 + (Height * Width * 2);
 
 
   /*  hltdc.Instance = LTDC;

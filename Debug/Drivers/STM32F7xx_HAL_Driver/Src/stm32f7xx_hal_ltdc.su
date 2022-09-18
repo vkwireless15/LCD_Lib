@@ -1,4 +1,4 @@
-stm32f7xx_hal_ltdc.c:2055:13:LTDC_SetConfig	20	static
+stm32f7xx_hal_ltdc.c:2055:13:LTDC_SetConfig	16	static
 stm32f7xx_hal_ltdc.c:332:13:HAL_LTDC_MspInit	0	static
 stm32f7xx_hal_ltdc.c:191:19:HAL_LTDC_Init	16	static
 stm32f7xx_hal_ltdc.c:348:13:HAL_LTDC_MspDeInit	0	static

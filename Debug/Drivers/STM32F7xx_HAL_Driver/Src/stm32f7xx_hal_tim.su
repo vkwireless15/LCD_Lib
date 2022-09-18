@@ -3,9 +3,9 @@ stm32f7xx_hal_tim.c:6935:13:TIM_OC3_SetConfig	12	static
 stm32f7xx_hal_tim.c:7009:13:TIM_OC4_SetConfig	12	static
 stm32f7xx_hal_tim.c:7069:13:TIM_OC5_SetConfig	12	static
 stm32f7xx_hal_tim.c:7122:13:TIM_OC6_SetConfig	12	static
-stm32f7xx_hal_tim.c:7354:13:TIM_TI1_ConfigInputStage	8	static
+stm32f7xx_hal_tim.c:7354:13:TIM_TI1_ConfigInputStage	4	static
 stm32f7xx_hal_tim.c:7397:13:TIM_TI2_SetConfig	8	static
-stm32f7xx_hal_tim.c:7437:13:TIM_TI2_ConfigInputStage	8	static
+stm32f7xx_hal_tim.c:7437:13:TIM_TI2_ConfigInputStage	4	static
 stm32f7xx_hal_tim.c:7480:13:TIM_TI3_SetConfig	8	static
 stm32f7xx_hal_tim.c:7528:13:TIM_TI4_SetConfig	8	static
 stm32f7xx_hal_tim.c:7571:13:TIM_ITRx_SetConfig	0	static
@@ -16,7 +16,7 @@ stm32f7xx_hal_tim.c:402:19:HAL_TIM_Base_Start	0	static
 stm32f7xx_hal_tim.c:441:19:HAL_TIM_Base_Stop	0	static
 stm32f7xx_hal_tim.c:461:19:HAL_TIM_Base_Start_IT	0	static
 stm32f7xx_hal_tim.c:503:19:HAL_TIM_Base_Stop_IT	0	static
-stm32f7xx_hal_tim.c:528:19:HAL_TIM_Base_Start_DMA	16	static
+stm32f7xx_hal_tim.c:528:19:HAL_TIM_Base_Start_DMA	8	static
 stm32f7xx_hal_tim.c:596:19:HAL_TIM_Base_Stop_DMA	8	static
 stm32f7xx_hal_tim.c:753:13:HAL_TIM_OC_MspInit	0	static
 stm32f7xx_hal_tim.c:768:13:HAL_TIM_OC_MspDeInit	0	static
@@ -33,10 +33,10 @@ stm32f7xx_hal_tim.c:2621:19:HAL_TIM_OnePulse_DeInit	8	static
 stm32f7xx_hal_tim.c:3102:13:HAL_TIM_Encoder_MspInit	0	static
 stm32f7xx_hal_tim.c:3117:13:HAL_TIM_Encoder_MspDeInit	0	static
 stm32f7xx_hal_tim.c:3057:19:HAL_TIM_Encoder_DeInit	8	static
-stm32f7xx_hal_tim.c:4506:19:HAL_TIM_DMABurst_MultiWriteStart	16	static
+stm32f7xx_hal_tim.c:4506:19:HAL_TIM_DMABurst_MultiWriteStart	24	static
 stm32f7xx_hal_tim.c:4453:19:HAL_TIM_DMABurst_WriteStart	24	static
 stm32f7xx_hal_tim.c:4683:19:HAL_TIM_DMABurst_WriteStop	16	static
-stm32f7xx_hal_tim.c:4838:19:HAL_TIM_DMABurst_MultiReadStart	16	static
+stm32f7xx_hal_tim.c:4838:19:HAL_TIM_DMABurst_MultiReadStart	24	static
 stm32f7xx_hal_tim.c:4785:19:HAL_TIM_DMABurst_ReadStart	24	static
 stm32f7xx_hal_tim.c:5016:19:HAL_TIM_DMABurst_ReadStop	16	static
 stm32f7xx_hal_tim.c:5094:19:HAL_TIM_GenerateEvent	0	static
