@@ -15,8 +15,8 @@ unsigned int Height = 0, Width = 0, LCD_FRAME_BUFFER0 = 0, LCD_FRAME_BUFFER1 = 0
 
 void Init_Graphics_System(uint32 H, uint32 W, uint32 LCD_RAM_START_ADDRESS, uint8 Layers, uint8 ColorType) //Инициализация драйвера дисплея, графического ускорителя и т.п.
 {
-	LTDC_LayerCfgTypeDef pLayerCfg = {0};
-	LTDC_LayerCfgTypeDef pLayerCfg1 = {0};
+	//LTDC_LayerCfgTypeDef pLayerCfg = {0};
+	//LTDC_LayerCfgTypeDef pLayerCfg1 = {0};
 	Height = H;
     Width = W;
 

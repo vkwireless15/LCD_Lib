@@ -11,6 +11,13 @@ typedef int int32;
 #define Error 0
 #define Ok 1
 
+//для работы с тачпадом
+#define NotClicked 0
+#define Clicked 1
+#define Unclicked 2
+#define Horisontal 3
+#define Vertical 4
+
 
 //argb цвета
 
@@ -182,7 +189,7 @@ typedef struct
 	int32 Y2;
 } D_Fill_Rectangle;
 
-/*
+
 typedef struct
 {
 	unsigned int Color;
@@ -215,7 +222,9 @@ typedef struct
 	char Is_pressed;
 	char Unvisible;
 } D_FramePanel;
-typedef struct
+
+
+/*typedef struct
 {
 	unsigned int X;
 	unsigned int Y;
@@ -335,6 +344,7 @@ typedef struct
 	char Is_pressed;
 	char Unvisible;
 } D_VGradient;
+///////////////
 typedef struct
 {
 	unsigned int X1;
@@ -554,7 +564,9 @@ void Graphics_Init(DisplayConfig *dcf);
 void Set_Backlight(uint8 State, uint32 Brightness);
 
 void Fill_Display(uint32 Color);
-void Fill_Rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32 StopY);
+void LCD_Fill_Rectangle(D_Fill_Rectangle *FR);
+uint8 LCD_FramePanel(D_FramePanel *framePanel);
+
 
 
 void Show_to_layer(uint8 Layer);

@@ -21,22 +21,31 @@ void MainFunc ()
 	Fill_Display(green);
 	HAL_Delay(1000);
 
-	while(1) // бесконечный цикл
+	D_Fill_Rectangle kv;
+	D_FramePanel pan;
+
+	kv.X1 = 200;
+	kv.X2 = 400;
+	kv.Y1 = 30;
+	kv.Y2 = 230;
+	kv.Color = green;
+
+	pan.FrameColor = blue;
+	pan.FillColor = yellow;
+	pan.Thickness = 2;
+	pan.X1 = 1;
+	pan.X2 = 480;
+	pan.Y1 = 1;
+	pan.Y2 = 272;
+
+
+	while(1) // бесконечный циклс
 	{
-		Fill_Display(white);
-		Fill_Rectangle(darkBlue4, 1, 480, 1, 272);
+		Fill_Display(black);
+		LCD_Fill_Rectangle(&kv);
 		HAL_Delay(3000);
 
-		Fill_Display(white);
-		Fill_Rectangle(darkBlue4, 2, 479, 2, 271);
-		HAL_Delay(3000);
-
-		Fill_Display(white);
-		Fill_Rectangle(darkBlue4, 3, 478, 3, 270);
-		HAL_Delay(3000);
-
-		Fill_Display(white);
-		Fill_Rectangle(darkBlue4, 50, 400, 70, 180);
+		LCD_FramePanel(&pan);
 		HAL_Delay(3000);
 
 	}
