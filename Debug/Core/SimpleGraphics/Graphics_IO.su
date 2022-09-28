@@ -1,6 +1,6 @@
 Graphics_IO.c:16:6:Init_Graphics_System	0	static
 Graphics_IO.c:166:6:Fill_all	0	static
 Graphics_IO.c:174:6:Fill_rectangle	16	static
-Graphics_IO.c:204:6:MemPoint	4	static
+Graphics_IO.c:204:6:MemPoint	0	static
 Graphics_IO.c:209:6:Show	16	static
 Graphics_IO.c:239:6:Backlight	8	static

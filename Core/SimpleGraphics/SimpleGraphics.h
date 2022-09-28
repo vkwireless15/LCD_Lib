@@ -222,8 +222,54 @@ typedef struct
 	char Is_pressed;
 	char Unvisible;
 } D_FramePanel;
+typedef struct
+{
+	unsigned int X1;
+	unsigned int Y1;
+	unsigned int X2;
+	unsigned int Y2;
+	unsigned int Color;
+	unsigned int Thickness;
+	char Is_pressed;
+	char Unvisible;
+} D_Line;
+typedef struct
+{
+	unsigned int X1;
+	unsigned int Y1;
+	unsigned int R;
+	unsigned int Color;
+	unsigned int Thickness;
+	char Is_pressed;
+	char Unvisible;
+} D_Circle;
+typedef struct
+{
+	unsigned int X1;
+	unsigned int Y1;
+	unsigned int R;
+	unsigned int Color;
+	char Is_pressed;
+	char Unvisible;
+} D_FillCircle;
 
-
+typedef struct
+{
+	unsigned int X1;
+	unsigned int X2;
+	unsigned int Y1;
+	unsigned int Y2;
+	unsigned int StartValue;
+	unsigned int StopValue;
+	unsigned int CurrentValue;
+	unsigned int FrameColor;
+	unsigned int FillColor;
+	unsigned int BarColor;
+	char Thickness;
+	char Orientation;
+	char Is_pressed;
+	char Unvisible;
+} D_ProgressBar;
 /*typedef struct
 {
 	unsigned int X;
@@ -560,14 +606,19 @@ typedef struct
 } D_GraphLine;
 */
 
+uint32 LCD_FRAME_BUFFER1;
+
+
 void Graphics_Init(DisplayConfig *dcf);
 void Set_Backlight(uint8 State, uint32 Brightness);
 
 void Fill_Display(uint32 Color);
 void LCD_Fill_Rectangle(D_Fill_Rectangle *FR);
 uint8 LCD_FramePanel(D_FramePanel *framePanel);
-
-
+void LCD_Line(D_Line *line);
+void LCD_Circle(D_Circle *circle);
+void LCD_FillCircle(D_FillCircle *fillCircle);
+void LCD_ProgressBar(D_ProgressBar *ProgressBar);
 
 void Show_to_layer(uint8 Layer);
 

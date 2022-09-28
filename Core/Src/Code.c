@@ -23,6 +23,10 @@ void MainFunc ()
 
 	D_Fill_Rectangle kv;
 	D_FramePanel pan;
+	D_Fill_Rectangle rec;
+	D_HLine line;
+	D_FillCircle ball;
+	D_ProgressBar p;
 
 	kv.X1 = 200;
 	kv.X2 = 400;
@@ -38,15 +42,66 @@ void MainFunc ()
 	pan.Y1 = 1;
 	pan.Y2 = 272;
 
+	rec.X1 = 50;
+	rec.X2 = 480;
+	rec.Y1 = 50;
+	rec.Y2 = 270;
+	rec.Color = red;
 
-	while(1) // бесконечный циклс
+	line.X1 = 100;
+	line.X2 = 450;
+	line.Y1 = 200;
+	line.Color = blue;
+	line.Thickness = 5;
+
+	ball.X1 = 200;
+	ball.Y1 = 125;
+	ball.Color = green;
+	ball.R = 40;
+
+	p.X1 = 200;
+	p.X2 = 400;
+	p.Y1 = 100;
+	p.Y2 = 120;
+	p.StartValue = 0;
+	p.StopValue = 19;
+	p.CurrentValue = 6;
+	p.Thickness = 3;
+	p.FillColor = white;
+	p.FrameColor = blue;
+	p.BarColor = green;
+	p.Orientation = Horisontal;
+
+    char i = 0;
+
+	while(1) // бесконечный цикл
 	{
-		Fill_Display(black);
-		LCD_Fill_Rectangle(&kv);
-		HAL_Delay(3000);
+//		Fill_Display(black);
+//		LCD_Fill_Rectangle(&kv);
+//		HAL_Delay(3000);
+//
+//		LCD_FramePanel(&pan);
+//		HAL_Delay(3000);
+//
+//		Fill_Display(black);
+//		LCD_Fill_Rectangle(&rec);
+//		HAL_Delay(3000);
+//
+//		Fill_Display(black);
+//		LCD_HLine(&line);
+//		HAL_Delay(3000);
+//
+//		Fill_Display(black);
+//		LCD_FillCircle(&ball);
+//		HAL_Delay(1000);
 
-		LCD_FramePanel(&pan);
-		HAL_Delay(3000);
+		for(i = 0; i < 20; i++)
+		{
+			p.CurrentValue = i;
+		    Fill_Display(black);
+		    LCD_ProgressBar(&p);
+		    HAL_Delay(400);
+		}
 
 	}
 }

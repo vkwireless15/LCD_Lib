@@ -10,7 +10,7 @@
 extern LTDC_HandleTypeDef hltdc;
 extern DMA2D_HandleTypeDef hdma2d;
 
-unsigned int Height = 0, Width = 0, LCD_FRAME_BUFFER0 = 0, LCD_FRAME_BUFFER1 = 0, LCD_FRAME_BUFFER2 = 0;
+unsigned int Height = 0, Width = 0, LCD_FRAME_BUFFER0 = 0;
 
 
 void Init_Graphics_System(uint32 H, uint32 W, uint32 LCD_RAM_START_ADDRESS, uint8 Layers, uint8 ColorType) //Инициализация драйвера дисплея, графического ускорителя и т.п.
@@ -201,9 +201,9 @@ void Fill_rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32
 	}
 }
 
-void MemPoint(uint32 Address, int32 x, int32 y, int32 Color) //Отрисовка одного пикселя
+void MemPoint(int32 x, int32 y, int32 Color) //Отрисовка одного пикселя
 {
-	*(__IO uint16*) (Address + (2*(y*Width + x))) = Color;
+	*(__IO uint16*) (LCD_FRAME_BUFFER0 + (2*(y*Width + x))) = Color;
 }
 
 void Show(uint8 Layer) // Отобразить содержимое на выбранный слой экрана
@@ -211,11 +211,11 @@ void Show(uint8 Layer) // Отобразить содержимое на выб�
 	unsigned int RAddr = 0;
 	if(Layer == 0)
 	{
-		RAddr = LCD_FRAME_BUFFER0;
+		//RAddr = LCD_FRAME_BUFFER0;
 	}
 	else
 	{
-		RAddr = LCD_FRAME_BUFFER2;
+		//RAddr = LCD_FRAME_BUFFER2;
 	}
 	hdma2d.Init.Mode = DMA2D_M2M_PFC;
     hdma2d.Init.ColorMode = DMA2D_ARGB8888;
