@@ -369,6 +369,64 @@ void Progress_bar(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16
   }
 }
 
+void CheckBox(int16 x1, int16 x2, int16 y1, int16 y2, uint32 BrColor, uint32 BackColor, uint32 ChColor, uint8 Checked)
+{
+	FramePanel(BrColor,BackColor,x1,x2,y1,y2,2);
+	if(Checked == 1)
+	{
+		Line(x1+3, y1+6, x1+((x2-x1)/2), y2-3, ChColor, 2);
+		Line(x1+((x2-x1)/2), y2-3, x2-3, y1+3, ChColor, 2);
+	}
+}
+
+void TrackBar(int16 XStart, int16 XEnd, int16 YStart, int16 YEnd, int16 StartPos, int16 StopPos, int16 CurrPos, int32 BorderColor, uint32 FloodColor, uint32 TrackerColor, uint8 Orient, uint8 Rad)
+{
+	  float STPOS;
+	  float POSCOUNT;
+	  uint16 XPOS = 0, YPOS = 0;
+	  uint16 POSN = CurrPos - StartPos;
+
+	  if(Orient == Horisontal)
+	  {
+	      if(CurrPos == 1)
+	      {
+	         STPOS = StopPos - StartPos;
+	         POSCOUNT = (XEnd - XStart)/STPOS;
+	         XPOS = (uint16)((POSN - StartPos * POSCOUNT)+ XStart + 1);
+	      }
+
+	      if(CurrPos == StartPos)
+	      {
+	         STPOS = StopPos - StartPos;
+	         POSCOUNT = (XEnd - XStart)/STPOS;
+	         XPOS = (uint16)((POSN * POSCOUNT)+ XStart);
+	      }
+
+	      if(CurrPos > StartPos)
+	      {
+	         STPOS = StopPos - StartPos;
+	         POSCOUNT = (XEnd - XStart)/STPOS;
+	         XPOS = (uint16)((POSN * POSCOUNT)+ XStart);
+	      }
+	  }
+	  else
+	  {
+	      STPOS = StopPos - StartPos;
+	      POSCOUNT = (YEnd - YStart)/STPOS;
+	      YPOS = (uint16)(YEnd - (POSN * POSCOUNT));
+	  }
+
+	  if(Orient == Horisontal)
+	  {
+	      FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,1);
+	      FillCircle(XPOS,YStart + (YEnd - YStart) / 2, Rad, TrackerColor);
+	  }
+	  else
+	  {
+		  FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,1);
+		  FillCircle(XStart + ((XEnd - XStart) / 2),YPOS,Rad,TrackerColor);
+	  }
+}
 
 
 //для внешнего пользования(прикладных программ) Обработка касаний, координатных штучек
@@ -439,7 +497,86 @@ void LCD_ProgressBar(D_ProgressBar *ProgressBar)
 	Progress_bar(ProgressBar->X1, ProgressBar->X2, ProgressBar->Y1, ProgressBar->Y2, ProgressBar->StartValue, ProgressBar->StopValue, ProgressBar->CurrentValue, ProgressBar->FrameColor, ProgressBar->FillColor, ProgressBar->BarColor, ProgressBar->Thickness, ProgressBar->Orientation);
 }
 
+uint8 LCD_CheckBox(D_CheckBox *ctrl)
+{
+//	uint8 TouchDet = GetCursorPosition();
+	CheckBox(ctrl->X1, ctrl->X2, ctrl->Y1, ctrl->Y2, ctrl->FrameColor, ctrl->BackColor, ctrl->CheckColor, ctrl->Checked);
+	/*if(CursorX >= ctrl->X1 && CursorX <= ctrl->X2 && CursorY >= ctrl->Y1 && CursorY <= ctrl->Y2 && TouchDet == Clicked)
+	{
+		ctrl->Is_pressed = Clicked;
+	 	return Clicked;
+	}
+	else
+	{
+		if(TouchDet == NotClicked)
+		{
+		    if(CursorX >= ctrl->X1 && CursorX <= ctrl->X2 && CursorY >= ctrl->Y1 && CursorY <= ctrl->Y2 && TouchDet == NotClicked)
+		    {
+		    	if(ctrl->Is_pressed == Clicked)
+		    	{
+		    		if(ctrl->Checked == 0)
+		    		{ctrl->Checked = 1;}
+		    		else
+		    		{ctrl->Checked = 0;}
+		    		ctrl->Is_pressed = NotClicked;
+			        return Unclicked;
+		    	}
+		    }
+	    }
+		else
+		{
+			return NotClicked;
+		}
+	}*/
+	return NotClicked;
+}
 
-
-
+uint8 LCD_TrackBar(D_TrackBar *trackBar)
+{
+//	uint8 TouchDet = GetCursorPosition();
+//	uint16 Xdif, ValDif;
+	TrackBar(trackBar->X1, trackBar->X2, trackBar->Y1, trackBar->Y2, trackBar->StartValue, trackBar->StopValue, trackBar->CurrentValue, trackBar->FrameColor, trackBar->BackColor, trackBar->TrackerColor, trackBar->Orientation, trackBar->Radius);
+//	if(CursorX >= trackBar->X1 && CursorX <= trackBar->X2 && CursorY >= trackBar->Y1 && CursorY <= trackBar->Y2 && TouchDet == Clicked)
+//	{
+//		if(trackBar->Orientation == Horisontal)
+//		{
+//		    trackBar->Is_pressed = Clicked;
+//		    Xdif = trackBar->X2 - trackBar->X1;
+//		    ValDif = trackBar->StopValue - trackBar->StartValue;
+//		    trackBar->CurrentValue = (CursorX - trackBar->X1) * ValDif / Xdif;
+//		    if(CursorX <= trackBar->X2 && CursorX >= trackBar->X2 - 3)
+//		    {trackBar->CurrentValue = trackBar->StopValue;}
+//	 	    return Clicked;
+//	    }
+//		else
+//		{
+//		    trackBar->Is_pressed = Clicked;
+//		    Xdif = trackBar->Y2 - trackBar->Y1;
+//		    ValDif = trackBar->StopValue - trackBar->StartValue;
+//		    trackBar->CurrentValue = trackBar->StopValue - ((CursorY - trackBar->Y1) * ValDif / Xdif);
+//		    if(CursorY <= trackBar->Y2 && CursorY >= trackBar->Y2 - 3)
+//		    {trackBar->CurrentValue = trackBar->StartValue;}
+//	 	    return Clicked;
+//		}
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= trackBar->X1 && CursorX <= trackBar->X2 && CursorY >= trackBar->Y1 - 5 && CursorY <= trackBar->Y1 + 5 && TouchDet == NotClicked)
+//		    {
+//		    	if(trackBar->Is_pressed == Clicked)
+//		    	{
+//		    		trackBar->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}
 

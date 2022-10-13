@@ -270,6 +270,36 @@ typedef struct
 	char Is_pressed;
 	char Unvisible;
 } D_ProgressBar;
+typedef struct
+{
+	unsigned int X1;
+	unsigned int X2;
+	unsigned int Y1;
+	unsigned int Y2;
+	unsigned int FrameColor;
+	unsigned int BackColor;
+	unsigned int CheckColor;
+	char Checked;
+	char Is_pressed;
+	char Unvisible;
+} D_CheckBox;
+typedef struct
+{
+	unsigned int X1;
+	unsigned int X2;
+	unsigned int Y1;
+	unsigned int Y2;
+	unsigned int StartValue;
+	unsigned int StopValue;
+	unsigned int CurrentValue;
+	unsigned int FrameColor;
+	unsigned int BackColor;
+	unsigned int TrackerColor;
+	char Orientation;
+	unsigned int Radius;
+	char Is_pressed;
+	char Unvisible;
+} D_TrackBar;
 /*typedef struct
 {
 	unsigned int X;
@@ -619,6 +649,8 @@ void LCD_Line(D_Line *line);
 void LCD_Circle(D_Circle *circle);
 void LCD_FillCircle(D_FillCircle *fillCircle);
 void LCD_ProgressBar(D_ProgressBar *ProgressBar);
+uint8 LCD_CheckBox(D_CheckBox *ctrl);
+uint8 LCD_TrackBar(D_TrackBar *trackBar);
 
 void Show_to_layer(uint8 Layer);
 

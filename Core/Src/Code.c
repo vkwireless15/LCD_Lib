@@ -27,6 +27,9 @@ void MainFunc ()
 	D_HLine line;
 	D_FillCircle ball;
 	D_ProgressBar p;
+	D_Circle round;
+	D_CheckBox check;
+	D_TrackBar tr;
 
 	kv.X1 = 200;
 	kv.X2 = 400;
@@ -72,28 +75,59 @@ void MainFunc ()
 	p.BarColor = green;
 	p.Orientation = Horisontal;
 
+	round.X1 = 100;
+	round.Y1 = 120;
+	round.Color = yellow;
+	round.Thickness = 3;
+	round.R = 40;
+
+	check.X1 = 50;
+	check.X2 = 70;
+	check.Y1 = 150;
+	check.Y2 = 170;
+	check.FrameColor = blue;
+	check.BackColor = white;
+	check.CheckColor = black;
+	check.Checked = 1;
+
+	tr.X1 = 200;
+	tr.X2 = 400;
+	tr.Y1 = 100;
+	tr.Y2 = 105;
+	tr.StartValue = 0;
+	tr.StopValue = 9;
+	tr.FrameColor = blue;
+	tr.BackColor = white;
+//	tr.Orientation = Horizontal;
+	tr.Radius = 6;
+	tr.TrackerColor = yellow;
+
+
+
+
+
     char i = 0;
 
 	while(1) // бесконечный цикл
 	{
-//		Fill_Display(black);
-//		LCD_Fill_Rectangle(&kv);
-//		HAL_Delay(3000);
-//
-//		LCD_FramePanel(&pan);
-//		HAL_Delay(3000);
-//
-//		Fill_Display(black);
-//		LCD_Fill_Rectangle(&rec);
-//		HAL_Delay(3000);
-//
-//		Fill_Display(black);
-//		LCD_HLine(&line);
-//		HAL_Delay(3000);
-//
-//		Fill_Display(black);
-//		LCD_FillCircle(&ball);
-//		HAL_Delay(1000);
+		Fill_Display(black);
+		LCD_Fill_Rectangle(&kv);
+		HAL_Delay(3000);
+
+		LCD_FramePanel(&pan);
+		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_Fill_Rectangle(&rec);
+		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_HLine(&line);
+		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_FillCircle(&ball);
+		HAL_Delay(3000);
 
 		for(i = 0; i < 20; i++)
 		{
@@ -102,6 +136,18 @@ void MainFunc ()
 		    LCD_ProgressBar(&p);
 		    HAL_Delay(400);
 		}
+
+		Fill_Display(black);
+		LCD_Circle(&round);
+		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_CheckBox(&check);
+		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_TrackBar(&tr);
+		HAL_Delay(3000);
 
 	}
 }
