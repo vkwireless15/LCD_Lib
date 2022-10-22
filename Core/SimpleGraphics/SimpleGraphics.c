@@ -131,10 +131,6 @@ void VLine(uint32 Color, int16 x1, int16 y1, int16 y2, uint8 Tolshina)
 }
 void FramePanel(uint32 BorderColor, uint32 FloodColor, int16 x1, int16 x2, int16 y1, int16 y2, uint8 Tolshina)
 {
-
-
-
-
 	Tolshina --;
 	Fill_Rectangle(FloodColor,x1,x2,y1,y2);
     HLine(BorderColor,x1,x2,y1,Tolshina + 1);
@@ -346,7 +342,7 @@ void Progress_bar(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16
       {
          STPOS = StopPos - StartPos;
          POSCOUNT = (XEnd - XStart)/STPOS;
-         XPOS = (uint16)((POSN * POSCOUNT)+ XStart);
+         XPOS = (uint16)((POSN * POSCOUNT)+ XStart - Tr);
       }
   }
   else
@@ -428,6 +424,174 @@ void TrackBar(int16 XStart, int16 XEnd, int16 YStart, int16 YEnd, int16 StartPos
 	  }
 }
 
+void VGradA(int16 x1, int16 x2, int16 y1, int16 y2, int32 ColorH, int32 ColorL)//
+{
+    float HRed, HGreen, HBlue;
+    float LRed, LGreen, LBlue;
+    y1-=1;
+    x1-=1;
+
+	if(ColorType == Color565)
+	{ ColorH = Get565Color(ColorH); ColorL = Get565Color(ColorL);}
+
+	if(ColorType == Color888)
+	{ ColorH = ColorH | 0xFF << 24; ColorL = ColorL | 0xFF << 24; }
+
+	if(x1 < 1){x1 = 1;}
+	if(x2 > DispWidth){ x2 = DispWidth;}
+	if(y1 < 1){ y1 = 1;}
+	if(y2 > DispHeight){ y2 = DispHeight;}
+
+    if(ColorType != Color565)
+    {
+       HBlue = ColorH & 0x000000ff;
+       ColorH = ColorH>>8;
+       HGreen = ColorH & 0x000000ff;
+       ColorH = ColorH>>8;
+       HRed = ColorH & 0x000000ff;
+
+       LBlue = ColorL & 0x000000ff;
+       ColorL = ColorL>>8;
+       LGreen = ColorL & 0x000000ff;
+       ColorL = ColorL>>8;
+       LRed = ColorL & 0x000000ff;
+    }
+    else
+    {
+        HBlue = ColorH & 0x0000001f;
+        ColorH = ColorH>>5;
+        HGreen = ColorH & 0x0000003f;
+        ColorH = ColorH>>6;
+        HRed = ColorH & 0x0000001f;
+
+        LBlue = ColorL & 0x0000001f;
+        ColorL = ColorL>>5;
+        LGreen = ColorL & 0x0000003f;
+        ColorL = ColorL>>6;
+        LRed = ColorL & 0x0000001f;
+    }
+
+    uint32 Res_Color, promej_zn;
+    float Mix;
+
+    for(int16 i = y1; i<y2; i++)
+    {
+     Mix = (float)(i - y1) / (float)(y2 - y1);
+
+     if(ColorType != Color565)
+     {
+        Res_Color = HRed * (1 - Mix) + LRed * (Mix);
+        Res_Color <<= 8;
+        promej_zn = HGreen * (1 - Mix) + LGreen * (Mix);
+        Res_Color |= promej_zn;
+        Res_Color <<= 8;
+        promej_zn = HBlue * (1 - Mix) + LBlue * (Mix);
+        Res_Color |= promej_zn;
+     }
+     else
+     {
+         Res_Color = HRed * (1 - Mix) + LRed * (Mix);
+         Res_Color <<= 6;
+         promej_zn = HGreen * (1 - Mix) + LGreen * (Mix);
+         Res_Color |= promej_zn;
+         Res_Color <<= 5;
+         promej_zn = HBlue * (1 - Mix) + LBlue * (Mix);
+         Res_Color |= promej_zn;
+     }
+
+     for(int16 j = x1; j<x2; j++)
+     {
+          MemPoint(j,i,Res_Color);
+     }
+   }
+}
+
+void HGradA(int16 x1, int16 x2, int16 y1, int16 y2, int32 ColorH, int32 ColorL)//++
+{
+    float HRed, HGreen, HBlue;
+    float LRed, LGreen, LBlue;
+    y1-=1;
+    x1-=1;
+
+	if(ColorType == Color565)
+	{ ColorH = Get565Color(ColorH); ColorL = Get565Color(ColorL);}
+
+	if(ColorType == Color888)
+	{ ColorH = ColorH | 0xFF << 24; ColorL = ColorL | 0xFF << 24; }
+
+	if(x1 < 1){x1 = 1;}
+	if(x2 > DispWidth){ x2 = DispWidth;}
+	if(y1 < 1){ y1 = 1;}
+	if(y2 > DispHeight){ y2 = DispHeight;}
+
+    if(ColorType != Color565)
+    {
+       HBlue = ColorH & 0x000000ff;
+       ColorH = ColorH>>8;
+       HGreen = ColorH & 0x000000ff;
+       ColorH = ColorH>>8;
+       HRed = ColorH & 0x000000ff;
+
+       LBlue = ColorL & 0x000000ff;
+       ColorL = ColorL>>8;
+       LGreen = ColorL & 0x000000ff;
+       ColorL = ColorL>>8;
+       LRed = ColorL & 0x000000ff;
+    }
+    else
+    {
+        HBlue = ColorH & 0x0000001f;
+        ColorH = ColorH>>5;
+        HGreen = ColorH & 0x0000003f;
+        ColorH = ColorH>>6;
+        HRed = ColorH & 0x0000001f;
+
+        LBlue = ColorL & 0x0000001f;
+        ColorL = ColorL>>5;
+        LGreen = ColorL & 0x0000003f;
+        ColorL = ColorL>>6;
+        LRed = ColorL & 0x0000001f;
+    }
+
+    uint32 Res_Color, promej_zn;
+    float Mix;
+
+    for(int16 i = x1; i<x2; i++)
+    {
+     if(i > x2 - 1)
+     {i = DispWidth;}
+
+
+     Mix = (float)(i - x1) / (float)(x2 - x1);
+
+     if(ColorType != Color565)
+     {
+         Res_Color = HRed * (1 - Mix) + LRed * (Mix);
+         Res_Color <<= 8;
+         promej_zn = HGreen * (1 - Mix) + LGreen * (Mix);
+         Res_Color |= promej_zn;
+         Res_Color <<= 8;
+         promej_zn = HBlue * (1 - Mix) + LBlue * (Mix);
+         Res_Color |= promej_zn;
+     }
+     else
+     {
+         Res_Color = HRed * (1 - Mix) + LRed * (Mix);
+         Res_Color <<= 6;
+         promej_zn = HGreen * (1 - Mix) + LGreen * (Mix);
+         Res_Color |= promej_zn;
+         Res_Color <<= 5;
+         promej_zn = HBlue * (1 - Mix) + LBlue * (Mix);
+         Res_Color |= promej_zn;
+     }
+
+
+     for(int16 j = y1; j<y2; j++)
+     {
+         MemPoint(i,j,Res_Color);
+     }
+   }
+}
 
 //для внешнего пользования(прикладных программ) Обработка касаний, координатных штучек
 
@@ -435,7 +599,6 @@ void LCD_Fill_Rectangle(D_Fill_Rectangle *FR)
 {
     Fill_Rectangle(FR->Color, FR->X1, FR->X2, FR->Y1, FR->Y2);
 }
-
 void LCD_HLine(D_HLine *hline)
 {
 	HLine(hline->Color, hline->X1, hline->X2, hline->Y1, hline->Thickness);
@@ -568,6 +731,67 @@ uint8 LCD_TrackBar(D_TrackBar *trackBar)
 //		    	if(trackBar->Is_pressed == Clicked)
 //		    	{
 //		    		trackBar->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}
+
+uint8 LCD_VGradient(D_VGradient *VGradient)
+{
+	//uint8 TouchDet = GetCursorPosition();
+	VGradA(VGradient->X1, VGradient->X2, VGradient->Y1, VGradient->Y2, VGradient->ColorH, VGradient->ColorL);
+
+//	if(CursorX >= VGradient->X1 && CursorX <= VGradient->X2 && CursorY >= VGradient->Y1 && CursorY <= VGradient->Y2 && TouchDet == Clicked)
+//	{
+//		VGradient->Is_pressed = Clicked;
+//	 	return Clicked;
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= VGradient->X1 && CursorX <= VGradient->X2 && CursorY >= VGradient->Y1 && CursorY <= VGradient->Y2 && TouchDet == NotClicked)
+//		    {
+//		    	if(VGradient->Is_pressed == Clicked)
+//		    	{
+//		    		VGradient->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}
+
+uint8 LCD_HGradient(D_HGradient *HGradient)
+{
+//	uint8 TouchDet = GetCursorPosition();
+	HGradA(HGradient->X1, HGradient->X2, HGradient->Y1, HGradient->Y2, HGradient->ColorH, HGradient->ColorL);
+//	if(CursorX >= HGradient->X1 && CursorX <= HGradient->X2 && CursorY >= HGradient->Y1 && CursorY <= HGradient->Y2 && TouchDet == Clicked)
+//	{
+//		HGradient->Is_pressed = Clicked;
+//	 	return Clicked;
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= HGradient->X1 && CursorX <= HGradient->X2 && CursorY >= HGradient->Y1 && CursorY <= HGradient->Y2 && TouchDet == NotClicked)
+//		    {
+//		    	if(HGradient->Is_pressed == Clicked)
+//		    	{
+//		    		HGradient->Is_pressed = NotClicked;
 //			        return Unclicked;
 //		    	}
 //		    }

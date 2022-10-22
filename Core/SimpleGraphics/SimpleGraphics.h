@@ -300,6 +300,28 @@ typedef struct
 	char Is_pressed;
 	char Unvisible;
 } D_TrackBar;
+typedef struct
+{
+	unsigned int X1;
+	unsigned int X2;
+	unsigned int Y1;
+	unsigned int Y2;
+	unsigned int ColorH;
+	unsigned int ColorL;
+	char Is_pressed;
+	char Unvisible;
+} D_VGradient;
+typedef struct
+{
+	unsigned int X1;
+	unsigned int X2;
+	unsigned int Y1;
+	unsigned int Y2;
+	unsigned int ColorH;
+	unsigned int ColorL;
+	char Is_pressed;
+	char Unvisible;
+} D_HGradient;
 /*typedef struct
 {
 	unsigned int X;
@@ -651,6 +673,8 @@ void LCD_FillCircle(D_FillCircle *fillCircle);
 void LCD_ProgressBar(D_ProgressBar *ProgressBar);
 uint8 LCD_CheckBox(D_CheckBox *ctrl);
 uint8 LCD_TrackBar(D_TrackBar *trackBar);
+uint8 LCD_VGradient(D_VGradient *VGradient);
+uint8 LCD_HGradient(D_HGradient *HGradient);
 
 void Show_to_layer(uint8 Layer);
 
