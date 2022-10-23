@@ -482,6 +482,7 @@ void VGradA(int16 x1, int16 x2, int16 y1, int16 y2, int32 ColorH, int32 ColorL)/
      {
         Res_Color = HRed * (1 - Mix) + LRed * (Mix);
         Res_Color <<= 8;
+
         promej_zn = HGreen * (1 - Mix) + LGreen * (Mix);
         Res_Color |= promej_zn;
         Res_Color <<= 8;
@@ -556,11 +557,10 @@ void HGradA(int16 x1, int16 x2, int16 y1, int16 y2, int32 ColorH, int32 ColorL)/
     uint32 Res_Color, promej_zn;
     float Mix;
 
-    for(int16 i = x1; i<x2; i++)
+    for(uint16 i = x1; i<x2; i++)
     {
      if(i > x2 - 1)
      {i = DispWidth;}
-
 
      Mix = (float)(i - x1) / (float)(x2 - x1);
 
@@ -591,6 +591,17 @@ void HGradA(int16 x1, int16 x2, int16 y1, int16 y2, int32 ColorH, int32 ColorL)/
          MemPoint(i,j,Res_Color);
      }
    }
+}
+
+void VGradB(int16 x1, int16 x2, int16 y1, int16 y2, uint32 ColorH, uint32 ColorC, uint32 ColorL)//++
+{
+ VGradA(x1,x2,y1,y1+((y2 - y1)/2),ColorH,ColorC);
+ VGradA(x1,x2,y1+((y2 - y1)/2),y2,ColorC,ColorL);
+}
+void HGradB(int16 x1, int16 x2, int16 y1, int16 y2, uint32 ColorH, uint32 ColorC, uint32 ColorL)//++
+{
+ HGradA(x1,x1+((x2 - x1)/2),y1,y2,ColorH,ColorC);
+ HGradA(x1+((x2 - x1)/2),x2,y1,y2,ColorC,ColorL);
 }
 
 //для внешнего пользования(прикладных программ) Обработка касаний, координатных штучек
@@ -792,6 +803,65 @@ uint8 LCD_HGradient(D_HGradient *HGradient)
 //		    	if(HGradient->Is_pressed == Clicked)
 //		    	{
 //		    		HGradient->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}
+
+uint8 LCD_DualVGradient(D_DualVGradient *DualVGradient)
+{
+//	uint8_t TouchDet = GetCursorPosition();
+	VGradB(DualVGradient->X1, DualVGradient->X2, DualVGradient->Y1, DualVGradient->Y2, DualVGradient->ColorH, DualVGradient->ColorC, DualVGradient->ColorL);
+//	if(CursorX >= DualVGradient->X1 && CursorX <= DualVGradient->X2 && CursorY >= DualVGradient->Y1 && CursorY <= DualVGradient->Y2 && TouchDet == Clicked)
+//	{
+//		DualVGradient->Is_pressed = Clicked;
+//	 	return Clicked;
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= DualVGradient->X1 && CursorX <= DualVGradient->X2 && CursorY >= DualVGradient->Y1 && CursorY <= DualVGradient->Y2 && TouchDet == NotClicked)
+//		    {
+//		    	if(DualVGradient->Is_pressed == Clicked)
+//		    	{
+//		    		DualVGradient->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}
+uint8 LCD_DualHGradient(D_DualHGradient *DualHGradient)
+{
+//	uint8_t TouchDet = GetCursorPosition();
+	HGradB(DualHGradient->X1, DualHGradient->X2, DualHGradient->Y1, DualHGradient->Y2, DualHGradient->ColorH, DualHGradient->ColorC, DualHGradient->ColorL);
+//	if(CursorX >= DualHGradient->X1 && CursorX <= DualHGradient->X2 && CursorY >= DualHGradient->Y1 && CursorY <= DualHGradient->Y2 && TouchDet == Clicked)
+//	{
+//		DualHGradient->Is_pressed = Clicked;
+//	 	return Clicked;
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= DualHGradient->X1 && CursorX <= DualHGradient->X2 && CursorY >= DualHGradient->Y1 && CursorY <= DualHGradient->Y2 && TouchDet == NotClicked)
+//		    {
+//		    	if(DualHGradient->Is_pressed == Clicked)
+//		    	{
+//		    		DualHGradient->Is_pressed = NotClicked;
 //			        return Unclicked;
 //		    	}
 //		    }

@@ -322,6 +322,30 @@ typedef struct
 	char Is_pressed;
 	char Unvisible;
 } D_HGradient;
+typedef struct
+{
+	unsigned int X1;
+	unsigned int X2;
+	unsigned int Y1;
+	unsigned int Y2;
+	unsigned int ColorH;
+	unsigned int ColorC;
+	unsigned int ColorL;
+	char Is_pressed;
+	char Unvisible;
+} D_DualVGradient;
+typedef struct
+{
+	unsigned int X1;
+	unsigned int X2;
+	unsigned int Y1;
+	unsigned int Y2;
+	unsigned int ColorH;
+	unsigned int ColorC;
+	unsigned int ColorL;
+	char Is_pressed;
+	char Unvisible;
+} D_DualHGradient;
 /*typedef struct
 {
 	unsigned int X;
@@ -675,6 +699,8 @@ uint8 LCD_CheckBox(D_CheckBox *ctrl);
 uint8 LCD_TrackBar(D_TrackBar *trackBar);
 uint8 LCD_VGradient(D_VGradient *VGradient);
 uint8 LCD_HGradient(D_HGradient *HGradient);
+uint8 LCD_DualVGradient(D_DualVGradient *DualVGradient);
+uint8 LCD_DualHGradient(D_DualHGradient *DualHGradient);
 
 void Show_to_layer(uint8 Layer);
 

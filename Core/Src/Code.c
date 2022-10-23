@@ -34,6 +34,8 @@ void MainFunc ()
 	D_TrackBar tra;
 	D_VGradient vgr;
 	D_HGradient hgr;
+	D_DualHGradient dhgr;
+	D_DualVGradient dvgr;
 
 
 	kv.X1 = 200;
@@ -69,8 +71,8 @@ void MainFunc ()
 
 	p.X1 = 200;
 	p.X2 = 400;
-	p.Y1 = 100;
-	p.Y2 = 120;
+	p.Y1 = 5;
+	p.Y2 = 15;
 	p.StartValue = 0;
 	p.StopValue = 10;
 	p.CurrentValue = 6;
@@ -80,8 +82,8 @@ void MainFunc ()
 	p.BarColor = red;
 	p.Orientation = Horisontal;
 
-	pa.X1 = 100;
-	pa.X2 = 120;
+	pa.X1 = 30;
+	pa.X2 = 50;
 	pa.Y1 = 10;
 	pa.Y2 = 262;
 	pa.StartValue = 0;
@@ -110,8 +112,8 @@ void MainFunc ()
 
 	tr.X1 = 200;
 	tr.X2 = 400;
-	tr.Y1 = 85;
-	tr.Y2 = 90;
+	tr.Y1 = 20;
+	tr.Y2 = 25;
 	tr.StartValue = 0;
 	tr.StopValue = 10;
 	tr.FrameColor = blue;
@@ -150,7 +152,21 @@ void MainFunc ()
 	hgr.Unvisible = 0;
 	hgr.Is_pressed = 0;
 
+	dhgr.X1 = 345;
+	dhgr.X2 = 445;
+	dhgr.Y1 = 190;
+	dhgr.Y2 = 262;
+	dhgr.ColorH  = red;
+	dhgr.ColorC = green;
+	dhgr.ColorL = blue;
 
+	dvgr.X1 = 345;
+	dvgr.X2 = 445;
+	dvgr.Y1 = 113;
+	dvgr.Y2 = 185;
+	dvgr.ColorH  = red;
+	dvgr.ColorC = green;
+	dvgr.ColorL = blue;
 
 
 
@@ -201,7 +217,9 @@ void MainFunc ()
 		    LCD_TrackBar(&tra);
 		    LCD_VGradient(&vgr);
 		    LCD_HGradient(&hgr);
-		    HAL_Delay(100);
+		    LCD_DualHGradient(&dhgr);
+		    LCD_DualVGradient(&dvgr);
+		    HAL_Delay(800);
 		}
 		HAL_Delay(300);
 
