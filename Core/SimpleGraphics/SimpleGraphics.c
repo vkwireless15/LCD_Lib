@@ -604,6 +604,265 @@ void HGradB(int16 x1, int16 x2, int16 y1, int16 y2, uint32 ColorH, uint32 ColorC
  HGradA(x1+((x2 - x1)/2),x2,y1,y2,ColorC,ColorL);
 }
 
+uint8 Inverse(uint8 S)
+{
+	uint8 K = 0;
+	for(uint8 i = 0; i<8; i++)
+	{
+		if((S & 0x01) != 0)
+		{
+			K = K | 0x01;
+		}
+		S = S >> 1;
+		if(i<7)
+		{
+		  K = K << 1;
+	    }
+	}
+	return K;
+}
+
+void Symbol(uint16 X, uint16 Y, uint16 *NextX, uint16 *NextY, uint8 *CharWt, uint8 *CharHt, uint32 Color, char Symbol)
+{
+	uint8 FontH = calibri[1];
+	uint8 FirstChar = calibri[2];
+	uint8 NumOfChar = calibri[3];
+	uint8 Cursor = Symbol - FirstChar;
+	uint16 SymbStartPos = 4 + NumOfChar;
+	uint8 CharW = calibri[Cursor + 4];
+	uint16 i, j, k = 0;
+	uint32 CharBit = 0;
+
+	*NextX = X + CharW;
+	*NextY = Y + FontH;
+	*CharWt = CharW;
+	*CharHt = FontH;
+	for(i = 4; i < Cursor + 4; i++)
+	{
+	   	if(calibri[i] <= 8)
+	   	{
+	   	   SymbStartPos += FontH;
+	   	}
+
+	   	if(calibri[i] > 8 && calibri[i] <= 16)
+		{
+	   		SymbStartPos += FontH * 2;
+		}
+
+	   	if(calibri[i] > 16 && calibri[i] <= 24)
+		{
+	   		SymbStartPos += FontH * 3;
+		}
+	   	if(calibri[i] > 24 && calibri[i] <= 32)
+		{
+	   		SymbStartPos += FontH * 4;
+		}
+	}
+
+	for(i = Y; i < Y + FontH; i++)
+	{
+		if(CharW <= 8)
+		{
+			CharBit = Inverse(calibri[SymbStartPos + k]);
+			CharBit = CharBit << 24;
+			k++;
+		}
+		if(CharW > 8 && CharW <= 16)
+		{
+			CharBit = Inverse(calibri[SymbStartPos + k]);
+			k++;
+			CharBit = CharBit << 8;
+			CharBit = CharBit | Inverse(calibri[SymbStartPos + k]);
+			CharBit = CharBit << 16;
+			k++;
+		}
+		if(CharW > 16 && CharW <= 24)
+		{
+			CharBit = Inverse(calibri[SymbStartPos + k]);
+			k++;
+			CharBit = CharBit << 8;
+			CharBit = CharBit | Inverse(calibri[SymbStartPos + k]);
+			k++;
+			CharBit = CharBit << 8;
+			CharBit = CharBit | Inverse(calibri[SymbStartPos + k]);
+			CharBit = CharBit << 8;
+			k++;
+		}
+		if(CharW > 24 && CharW <= 32)
+		{
+			CharBit = Inverse(calibri[SymbStartPos + k]);
+			k++;
+			CharBit = CharBit << 8;
+			CharBit = CharBit | Inverse(calibri[SymbStartPos + k]);
+			k++;
+			CharBit = CharBit << 8;
+			CharBit = CharBit | Inverse(calibri[SymbStartPos + k]);
+			k++;
+			CharBit = CharBit << 8;
+			CharBit = CharBit | Inverse(calibri[SymbStartPos + k]);
+			k++;
+		}
+
+
+		for(j = X; j < X + CharW; j++)
+		{
+            if((CharBit & 0x80000000) != 0)
+            {
+      		    if(i < DispHeight && j < DispWidth)
+      		    {
+      		    	MemPoint(j,i,Color);
+      	        }
+            }
+            CharBit = CharBit << 1;
+		}
+	}
+}
+uint32 SymbolLength(char String[])
+{
+	uint8 FirstChar = calibri[2];
+	uint8 Cursor = 0;
+	uint8 CharW = 0;
+	uint32 Len = 0;
+	uint32 SymCh = 0;
+
+	while(String[SymCh] != 0)
+	{
+		Cursor = String[SymCh] - FirstChar;
+		CharW = calibri[Cursor + 4];
+		Len += CharW;
+		SymCh++;
+	}
+	return Len;
+}
+uint8 RU_EN_UTF16ToASCII(char S1, char S2)
+{
+	char S = S2 - 16;
+
+	if(S1 == 0xD1 && S2 == 145)
+	{
+		return 184;
+	}
+
+	if(S1 == 0xD0 && S2 == 129)
+	{
+		return 168;
+	}
+
+	if(S <= 175 && S>= 128)
+	{
+	    return S2 + 48;
+    }
+	else
+	{
+		return S + 128;
+	}
+	return Error;
+}
+void Get1251(char Str[])
+{
+	 uint32 W1 = 0, cnt = 0;
+	 while(Str[W1] != 0)
+	 { W1++ ;}
+
+	 for(uint32	s = 0; s < W1;)
+	 {
+		 if(Str[s] == 0xD0 || Str[s] == 0xD1)
+		 {
+			 Str[cnt] = RU_EN_UTF16ToASCII(Str[s], Str[s+1]);
+			 if(s!=cnt)
+			 {
+				 Str[s] = 0;
+				 Str[s + 1] = 0;
+			 }
+			 cnt++;
+			 s+=2;
+		 }
+		 else
+		 {
+			 Str[cnt] = Str[s];
+			 if(s!=cnt)
+			 {
+				 Str[s] = 0;
+			 }
+			 cnt++;
+			 s++;
+		 }
+	 }
+}
+void Label (uint16 X, uint16 Y, uint32 Color, char String[])//++
+{
+  uint16 Nx = 0, Ny = 0;
+  uint16 Sym = 0;
+  uint8 ChW = 0;
+  uint8 ChH = 0;
+  while(String[Sym]!=0)
+  {
+  	Sym++;
+  }
+  for(uint16 i = 0; i<Sym; i++)
+  {
+  	if(String[i]>= 0x20 && String[i]<= 0xFF)
+  	{
+
+  		Symbol(X, Y, &Nx, &Ny,&ChW,&ChH, Color, String[i]);
+
+  		if(X + ChW < DispWidth)
+  		{
+  		   X = Nx;
+  	    }
+  		else
+  		{
+  			break;
+  		}
+
+  	}
+  }
+
+}
+void Form(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 TolshinaB, uint32 ColorL, uint32 ColorS, uint32 ColorW,uint32 ColorT,char FormName[])//++
+{
+  uint16 k = TolshinaB - 1,txty;
+  txty = y1+((y1+y_S - y1)/2 - 8);
+
+  Fill_Rectangle(ColorW,x1,x2,y1,y2);
+  Fill_Rectangle(ColorS,x1,x2,y1,y1+y_S);
+  VLine(ColorL,x1,y1,y2,TolshinaB);
+  VLine(ColorL,x2-k,y1,y2,TolshinaB);
+  HLine(ColorL,x1,x2,y1,TolshinaB);
+  HLine(ColorL,x1,x2,y2-k,TolshinaB);
+  HLine(ColorL,x1+k,x2 - k,y_S+y1,TolshinaB);
+  Label(x1+k+2,txty+k,ColorT,FormName);
+}
+void Button(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 TolshinaB, uint32 BorderColor, uint32 BtColor, char Text[],uint32 TextColor)//++
+{
+  uint16 txtX, txtY, g = 0;
+  txtY = y1+((y2 - y1)/2 - 8);
+  g = SymbolLength(Text);
+  txtX = x1+((x2 - x1)/2)-(g/2);
+  FramePanel(BorderColor,BtColor,x1,x2,y1,y2,TolshinaB);
+  Label(txtX, txtY, TextColor,Text);
+}
+void GradientFormA(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 TolshinaB, uint32 ColorL, uint32 ColorSH, uint32 ColorSL, uint32 ColorW,uint32 ColorT,char FormName[])//++
+{
+  uint16 k = TolshinaB - 1,txty, g = 0;
+  txty = y1+((y1+y_S - y1)/2 - 8);
+  for(int i = 0 ; i<50; i++)
+  {
+    if(FormName[i] >= 0x20 && FormName[i] <= 0x7f)
+    {g++;}
+    else
+    {i = 50;}
+  }
+  Fill_Rectangle(ColorW,x1,x2,y1,y2);
+  HGradA(x1,x2,y1,y1+y_S,ColorSH,ColorSL);
+  VLine(ColorL,x1,y1,y2,TolshinaB);
+  VLine(ColorL,x2-k,y1,y2,TolshinaB);
+  HLine(ColorL,x1,x2,y1,TolshinaB);
+  HLine(ColorL,x1,x2,y2-k,TolshinaB);
+  HLine(ColorL,x1+k,x2 - k,y_S+y1,TolshinaB);
+  Label(x1+k+2,txty+k,ColorT,FormName);
+}
+
 //для внешнего пользования(прикладных программ) Обработка касаний, координатных штучек
 
 void LCD_Fill_Rectangle(D_Fill_Rectangle *FR)
@@ -814,7 +1073,6 @@ uint8 LCD_HGradient(D_HGradient *HGradient)
 //	}
 	return NotClicked;
 }
-
 uint8 LCD_DualVGradient(D_DualVGradient *DualVGradient)
 {
 //	uint8_t TouchDet = GetCursorPosition();
@@ -873,4 +1131,97 @@ uint8 LCD_DualHGradient(D_DualHGradient *DualHGradient)
 //	}
 	return NotClicked;
 }
-
+void LCD_Label(D_Label *label, char Text[])
+{
+    Label(label->X, label->Y, label->Color, Text);
+}
+uint8 LCD_Form(D_Form *form, char Text[])
+{
+	//uint8 TouchDet = GetCursorPosition();
+	Form(form->X1, form->X2, form->Y1, form->Y2, form->YBar, form->Thickness, form->FrameColor, form->BarColor, form->WindowColor, form->TextColor, Text);
+//	if(CursorX >= form->X1 && CursorX <= form->X2 && CursorY >= form->Y1 && CursorY <= form->YBar && TouchDet == Clicked)
+//	{
+//		form->Is_pressed = Clicked;
+//	 	return Clicked;
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= form->X1 && CursorX <= form->X2 && CursorY >= form->Y1 && CursorY <= form->YBar && TouchDet == NotClicked)
+//		    {
+//		    	if(form->Is_pressed == Clicked)
+//		    	{
+//		    		form->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			form->Is_pressed = NotClicked;
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}
+uint8 LCD_Button(D_Button *button, char Text[])
+{
+//	uint8 TouchDet = GetCursorPosition();
+//	if(CursorX >= button->X1 && CursorX <= button->X2 && CursorY >= button->Y1 && CursorY <= button->Y2 && TouchDet == Clicked)
+//	{
+//		button->Is_pressed = Clicked;
+//		Button(button->X1, button->X2, button->Y1, button->Y2, button->Thickness, button->FrameColor, button->PressedColor, Text, button->TextColor);
+//	 	return Clicked;
+//	}
+//	else
+//	{
+		Button(button->X1, button->X2, button->Y1, button->Y2, button->Thickness, button->FrameColor, button->FillColor, Text, button->TextColor);
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= button->X1 && CursorX <= button->X2 && CursorY >= button->Y1 && CursorY <= button->Y2 && TouchDet == NotClicked)
+//		    {
+//		    	if(button->Is_pressed == Clicked)
+//		    	{
+//		    		button->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}
+uint8 LCD_HGradientForm(D_HGradientForm *HGradientForm, char Text[])
+{
+	//uint8 TouchDet = GetCursorPosition();
+	GradientFormA(HGradientForm->X1, HGradientForm->X2, HGradientForm->Y1, HGradientForm->Y2, HGradientForm->YBar, HGradientForm->Thickness, HGradientForm->FrameColor, HGradientForm->BarColorH, HGradientForm->BarColorL, HGradientForm->WindowColor, HGradientForm->TextColor, Text);
+//	if(CursorX >= HGradientForm->X1 && CursorX <= HGradientForm->X2 && CursorY >= HGradientForm->Y1 && CursorY <= HGradientForm->YBar && TouchDet == Clicked)
+//	{
+//		HGradientForm->Is_pressed = Clicked;
+//	 	return Clicked;
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= HGradientForm->X1 && CursorX <= HGradientForm->X2 && CursorY >= HGradientForm->Y1 && CursorY <= HGradientForm->YBar && TouchDet == NotClicked)
+//		    {
+//		    	if(HGradientForm->Is_pressed == Clicked)
+//		    	{
+//		    		HGradientForm->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			HGradientForm->Is_pressed = NotClicked;
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}

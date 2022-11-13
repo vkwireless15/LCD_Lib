@@ -18,8 +18,8 @@ void MainFunc ()
 	HAL_LTDC_SetAddress(&hltdc,(uint32_t)&RGB,0);  // запускаем модуль LTDC (железный)
 	Graphics_Init(&ds); //инит библиотеки (из структуры ds)
 
-	Fill_Display(green);
-	HAL_Delay(1000);
+	//Fill_Display(green);
+	//HAL_Delay(1000);
 
 	D_Fill_Rectangle kv;
 	D_FramePanel pan;
@@ -36,6 +36,10 @@ void MainFunc ()
 	D_HGradient hgr;
 	D_DualHGradient dhgr;
 	D_DualVGradient dvgr;
+    D_Label lb;
+    D_Form fr;
+    D_Button bt;
+    D_HGradientForm hfr;
 
 
 	kv.X1 = 200;
@@ -71,8 +75,8 @@ void MainFunc ()
 
 	p.X1 = 200;
 	p.X2 = 400;
-	p.Y1 = 5;
-	p.Y2 = 15;
+	p.Y1 = 30;
+	p.Y2 = 40;
 	p.StartValue = 0;
 	p.StopValue = 10;
 	p.CurrentValue = 6;
@@ -84,7 +88,7 @@ void MainFunc ()
 
 	pa.X1 = 30;
 	pa.X2 = 50;
-	pa.Y1 = 10;
+	pa.Y1 = 30;
 	pa.Y2 = 262;
 	pa.StartValue = 0;
 	pa.StopValue = 10;
@@ -112,8 +116,8 @@ void MainFunc ()
 
 	tr.X1 = 200;
 	tr.X2 = 400;
-	tr.Y1 = 20;
-	tr.Y2 = 25;
+	tr.Y1 = 45;
+	tr.Y2 = 50;
 	tr.StartValue = 0;
 	tr.StopValue = 10;
 	tr.FrameColor = blue;
@@ -124,7 +128,7 @@ void MainFunc ()
 
 	tra.X1 = 20;
 	tra.X2 = 25;
-	tra.Y1 = 10;
+	tra.Y1 = 35;
 	tra.Y2 = 262;
 	tra.StartValue = 0;
 	tra.StopValue = 10;
@@ -168,9 +172,45 @@ void MainFunc ()
 	dvgr.ColorC = green;
 	dvgr.ColorL = blue;
 
+    lb.X = 80;
+    lb.Y = 90;
+    lb.Color = white;
+    lb.ClickedColor = gray;
 
+    fr.X1 = 2;
+    fr.X2 = 479;
+    fr.Y1 = 2;
+    fr.Y2 = 271;
+    fr.YBar = 25;
+    fr.BarColor = blue;
+    fr.FrameColor = red;
+    fr.TextColor = green;
+    fr.Thickness = 1;
+    fr.WindowColor = white;
 
-    char i = 0;
+    bt.FillColor = gray2;
+    bt.FrameColor = black;
+    bt.PressedColor = white;
+    bt.TextColor = black;
+    bt.Thickness = 1;
+    bt.X1 = 220;
+    bt.X2 = 310;
+    bt.Y1 = 90;
+    bt.Y2 = 120;
+
+    hfr.X1 = 2;
+    hfr.X2 = 479;
+    hfr.Y1 = 2;
+    hfr.Y2 = 271;
+    hfr.YBar = 25;
+    hfr.BarColorH = blue;
+    hfr.BarColorL = lightBlue3;
+    hfr.FrameColor = red;
+    hfr.TextColor = green;
+    hfr.Thickness = 1;
+    hfr.WindowColor = white;
+
+    uint16 i = 0;
 
 	while(1) // бесконечный цикл
 	{
@@ -203,6 +243,9 @@ void MainFunc ()
 		hgr.Y1 = 190;
 		hgr.Y2 = 262;
 
+		lb.X = 80;
+		lb.Y = 90;
+
 		for(i = 0; i < 11; i++)
 		{
 			p.CurrentValue = i;
@@ -210,7 +253,11 @@ void MainFunc ()
 			tr.CurrentValue = i;
 			tra.CurrentValue = i;
 
+			lb.Y += 2;
+
 			Fill_Display(darkBlue3);
+			LCD_Form(&fr, "Form1");
+            LCD_HGradientForm(&hfr, "HForm1");
 		    LCD_ProgressBar(&p);
 		    LCD_ProgressBar(&pa);
 		    LCD_TrackBar(&tr);
@@ -219,6 +266,8 @@ void MainFunc ()
 		    LCD_HGradient(&hgr);
 		    LCD_DualHGradient(&dhgr);
 		    LCD_DualVGradient(&dvgr);
+		    LCD_Label(&lb, "V & Iu = Love");
+		    LCD_Button(&bt, "Butt1");
 		    HAL_Delay(800);
 		}
 		HAL_Delay(300);
@@ -238,6 +287,7 @@ void MainFunc ()
 		HAL_Delay(5000);
 
 		Fill_Display(green);
+		LCD_Form(&fr, "Form1");
 		LCD_HGradient(&hgr);
 		HAL_Delay(5000);
 
