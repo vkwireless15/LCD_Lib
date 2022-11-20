@@ -138,8 +138,6 @@ void FramePanel(uint32 BorderColor, uint32 FloodColor, int16 x1, int16 x2, int16
     VLine(BorderColor,x1,y1,y2,Tolshina + 1);
     VLine(BorderColor,x2 - Tolshina,y1,y2,Tolshina + 1);
 }
-
-
 void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)//++
 {
    uint16 y = 0, k = 0;
@@ -286,7 +284,6 @@ void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)
 	   }
    }
 }
-
 void Circle (int16 x1, int16 y1, int16 r,uint32 Color, uint16 Tolshina)
 {
     int x = -r, y = 0, err = 2-2*r, e2;
@@ -303,7 +300,6 @@ void Circle (int16 x1, int16 y1, int16 r,uint32 Color, uint16 Tolshina)
 		if (e2 > x) err += ++x*2+1;
 	} while (x <= 0);
 }
-
 void FillCircle(uint16 x1, uint16 y1, uint16 r, uint32 Color)//
 {
   uint16 r1 = r;
@@ -313,117 +309,6 @@ void FillCircle(uint16 x1, uint16 y1, uint16 r, uint32 Color)//
       r1--;
   }
 }
-
-void Progress_bar(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint32 BorderColor, uint32 FloodColor, uint32 BarColor, uint16 Tolshina, uint8 Orient)
-{
-  uint16 Tr = Tolshina - 1;
-  float STPOS;
-  float POSCOUNT;
-  uint16 XPOS = 0, YPOS = 0;
-  uint16 POSN = CurrPos - StartPos;
-
-  if(Orient == Horisontal)
-  {
-      if(CurrPos == 1)
-      {
-         STPOS = StopPos - StartPos;
-         POSCOUNT = (XEnd - XStart)/STPOS;
-         XPOS = (uint16)((POSN - StartPos * POSCOUNT)+ XStart + 1 + Tr);
-      }
-
-      if(CurrPos == StartPos)
-      {
-         STPOS = StopPos - StartPos;
-         POSCOUNT = (XEnd - XStart)/STPOS;
-         XPOS = (uint16)((POSN * POSCOUNT)+ XStart + Tr);
-      }
-
-      if(CurrPos > StartPos)
-      {
-         STPOS = StopPos - StartPos;
-         POSCOUNT = (XEnd - XStart)/STPOS;
-         XPOS = (uint16)((POSN * POSCOUNT)+ XStart - Tr);
-      }
-  }
-  else
-  {
-      STPOS = StopPos - StartPos;
-      POSCOUNT = (YEnd - YStart)/STPOS;
-      YPOS = (uint16)(YEnd - (POSN * POSCOUNT));
-      YPOS += Tolshina;
-  }
-
-  if(Orient == Horisontal)
-  {
-      FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Tolshina);
-      Fill_Rectangle(BarColor,XStart + 1 + Tr,XPOS-1,YStart + 1 + Tr,YEnd - Tr - 1);
-  }
-  else
-  {
-	  FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Tolshina);
-	  Fill_Rectangle(BarColor, XStart + 1 + Tr,XEnd - Tr - 1, YPOS, YEnd - Tr - 1);
-  }
-}
-
-void CheckBox(int16 x1, int16 x2, int16 y1, int16 y2, uint32 BrColor, uint32 BackColor, uint32 ChColor, uint8 Checked)
-{
-	FramePanel(BrColor,BackColor,x1,x2,y1,y2,2);
-	if(Checked == 1)
-	{
-		Line(x1+3, y1+6, x1+((x2-x1)/2), y2-3, ChColor, 2);
-		Line(x1+((x2-x1)/2), y2-3, x2-3, y1+3, ChColor, 2);
-	}
-}
-
-void TrackBar(int16 XStart, int16 XEnd, int16 YStart, int16 YEnd, int16 StartPos, int16 StopPos, int16 CurrPos, int32 BorderColor, uint32 FloodColor, uint32 TrackerColor, uint8 Orient, uint8 Rad)
-{
-	  float STPOS;
-	  float POSCOUNT;
-	  uint16 XPOS = 0, YPOS = 0;
-	  uint16 POSN = CurrPos - StartPos;
-
-	  if(Orient == Horisontal)
-	  {
-	      if(CurrPos == 1)
-	      {
-	         STPOS = StopPos - StartPos;
-	         POSCOUNT = (XEnd - XStart)/STPOS;
-	         XPOS = (uint16)((POSN - StartPos * POSCOUNT)+ XStart + 1);
-	      }
-
-	      if(CurrPos == StartPos)
-	      {
-	         STPOS = StopPos - StartPos;
-	         POSCOUNT = (XEnd - XStart)/STPOS;
-	         XPOS = (uint16)((POSN * POSCOUNT)+ XStart);
-	      }
-
-	      if(CurrPos > StartPos)
-	      {
-	         STPOS = StopPos - StartPos;
-	         POSCOUNT = (XEnd - XStart)/STPOS;
-	         XPOS = (uint16)((POSN * POSCOUNT)+ XStart);
-	      }
-	  }
-	  else
-	  {
-	      STPOS = StopPos - StartPos;
-	      POSCOUNT = (YEnd - YStart)/STPOS;
-	      YPOS = (uint16)(YEnd - (POSN * POSCOUNT));
-	  }
-
-	  if(Orient == Horisontal)
-	  {
-	      FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,1);
-	      FillCircle(XPOS,YStart + (YEnd - YStart) / 2, Rad, TrackerColor);
-	  }
-	  else
-	  {
-		  FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,1);
-		  FillCircle(XStart + ((XEnd - XStart) / 2),YPOS,Rad,TrackerColor);
-	  }
-}
-
 void VGradA(int16 x1, int16 x2, int16 y1, int16 y2, int32 ColorH, int32 ColorL)//
 {
     float HRed, HGreen, HBlue;
@@ -506,7 +391,6 @@ void VGradA(int16 x1, int16 x2, int16 y1, int16 y2, int32 ColorH, int32 ColorL)/
      }
    }
 }
-
 void HGradA(int16 x1, int16 x2, int16 y1, int16 y2, int32 ColorH, int32 ColorL)//++
 {
     float HRed, HGreen, HBlue;
@@ -592,7 +476,6 @@ void HGradA(int16 x1, int16 x2, int16 y1, int16 y2, int32 ColorH, int32 ColorL)/
      }
    }
 }
-
 void VGradB(int16 x1, int16 x2, int16 y1, int16 y2, uint32 ColorH, uint32 ColorC, uint32 ColorL)//++
 {
  VGradA(x1,x2,y1,y1+((y2 - y1)/2),ColorH,ColorC);
@@ -603,7 +486,106 @@ void HGradB(int16 x1, int16 x2, int16 y1, int16 y2, uint32 ColorH, uint32 ColorC
  HGradA(x1,x1+((x2 - x1)/2),y1,y2,ColorH,ColorC);
  HGradA(x1+((x2 - x1)/2),x2,y1,y2,ColorC,ColorL);
 }
+void Progress_bar(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint32 BorderColor, uint32 FloodColor, uint32 BarColor, uint16 Tolshina, uint8 Orient)
+{
+  uint16 Tr = Tolshina - 1;
+  float STPOS;
+  float POSCOUNT;
+  uint16 XPOS = 0, YPOS = 0;
+  uint16 POSN = CurrPos - StartPos;
 
+  if(Orient == Horisontal)
+  {
+      if(CurrPos == 1)
+      {
+         STPOS = StopPos - StartPos;
+         POSCOUNT = (XEnd - XStart)/STPOS;
+         XPOS = (uint16)((POSN - StartPos * POSCOUNT)+ XStart + 1 + Tr);
+      }
+
+      if(CurrPos == StartPos)
+      {
+         STPOS = StopPos - StartPos;
+         POSCOUNT = (XEnd - XStart)/STPOS;
+         XPOS = (uint16)((POSN * POSCOUNT)+ XStart + Tr);
+      }
+
+      if(CurrPos > StartPos)
+      {
+         STPOS = StopPos - StartPos;
+         POSCOUNT = (XEnd - XStart)/STPOS;
+         XPOS = (uint16)((POSN * POSCOUNT)+ XStart - Tr);
+      }
+  }
+  else
+  {
+      STPOS = StopPos - StartPos;
+      POSCOUNT = (YEnd - YStart)/STPOS;
+      YPOS = (uint16)(YEnd - (POSN * POSCOUNT));
+      YPOS += Tolshina;
+  }
+
+  if(Orient == Horisontal)
+  {
+      FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Tolshina);
+      Fill_Rectangle(BarColor,XStart + 1 + Tr,XPOS-1,YStart + 1 + Tr,YEnd - Tr - 1);
+  }
+  else
+  {
+	  FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Tolshina);
+	  Fill_Rectangle(BarColor, XStart + 1 + Tr,XEnd - Tr - 1, YPOS, YEnd - Tr - 1);
+  }
+}
+void Progress_bar_gradientB_V(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint32 BorderColor, uint32 FloodColor, uint32 BarColorH, uint32 BarColorC, uint16 Tolshina, uint8 Orient)//++
+{
+	  uint16 Tr = Tolshina - 1;
+	  float STPOS;
+	  float POSCOUNT;
+	  uint16 XPOS = 0, YPOS = 0;
+	  uint16 POSN = CurrPos - StartPos;
+
+	  if(Orient == Horisontal)
+	  {
+	      if(CurrPos == 1)
+	      {
+	         STPOS = StopPos - StartPos;
+	         POSCOUNT = (XEnd - XStart)/STPOS;
+	         XPOS = (uint16)((POSN - StartPos * POSCOUNT)+ XStart + 1 + Tr);
+	      }
+
+	      if(CurrPos == StartPos)
+	      {
+	         STPOS = StopPos - StartPos;
+	         POSCOUNT = (XEnd - XStart)/STPOS;
+	         XPOS = (uint16)((POSN * POSCOUNT)+ XStart + Tr);
+	      }
+
+	      if(CurrPos > StartPos)
+	      {
+	         STPOS = StopPos - StartPos;
+	         POSCOUNT = (XEnd - XStart)/STPOS;
+	         XPOS = (uint16)((POSN * POSCOUNT)+ XStart);
+	      }
+	  }
+	  else
+	  {
+	      STPOS = StopPos - StartPos;
+	      POSCOUNT = (YEnd - YStart)/STPOS;
+	      YPOS = (uint16)(YEnd - (POSN * POSCOUNT));
+	      YPOS += Tolshina;
+	  }
+
+	  if(Orient == Horisontal)
+	  {
+	      FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Tolshina);
+	      VGradB(XStart + 1 + Tr,XPOS-1,YStart + 1 + Tr,YEnd - 1 - Tr,BarColorH,BarColorC,BarColorH);
+	  }
+	  else
+	  {
+		  FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Tolshina);
+		  VGradB(XStart + 1 + Tr, XEnd - Tr - 1, YPOS, YEnd - Tr - 1, BarColorH, BarColorC, BarColorH);
+	  }
+}
 uint8 Inverse(uint8 S)
 {
 	uint8 K = 0;
@@ -621,7 +603,6 @@ uint8 Inverse(uint8 S)
 	}
 	return K;
 }
-
 void Symbol(uint16 X, uint16 Y, uint16 *NextX, uint16 *NextY, uint8 *CharWt, uint8 *CharHt, uint32 Color, char Symbol)
 {
 	uint8 FontH = calibri[1];
@@ -717,6 +698,98 @@ void Symbol(uint16 X, uint16 Y, uint16 *NextX, uint16 *NextY, uint8 *CharWt, uin
 		}
 	}
 }
+void Label (uint16 X, uint16 Y, uint32 Color, char String[])//++
+{
+  uint16 Nx = 0, Ny = 0;
+  uint16 Sym = 0;
+  uint8 ChW = 0;
+  uint8 ChH = 0;
+  while(String[Sym]!=0)
+  {
+  	Sym++;
+  }
+  for(uint16 i = 0; i<Sym; i++)
+  {
+  	if(String[i]>= 0x20 && String[i]<= 0xFF)
+  	{
+
+  		Symbol(X, Y, &Nx, &Ny,&ChW,&ChH, Color, String[i]);
+
+  		if(X + ChW < DispWidth)
+  		{
+  		   X = Nx;
+  	    }
+  		else
+  		{
+  			break;
+  		}
+
+  	}
+  }
+
+}
+void TextBox(uint16 x1, uint16 x2, uint16 y1,uint16 Tolshina, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[])//++
+{
+  FramePanel(BColor,FloodColor,x1, x2, y1, y1+19, Tolshina);
+  Label(x1+2,y1+1, TextColor, Text);
+}
+void CheckBox(int16 x1, int16 x2, int16 y1, int16 y2, uint32 BrColor, uint32 BackColor, uint32 ChColor, uint8 Checked)
+{
+	FramePanel(BrColor,BackColor,x1,x2,y1,y2,2);
+	if(Checked == 1)
+	{
+		Line(x1+3, y1+6, x1+((x2-x1)/2), y2-3, ChColor, 2);
+		Line(x1+((x2-x1)/2), y2-3, x2-3, y1+3, ChColor, 2);
+	}
+}
+void TrackBar(int16 XStart, int16 XEnd, int16 YStart, int16 YEnd, int16 StartPos, int16 StopPos, int16 CurrPos, int32 BorderColor, uint32 FloodColor, uint32 TrackerColor, uint8 Orient, uint8 Rad)
+{
+	  float STPOS;
+	  float POSCOUNT;
+	  uint16 XPOS = 0, YPOS = 0;
+	  uint16 POSN = CurrPos - StartPos;
+
+	  if(Orient == Horisontal)
+	  {
+	      if(CurrPos == 1)
+	      {
+	         STPOS = StopPos - StartPos;
+	         POSCOUNT = (XEnd - XStart)/STPOS;
+	         XPOS = (uint16)((POSN - StartPos * POSCOUNT)+ XStart + 1);
+	      }
+
+	      if(CurrPos == StartPos)
+	      {
+	         STPOS = StopPos - StartPos;
+	         POSCOUNT = (XEnd - XStart)/STPOS;
+	         XPOS = (uint16)((POSN * POSCOUNT)+ XStart);
+	      }
+
+	      if(CurrPos > StartPos)
+	      {
+	         STPOS = StopPos - StartPos;
+	         POSCOUNT = (XEnd - XStart)/STPOS;
+	         XPOS = (uint16)((POSN * POSCOUNT)+ XStart);
+	      }
+	  }
+	  else
+	  {
+	      STPOS = StopPos - StartPos;
+	      POSCOUNT = (YEnd - YStart)/STPOS;
+	      YPOS = (uint16)(YEnd - (POSN * POSCOUNT));
+	  }
+
+	  if(Orient == Horisontal)
+	  {
+	      FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,1);
+	      FillCircle(XPOS,YStart + (YEnd - YStart) / 2, Rad, TrackerColor);
+	  }
+	  else
+	  {
+		  FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,1);
+		  FillCircle(XStart + ((XEnd - XStart) / 2),YPOS,Rad,TrackerColor);
+	  }
+}
 uint32 SymbolLength(char String[])
 {
 	uint8 FirstChar = calibri[2];
@@ -789,36 +862,6 @@ void Get1251(char Str[])
 		 }
 	 }
 }
-void Label (uint16 X, uint16 Y, uint32 Color, char String[])//++
-{
-  uint16 Nx = 0, Ny = 0;
-  uint16 Sym = 0;
-  uint8 ChW = 0;
-  uint8 ChH = 0;
-  while(String[Sym]!=0)
-  {
-  	Sym++;
-  }
-  for(uint16 i = 0; i<Sym; i++)
-  {
-  	if(String[i]>= 0x20 && String[i]<= 0xFF)
-  	{
-
-  		Symbol(X, Y, &Nx, &Ny,&ChW,&ChH, Color, String[i]);
-
-  		if(X + ChW < DispWidth)
-  		{
-  		   X = Nx;
-  	    }
-  		else
-  		{
-  			break;
-  		}
-
-  	}
-  }
-
-}
 void Form(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 TolshinaB, uint32 ColorL, uint32 ColorS, uint32 ColorW,uint32 ColorT,char FormName[])//++
 {
   uint16 k = TolshinaB - 1,txty;
@@ -844,15 +887,8 @@ void Button(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 TolshinaB, uint32
 }
 void GradientFormA(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 TolshinaB, uint32 ColorL, uint32 ColorSH, uint32 ColorSL, uint32 ColorW,uint32 ColorT,char FormName[])//++
 {
-  uint16 k = TolshinaB - 1,txty, g = 0;
-  txty = y1+((y1+y_S - y1)/2 - 8);
-  for(int i = 0 ; i<50; i++)
-  {
-    if(FormName[i] >= 0x20 && FormName[i] <= 0x7f)
-    {g++;}
-    else
-    {i = 50;}
-  }
+  uint16 k = TolshinaB - 1,txty;
+  txty = y1+(y_S / 2 - 8);
   Fill_Rectangle(ColorW,x1,x2,y1,y2);
   HGradA(x1,x2,y1,y1+y_S,ColorSH,ColorSL);
   VLine(ColorL,x1,y1,y2,TolshinaB);
@@ -862,6 +898,20 @@ void GradientFormA(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint1
   HLine(ColorL,x1+k,x2 - k,y_S+y1,TolshinaB);
   Label(x1+k+2,txty+k,ColorT,FormName);
 }
+void GradientFormB(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 TolshinaB, uint32 ColorL, uint32 ColorSH, uint32 ColorSL, uint32 ColorW,uint32 ColorT,char FormName[])//++
+{
+  uint16 k = TolshinaB - 1,txty;
+  txty = y1+(y_S/2 - 8);
+  Fill_Rectangle(ColorW,x1,x2,y1,y2);
+  VGradA(x1,x2,y1,y1+y_S,ColorSH,ColorSL);
+  VLine(ColorL,x1,y1,y2,TolshinaB);
+  VLine(ColorL,x2-k,y1,y2,TolshinaB);
+  HLine(ColorL,x1,x2,y1,TolshinaB);
+  HLine(ColorL,x1,x2,y2-k,TolshinaB);
+  HLine(ColorL,x1+k,x2 - k,y_S+y1,TolshinaB);
+  Label(x1+k+2,txty+k,ColorT,FormName);
+}
+
 
 //для внешнего пользования(прикладных программ) Обработка касаний, координатных штучек
 
@@ -873,12 +923,10 @@ void LCD_HLine(D_HLine *hline)
 {
 	HLine(hline->Color, hline->X1, hline->X2, hline->Y1, hline->Thickness);
 }
-
 void LCD_VLine(D_VLine *vline)
 {
 	VLine(vline->Color, vline->X1, vline->Y1, vline->Y2, vline->Thickness);
 }
-
 uint8 LCD_FramePanel(D_FramePanel *framePanel)
 {
 	//uint8 TouchDet = GetCursorPosition();
@@ -909,27 +957,22 @@ uint8 LCD_FramePanel(D_FramePanel *framePanel)
 	} */
 	return NotClicked;
 }
-
 void LCD_Circle(D_Circle *circle)
 {
 	Circle(circle->X1, circle->Y1, circle->R, circle->Color, circle->Thickness);
 }
-
 void LCD_Line(D_Line *line)
 {
     Line(line->X1, line->Y1, line->X2, line->Y2, line->Color, line->Thickness);
 }
-
 void LCD_FillCircle(D_FillCircle *fillCircle)
 {
 	FillCircle(fillCircle->X1, fillCircle->Y1, fillCircle->R, fillCircle->Color);
 }
-
 void LCD_ProgressBar(D_ProgressBar *ProgressBar)
 {
 	Progress_bar(ProgressBar->X1, ProgressBar->X2, ProgressBar->Y1, ProgressBar->Y2, ProgressBar->StartValue, ProgressBar->StopValue, ProgressBar->CurrentValue, ProgressBar->FrameColor, ProgressBar->FillColor, ProgressBar->BarColor, ProgressBar->Thickness, ProgressBar->Orientation);
 }
-
 uint8 LCD_CheckBox(D_CheckBox *ctrl)
 {
 //	uint8 TouchDet = GetCursorPosition();
@@ -963,7 +1006,6 @@ uint8 LCD_CheckBox(D_CheckBox *ctrl)
 	}*/
 	return NotClicked;
 }
-
 uint8 LCD_TrackBar(D_TrackBar *trackBar)
 {
 //	uint8 TouchDet = GetCursorPosition();
@@ -1012,7 +1054,6 @@ uint8 LCD_TrackBar(D_TrackBar *trackBar)
 //	}
 	return NotClicked;
 }
-
 uint8 LCD_VGradient(D_VGradient *VGradient)
 {
 	//uint8 TouchDet = GetCursorPosition();
@@ -1043,7 +1084,6 @@ uint8 LCD_VGradient(D_VGradient *VGradient)
 //	}
 	return NotClicked;
 }
-
 uint8 LCD_HGradient(D_HGradient *HGradient)
 {
 //	uint8 TouchDet = GetCursorPosition();
@@ -1225,3 +1265,69 @@ uint8 LCD_HGradientForm(D_HGradientForm *HGradientForm, char Text[])
 //	}
 	return NotClicked;
 }
+uint8 LCD_VGradientForm(D_VGradientForm *VGradientForm, char Text[])
+{
+	//uint8 TouchDet = GetCursorPosition();
+	GradientFormB(VGradientForm->X1, VGradientForm->X2, VGradientForm->Y1, VGradientForm->Y2, VGradientForm->YBar, VGradientForm->Thickness, VGradientForm->FrameColor, VGradientForm->BarColorH, VGradientForm->BarColorL, VGradientForm->WindowColor, VGradientForm->TextColor, Text);
+//	if(CursorX >= VGradientForm->X1 && CursorX <= VGradientForm->X2 && CursorY >= VGradientForm->Y1 && CursorY <= VGradientForm->YBar && TouchDet == Clicked)
+//	{
+//		VGradientForm->Is_pressed = Clicked;
+//	 	return Clicked;
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= VGradientForm->X1 && CursorX <= VGradientForm->X2 && CursorY >= VGradientForm->Y1 && CursorY <= VGradientForm->YBar && TouchDet == NotClicked)
+//		    {
+//		    	if(VGradientForm->Is_pressed == Clicked)
+//		    	{
+//		    		VGradientForm->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			VGradientForm->Is_pressed = NotClicked;
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}
+void LCD_ProgressBarVGradient(D_ProgressBarVGradient *ProgressBarVGradient)
+{
+   Progress_bar_gradientB_V(ProgressBarVGradient->X1, ProgressBarVGradient->X2, ProgressBarVGradient->Y1, ProgressBarVGradient->Y2, ProgressBarVGradient->StartValue, ProgressBarVGradient->StopValue, ProgressBarVGradient->CurrentValue, ProgressBarVGradient->FrameColor, ProgressBarVGradient->FillColor, ProgressBarVGradient->BarColorH, ProgressBarVGradient->BarColorC, ProgressBarVGradient->Thickness, ProgressBarVGradient->Orientation);
+}
+uint8 LCD_TextBox(D_TextBox *textBox, char Text[])
+{
+//	uint8 TouchDet = GetCursorPosition();
+	TextBox(textBox->X1, textBox->X2, textBox->Y1, textBox->Thickness, textBox->FrameColor, textBox->FillColor, textBox->TextColor, Text);
+//	if(CursorX >= textBox->X1 && CursorX <= textBox->X2 && CursorY >= textBox->Y1 && CursorY <= textBox->Y1+7 && TouchDet == Clicked)
+//	{
+//		textBox->Is_pressed = Clicked;
+//	 	return Clicked;
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= textBox->X1 && CursorX <= textBox->X2 && CursorY >= textBox->Y1 && CursorY <= textBox->Y1+7 && TouchDet == NotClicked)
+//		    {
+//		    	if(textBox->Is_pressed == Clicked)
+//		    	{
+//		    		textBox->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			textBox->Is_pressed = NotClicked;
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+
+}
+

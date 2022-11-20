@@ -40,6 +40,9 @@ void MainFunc ()
     D_Form fr;
     D_Button bt;
     D_HGradientForm hfr;
+    D_VGradientForm vfr;
+    D_ProgressBarVGradient pvg;
+    D_TextBox tb;
 
 
 	kv.X1 = 200;
@@ -210,6 +213,36 @@ void MainFunc ()
     hfr.Thickness = 1;
     hfr.WindowColor = white;
 
+    vfr.X1 = 2;
+    vfr.X2 = 479;
+    vfr.Y1 = 2;
+    vfr.Y2 = 271;
+    vfr.YBar = 25;
+    vfr.BarColorL = blue;
+    vfr.BarColorH = lightBlue4;
+    vfr.FrameColor = red;
+    vfr.TextColor = green;
+    vfr.Thickness = 1;
+    vfr.WindowColor = white;
+
+
+	pvg.X1 = 200;
+	pvg.X2 = 400;
+	pvg.Y1 = 70;
+	pvg.Y2 = 90;
+	pvg.StartValue = 0;
+	pvg.StopValue = 10;
+	pvg.CurrentValue = 6;
+	pvg.Thickness = 1;
+	pvg.FillColor = black;
+	pvg.FrameColor = green;
+	pvg.BarColorC = red;
+	pvg.BarColorH = blue;
+	pvg.Orientation = Horisontal;
+
+
+
+
     uint16 i = 0;
 
 	while(1) // бесконечный цикл
@@ -252,14 +285,17 @@ void MainFunc ()
 			pa.CurrentValue = i;
 			tr.CurrentValue = i;
 			tra.CurrentValue = i;
+			pvg.CurrentValue = i;
 
 			lb.Y += 2;
 
 			Fill_Display(darkBlue3);
-			LCD_Form(&fr, "Form1");
-            LCD_HGradientForm(&hfr, "HForm1");
+			//LCD_Form(&fr, "Form1");
+            //LCD_HGradientForm(&hfr, "HForm1");
+            LCD_VGradientForm(&vfr, "VForm1");
 		    LCD_ProgressBar(&p);
 		    LCD_ProgressBar(&pa);
+		    LCD_ProgressBarVGradient(&pvg);
 		    LCD_TrackBar(&tr);
 		    LCD_TrackBar(&tra);
 		    LCD_VGradient(&vgr);

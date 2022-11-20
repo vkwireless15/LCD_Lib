@@ -400,41 +400,24 @@ typedef struct
 	char Is_pressed;
 	char Unvisible;
 } D_HGradientForm;
-/*typedef struct
-{
-	unsigned int X1;
-	unsigned int X2;
-	unsigned int Y1;
-	unsigned int Y2;
-	unsigned int StartValue;
-	unsigned int StopValue;
-	unsigned int CurrentValue;
-	unsigned int FrameColor;
-	unsigned int FillColor;
-	unsigned int BarColor;
-	char Thickness;
-	char Orientation;
-	char Is_pressed;
-	char Unvisible;
-} D_ProgressBar;
+
 typedef struct
 {
 	unsigned int X1;
 	unsigned int X2;
 	unsigned int Y1;
 	unsigned int Y2;
-	unsigned int StartValue;
-	unsigned int StopValue;
-	unsigned int CurrentValue;
-	unsigned int FrameColor;
-	unsigned int FillColor;
-	unsigned int BarColorH;
-	unsigned int BarColorC;
+	unsigned int YBar;
 	char Thickness;
-	char Orientation;
+	unsigned int FrameColor;
+	unsigned int BarColorH;
+	unsigned int BarColorL;
+	unsigned int WindowColor;
+	unsigned int TextColor;
 	char Is_pressed;
 	char Unvisible;
-}D_ProgressBarHGradient;
+} D_VGradientForm;
+
 typedef struct
 {
 	unsigned int X1;
@@ -454,23 +437,40 @@ typedef struct
 	char Unvisible;
 }D_ProgressBarVGradient;
 
-
 typedef struct
 {
 	unsigned int X1;
 	unsigned int X2;
 	unsigned int Y1;
-	unsigned int Y2;
-	unsigned int YBar;
-	char Thickness;
+	unsigned int Thickness;
 	unsigned int FrameColor;
-	unsigned int BarColorH;
-	unsigned int BarColorL;
-	unsigned int WindowColor;
+	unsigned int FillColor;
 	unsigned int TextColor;
 	char Is_pressed;
 	char Unvisible;
-} D_VGradientForm;
+} D_TextBox;
+
+/*typedef struct
+{
+	unsigned int X1;
+	unsigned int X2;
+	unsigned int Y1;
+	unsigned int Y2;
+	unsigned int StartValue;
+	unsigned int StopValue;
+	unsigned int CurrentValue;
+	unsigned int FrameColor;
+	unsigned int FillColor;
+	unsigned int BarColor;
+	char Thickness;
+	char Orientation;
+	char Is_pressed;
+	char Unvisible;
+} D_ProgressBar;
+
+
+
+
 typedef struct
 {
 	unsigned int X1;
@@ -535,18 +535,7 @@ typedef struct
 	char Is_pressed;
 	char Unvisible;
 } D_GradientButton;
-typedef struct
-{
-	unsigned int X1;
-	unsigned int X2;
-	unsigned int Y1;
-	unsigned int Thickness;
-	unsigned int FrameColor;
-	unsigned int FillColor;
-	unsigned int TextColor;
-	char Is_pressed;
-	char Unvisible;
-} D_TextBox;
+
 typedef struct
 {
 	unsigned int X1;
@@ -708,6 +697,9 @@ void LCD_Label(D_Label *label, char Text[]);
 uint8 LCD_Button(D_Button *button, char Text[]);
 uint8 LCD_Form(D_Form *form, char Text[]);
 uint8 LCD_HGradientForm(D_HGradientForm *HGradientForm, char Text[]);
+uint8 LCD_VGradientForm(D_VGradientForm *VGradientForm, char Text[]);
+void LCD_ProgressBarVGradient(D_ProgressBarVGradient *ProgressBarVGradient);
+uint8 LCD_TextBox(D_TextBox *textBox, char Text[]);
 
 void Show_to_layer(uint8 Layer);
 
