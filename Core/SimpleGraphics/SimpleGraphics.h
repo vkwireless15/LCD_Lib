@@ -280,6 +280,7 @@ typedef struct
 	unsigned int BackColor;
 	unsigned int CheckColor;
 	char Checked;
+	unsigned int TextColor;
 	char Is_pressed;
 	char Unvisible;
 } D_CheckBox;
@@ -449,6 +450,21 @@ typedef struct
 	char Is_pressed;
 	char Unvisible;
 } D_TextBox;
+
+typedef struct
+{
+	unsigned int X;
+	unsigned int Y;
+	unsigned int Radius;
+	unsigned int ExCirColor;
+	unsigned int InCirColor;
+	unsigned int BackColor;
+	unsigned int TextColor;
+	char Transp_key;
+	char Checked;
+	char Is_pressed;
+	char Unvisible;
+} D_RadioButton;
 
 /*typedef struct
 {
@@ -687,7 +703,7 @@ void LCD_Line(D_Line *line);
 void LCD_Circle(D_Circle *circle);
 void LCD_FillCircle(D_FillCircle *fillCircle);
 void LCD_ProgressBar(D_ProgressBar *ProgressBar);
-uint8 LCD_CheckBox(D_CheckBox *ctrl);
+uint8 LCD_CheckBox(D_CheckBox *ctrl, char Name[]);
 uint8 LCD_TrackBar(D_TrackBar *trackBar);
 uint8 LCD_VGradient(D_VGradient *VGradient);
 uint8 LCD_HGradient(D_HGradient *HGradient);
@@ -700,6 +716,7 @@ uint8 LCD_HGradientForm(D_HGradientForm *HGradientForm, char Text[]);
 uint8 LCD_VGradientForm(D_VGradientForm *VGradientForm, char Text[]);
 void LCD_ProgressBarVGradient(D_ProgressBarVGradient *ProgressBarVGradient);
 uint8 LCD_TextBox(D_TextBox *textBox, char Text[]);
+uint8 LCD_RadioButton(D_RadioButton *RadioButton, char Name[]);
 
 void Show_to_layer(uint8 Layer);
 

@@ -733,14 +733,16 @@ void TextBox(uint16 x1, uint16 x2, uint16 y1,uint16 Tolshina, uint32 BColor, uin
   FramePanel(BColor,FloodColor,x1, x2, y1, y1+19, Tolshina);
   Label(x1+2,y1+1, TextColor, Text);
 }
-void CheckBox(int16 x1, int16 x2, int16 y1, int16 y2, uint32 BrColor, uint32 BackColor, uint32 ChColor, uint8 Checked)
+void CheckBox(int16 x1, int16 x2, int16 y1, int16 y2, uint32 BrColor, uint32 BackColor, uint32 ChColor, uint8 Checked, uint32 TextColor, char Name[])
 {
 	FramePanel(BrColor,BackColor,x1,x2,y1,y2,2);
 	if(Checked == 1)
 	{
+
 		Line(x1+3, y1+6, x1+((x2-x1)/2), y2-3, ChColor, 2);
 		Line(x1+((x2-x1)/2), y2-3, x2-3, y1+3, ChColor, 2);
 	}
+	Label(x2 + 3, y1, TextColor, Name);
 }
 void TrackBar(int16 XStart, int16 XEnd, int16 YStart, int16 YEnd, int16 StartPos, int16 StopPos, int16 CurrPos, int32 BorderColor, uint32 FloodColor, uint32 TrackerColor, uint8 Orient, uint8 Rad)
 {
@@ -911,6 +913,24 @@ void GradientFormB(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint1
   HLine(ColorL,x1+k,x2 - k,y_S+y1,TolshinaB);
   Label(x1+k+2,txty+k,ColorT,FormName);
 }
+void Radiobutton(uint16 x, uint16 y, uint16 Radius, uint32 ExCirColor, uint32 InCirColor, uint32 BackColor, uint8 Transp_key, uint16 Checked)
+{
+	if(Transp_key == 0)
+	{
+//		FramePanel(BackColor,x-Radius,x+Radius+1,y-Radius,y+Radius+1);
+	}
+
+	if(Checked == 1)
+	{
+		Circle(x,y,Radius,ExCirColor,2);
+		FillCircle(x,y,Radius - 4,InCirColor);
+
+	}
+	else
+	{
+		Circle(x,y,Radius,ExCirColor,2);
+	}
+}
 
 
 //для внешнего пользования(прикладных программ) Обработка касаний, координатных штучек
@@ -973,10 +993,13 @@ void LCD_ProgressBar(D_ProgressBar *ProgressBar)
 {
 	Progress_bar(ProgressBar->X1, ProgressBar->X2, ProgressBar->Y1, ProgressBar->Y2, ProgressBar->StartValue, ProgressBar->StopValue, ProgressBar->CurrentValue, ProgressBar->FrameColor, ProgressBar->FillColor, ProgressBar->BarColor, ProgressBar->Thickness, ProgressBar->Orientation);
 }
-uint8 LCD_CheckBox(D_CheckBox *ctrl)
+uint8 LCD_CheckBox(D_CheckBox *ctrl, char Name[])
 {
 //	uint8 TouchDet = GetCursorPosition();
-	CheckBox(ctrl->X1, ctrl->X2, ctrl->Y1, ctrl->Y2, ctrl->FrameColor, ctrl->BackColor, ctrl->CheckColor, ctrl->Checked);
+
+	CheckBox(ctrl->X1, ctrl->X2, ctrl->Y1, ctrl->Y2, ctrl->FrameColor, ctrl->BackColor, ctrl->CheckColor, ctrl->Checked, ctrl->TextColor, Name);
+
+
 	/*if(CursorX >= ctrl->X1 && CursorX <= ctrl->X2 && CursorY >= ctrl->Y1 && CursorY <= ctrl->Y2 && TouchDet == Clicked)
 	{
 		ctrl->Is_pressed = Clicked;
@@ -1330,4 +1353,40 @@ uint8 LCD_TextBox(D_TextBox *textBox, char Text[])
 	return NotClicked;
 
 }
+uint8 LCD_RadioButton(D_RadioButton *RadioButton, char Name[])
+{
+//	uint8 TouchDet = GetCursorPosition();
+	Radiobutton(RadioButton->X, RadioButton->Y, RadioButton->Radius, RadioButton->ExCirColor, RadioButton->InCirColor, RadioButton->BackColor,
+			RadioButton->Transp_key, RadioButton->Checked);
+	Label(RadioButton->X + RadioButton->Radius + 6, RadioButton->Y - (RadioButton->Radius * 2), RadioButton->TextColor, Name);
+//	if(CursorX >= RadioButton->X - RadioButton->Radius && CursorX <= RadioButton->X + RadioButton->Radius && CursorY >= RadioButton->Y - RadioButton->Radius && CursorY <= RadioButton->Y + RadioButton->Radius && TouchDet == Clicked)
+//	{
+//		RadioButton->Is_pressed = Clicked;
+//	 	return Clicked;
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= RadioButton->X - RadioButton->Radius && CursorX <= RadioButton->X + RadioButton->Radius && CursorY >= RadioButton->Y - RadioButton->Radius && CursorY <= RadioButton->Y + RadioButton->Radius && TouchDet == NotClicked)
+//		    {
+//		    	if(RadioButton->Is_pressed == Clicked)
+//		    	{
+//		    		if(RadioButton->Checked == 0)
+//		    		{RadioButton->Checked = 1;}
+//		    		else
+//		    		{RadioButton->Checked = 0;}
+//		    		RadioButton->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}
+
 
