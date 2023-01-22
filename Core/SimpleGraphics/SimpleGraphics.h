@@ -466,6 +466,25 @@ typedef struct
 	char Unvisible;
 } D_RadioButton;
 
+typedef struct
+{
+	unsigned int X1;
+	unsigned int X2;
+	unsigned int Y1;
+	unsigned int Y2;
+	unsigned int FillColor;
+	unsigned int FrameColor;
+	unsigned int Thickness;
+	unsigned int LinesColor;
+	unsigned int StepX;
+	unsigned int StepY;
+	unsigned int XMax;
+	unsigned int XMin;
+	unsigned int YMax;
+	unsigned int YMin;
+	char Unvisible;
+} D_Graph;
+
 /*typedef struct
 {
 	unsigned int X1;
@@ -717,6 +736,7 @@ uint8 LCD_VGradientForm(D_VGradientForm *VGradientForm, char Text[]);
 void LCD_ProgressBarVGradient(D_ProgressBarVGradient *ProgressBarVGradient);
 uint8 LCD_TextBox(D_TextBox *textBox, char Text[]);
 uint8 LCD_RadioButton(D_RadioButton *RadioButton, char Name[]);
+void LCD_Graph(D_Graph *Gr);
 
 void Show_to_layer(uint8 Layer);
 

@@ -733,17 +733,6 @@ void TextBox(uint16 x1, uint16 x2, uint16 y1,uint16 Tolshina, uint32 BColor, uin
   FramePanel(BColor,FloodColor,x1, x2, y1, y1+19, Tolshina);
   Label(x1+2,y1+1, TextColor, Text);
 }
-void CheckBox(int16 x1, int16 x2, int16 y1, int16 y2, uint32 BrColor, uint32 BackColor, uint32 ChColor, uint8 Checked, uint32 TextColor, char Name[])
-{
-	FramePanel(BrColor,BackColor,x1,x2,y1,y2,2);
-	if(Checked == 1)
-	{
-
-		Line(x1+3, y1+6, x1+((x2-x1)/2), y2-3, ChColor, 2);
-		Line(x1+((x2-x1)/2), y2-3, x2-3, y1+3, ChColor, 2);
-	}
-	Label(x2 + 3, y1, TextColor, Name);
-}
 void TrackBar(int16 XStart, int16 XEnd, int16 YStart, int16 YEnd, int16 StartPos, int16 StopPos, int16 CurrPos, int32 BorderColor, uint32 FloodColor, uint32 TrackerColor, uint8 Orient, uint8 Rad)
 {
 	  float STPOS;
@@ -913,6 +902,17 @@ void GradientFormB(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint1
   HLine(ColorL,x1+k,x2 - k,y_S+y1,TolshinaB);
   Label(x1+k+2,txty+k,ColorT,FormName);
 }
+void CheckBox(int16 x1, int16 x2, int16 y1, int16 y2, uint32 BrColor, uint32 BackColor, uint32 ChColor, uint8 Checked, uint32 TextColor, char Name[])
+{
+	FramePanel(BrColor,BackColor,x1,x2,y1,y2,2);
+	if(Checked == 1)
+	{
+
+		Line(x1+3, y1+6, x1+((x2-x1)/2), y2-3, ChColor, 2);
+		Line(x1+((x2-x1)/2), y2-3, x2-3, y1+3, ChColor, 2);
+	}
+	Label(x2 + 3, y1, TextColor, Name);
+}
 void Radiobutton(uint16 x, uint16 y, uint16 Radius, uint32 ExCirColor, uint32 InCirColor, uint32 BackColor, uint8 Transp_key, uint16 Checked)
 {
 	if(Transp_key == 0)
@@ -931,7 +931,49 @@ void Radiobutton(uint16 x, uint16 y, uint16 Radius, uint32 ExCirColor, uint32 In
 		Circle(x,y,Radius,ExCirColor,2);
 	}
 }
+void Graph(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 FillColor, uint32 FrColor, uint8 Tl, uint32 LinColor, uint32 StepX, uint32 StepY, int32 XMax, int32 XMin, int32 YMax, int32 YMin)
+{
+	float XC, YC, StX, StY, XX, YY;;
 
+	XC = ((float)XMax - (float)XMin) / (float)StepX;
+	YC = ((float)YMax - (float)YMin) / (float)StepY;
+	FramePanel(FrColor, FillColor, X1, X2, Y1, Y2, Tl);
+
+	StX = (((float)X2 - (float)Tl) - ((float)X1 + (float)Tl)) / XC;
+	StY = (((float)Y2 - (float)Tl) - ((float)Y1 + (float)Tl)) / YC;
+	XX = (float)X1 + (float)Tl;
+	YY = (float)Y2 - (float)Tl;
+
+	VLine(LinColor, (uint16)XX, Y1+Tl, Y2-Tl, 1);
+	XX += StX;
+	for(uint16 x = 0; x < XC; x++)
+	{
+		if(x < XC - 1)
+		{
+		    VLine(LinColor, (uint16)XX, Y1+Tl, Y2-Tl, 1);
+		    XX += StX;
+	    }
+		else
+		{
+		    VLine(LinColor, X2 - Tl, Y1+Tl, Y2-Tl, 1);
+		    XX += StX;
+		}
+	}
+	HLine(LinColor, X1+Tl, X2-Tl, (uint16)YY, 1);
+	YY -= StY;
+	for(uint16 y = 0; y < YC; y++)
+	{
+		if((uint16)YY >= Y1 && (uint16)YY <= Y1 + Tl)
+		{
+		    HLine(LinColor, X1+Tl, X2-Tl, Y1 + Tl, 1);
+	    }
+		else
+		{
+			HLine(LinColor, X1+Tl, X2-Tl, (uint16)YY, 1);
+		}
+		YY -= StY;
+	}
+}
 
 //для внешнего пользования(прикладных программ) Обработка касаний, координатных штучек
 
@@ -992,42 +1034,6 @@ void LCD_FillCircle(D_FillCircle *fillCircle)
 void LCD_ProgressBar(D_ProgressBar *ProgressBar)
 {
 	Progress_bar(ProgressBar->X1, ProgressBar->X2, ProgressBar->Y1, ProgressBar->Y2, ProgressBar->StartValue, ProgressBar->StopValue, ProgressBar->CurrentValue, ProgressBar->FrameColor, ProgressBar->FillColor, ProgressBar->BarColor, ProgressBar->Thickness, ProgressBar->Orientation);
-}
-uint8 LCD_CheckBox(D_CheckBox *ctrl, char Name[])
-{
-//	uint8 TouchDet = GetCursorPosition();
-
-	CheckBox(ctrl->X1, ctrl->X2, ctrl->Y1, ctrl->Y2, ctrl->FrameColor, ctrl->BackColor, ctrl->CheckColor, ctrl->Checked, ctrl->TextColor, Name);
-
-
-	/*if(CursorX >= ctrl->X1 && CursorX <= ctrl->X2 && CursorY >= ctrl->Y1 && CursorY <= ctrl->Y2 && TouchDet == Clicked)
-	{
-		ctrl->Is_pressed = Clicked;
-	 	return Clicked;
-	}
-	else
-	{
-		if(TouchDet == NotClicked)
-		{
-		    if(CursorX >= ctrl->X1 && CursorX <= ctrl->X2 && CursorY >= ctrl->Y1 && CursorY <= ctrl->Y2 && TouchDet == NotClicked)
-		    {
-		    	if(ctrl->Is_pressed == Clicked)
-		    	{
-		    		if(ctrl->Checked == 0)
-		    		{ctrl->Checked = 1;}
-		    		else
-		    		{ctrl->Checked = 0;}
-		    		ctrl->Is_pressed = NotClicked;
-			        return Unclicked;
-		    	}
-		    }
-	    }
-		else
-		{
-			return NotClicked;
-		}
-	}*/
-	return NotClicked;
 }
 uint8 LCD_TrackBar(D_TrackBar *trackBar)
 {
@@ -1353,6 +1359,42 @@ uint8 LCD_TextBox(D_TextBox *textBox, char Text[])
 	return NotClicked;
 
 }
+uint8 LCD_CheckBox(D_CheckBox *ctrl, char Name[])
+{
+//	uint8 TouchDet = GetCursorPosition();
+
+	CheckBox(ctrl->X1, ctrl->X2, ctrl->Y1, ctrl->Y2, ctrl->FrameColor, ctrl->BackColor, ctrl->CheckColor, ctrl->Checked, ctrl->TextColor, Name);
+
+
+	/*if(CursorX >= ctrl->X1 && CursorX <= ctrl->X2 && CursorY >= ctrl->Y1 && CursorY <= ctrl->Y2 && TouchDet == Clicked)
+	{
+		ctrl->Is_pressed = Clicked;
+	 	return Clicked;
+	}
+	else
+	{
+		if(TouchDet == NotClicked)
+		{
+		    if(CursorX >= ctrl->X1 && CursorX <= ctrl->X2 && CursorY >= ctrl->Y1 && CursorY <= ctrl->Y2 && TouchDet == NotClicked)
+		    {
+		    	if(ctrl->Is_pressed == Clicked)
+		    	{
+		    		if(ctrl->Checked == 0)
+		    		{ctrl->Checked = 1;}
+		    		else
+		    		{ctrl->Checked = 0;}
+		    		ctrl->Is_pressed = NotClicked;
+			        return Unclicked;
+		    	}
+		    }
+	    }
+		else
+		{
+			return NotClicked;
+		}
+	}*/
+	return NotClicked;
+}
 uint8 LCD_RadioButton(D_RadioButton *RadioButton, char Name[])
 {
 //	uint8 TouchDet = GetCursorPosition();
@@ -1388,5 +1430,8 @@ uint8 LCD_RadioButton(D_RadioButton *RadioButton, char Name[])
 //	}
 	return NotClicked;
 }
-
+void LCD_Graph(D_Graph *Gr)
+{
+	Graph(Gr->X1, Gr->X2, Gr->Y1, Gr->Y2, Gr->FillColor, Gr->FrameColor, Gr->Thickness, Gr->LinesColor, Gr->StepX, Gr->StepY, Gr->XMax, Gr->XMin, Gr->YMax, Gr->YMin);
+}
 

@@ -44,6 +44,7 @@ void MainFunc ()
     D_ProgressBarVGradient pvg;
     D_TextBox tb;
     D_RadioButton rb;
+    D_Graph gr;
 
 
 	kv.X1 = 200;
@@ -109,10 +110,10 @@ void MainFunc ()
 	round.Thickness = 3;
 	round.R = 40;
 
-	check.X1 = 50;
-	check.X2 = 70;
-	check.Y1 = 150;
-	check.Y2 = 170;
+	check.X1 = 20;
+	check.X2 = 35;
+	check.Y1 = 10;
+	check.Y2 = 25;
 	check.FrameColor = blue;
 	check.BackColor = white;
 	check.CheckColor = black;
@@ -248,23 +249,39 @@ void MainFunc ()
 	rb.Radius = 5;
 	rb.TextColor = white;
 	rb.X = 25;
-	rb.Y = 25;
+	rb.Y = 50;
 	rb.Transp_key = 0;
 	rb.ExCirColor = green;
 	rb.InCirColor = blue;
-	rb.Unvisible = white;
+	rb.Unvisible = 1;
+
+	gr.FillColor = white;
+	gr.FrameColor = green;
+	gr.LinesColor = yellow;
+	gr.StepX = 10;
+	gr.StepY = 10;
+	gr.X1 = 1;
+	gr.X2 = 480;
+	gr.XMax = 0;
+	gr.XMin = 100;
+	gr.Y1 = 1;
+	gr.Y2 = 272;
+	gr.YMax = 0;
+	gr.YMin = 100;
+	gr.Unvisible = 0;
+	gr.Thickness = 1;
 
 
 
 
 
-//    uint16 i = 0;
+
+
+    uint16 i = 0;
 
 	while(1) // бесконечный цикл
 	{
-		Fill_Display(black);
-		LCD_RadioButton(&rb, "Uraaaa");
-		HAL_Delay(800);
+
 
 //		Fill_Display(black);
 //		LCD_Fill_Rectangle(&kv);
@@ -298,17 +315,27 @@ void MainFunc ()
 		lb.X = 80;
 		lb.Y = 120;
 
-//		for(i = 0; i < 11; i++)
-//		{
-//			p.CurrentValue = i;
-//			pa.CurrentValue = i;
-//			tr.CurrentValue = i;
-//			tra.CurrentValue = i;
-//			pvg.CurrentValue = i;
+		for(i = 0; i < 11; i++)
+		{
+			p.CurrentValue = i;
+			pa.CurrentValue = i;
+			tr.CurrentValue = i;
+			tra.CurrentValue = i;
+			pvg.CurrentValue = i;
 //
 //			lb.Y += 2;
 //
-//			Fill_Display(darkBlue3);
+			Fill_Display(darkBlue3);
+				Fill_Display(black);
+//				LCD_RadioButton(&rb, "Uraaaa");
+//				HAL_Delay(800);
+
+//				Fill_Display(black);
+//				LCD_CheckBox(&check, "Lalala");
+
+
+				LCD_Graph(&gr);
+				HAL_Delay(3000);
 //			LCD_Form(&fr, "Form1");
 //            LCD_HGradientForm(&hfr, "HForm1");
 //            LCD_VGradientForm(&vfr, "VForm1");
@@ -324,8 +351,8 @@ void MainFunc ()
 //		    LCD_Label(&lb, "Vitea & Iulea = Love");
 //		    LCD_Button(&bt, "Butt1");
 //		    HAL_Delay(800);
-//		}
-//		HAL_Delay(300);
+		}
+		HAL_Delay(300);
 //
 //		vgr.X1 = 2;
 //		vgr.X2 = 479;
@@ -350,9 +377,7 @@ void MainFunc ()
 //		LCD_Circle(&round);
 //		HAL_Delay(3000);
 
-		Fill_Display(black);
-		LCD_CheckBox(&check, "Lalala");
-		HAL_Delay(3000);
+
 
 
 
