@@ -1068,8 +1068,8 @@ void MainFunc ()
  80009c4:	b090      	sub	sp, #64	; 0x40
 	ds.Color_Type = Color565;
  80009c6:	4c23      	ldr	r4, [pc, #140]	; (8000a54 <MainFunc+0x94>)
- 80009c8:	2500      	movs	r5, #0
- 80009ca:	7325      	strb	r5, [r4, #12]
+ 80009c8:	2600      	movs	r6, #0
+ 80009ca:	7326      	strb	r6, [r4, #12]
 	ds.Display_Height = 272;
  80009cc:	f44f 7788 	mov.w	r7, #272	; 0x110
  80009d0:	6067      	str	r7, [r4, #4]
@@ -1077,14 +1077,14 @@ void MainFunc ()
  80009d2:	f44f 78f0 	mov.w	r8, #480	; 0x1e0
  80009d6:	f8c4 8008 	str.w	r8, [r4, #8]
 	ds.Layers = 1;
- 80009da:	2601      	movs	r6, #1
- 80009dc:	7366      	strb	r6, [r4, #13]
+ 80009da:	2501      	movs	r5, #1
+ 80009dc:	7365      	strb	r5, [r4, #13]
 	ds.Start_RAM_Address = (uint32_t)&RGB;
  80009de:	491e      	ldr	r1, [pc, #120]	; (8000a58 <MainFunc+0x98>)
  80009e0:	6021      	str	r1, [r4, #0]
 
 	HAL_LTDC_SetAddress(&hltdc,(uint32_t)&RGB,0);  // запускаем модуль LTDC (железный)
- 80009e2:	462a      	mov	r2, r5
+ 80009e2:	4632      	mov	r2, r6
  80009e4:	481d      	ldr	r0, [pc, #116]	; (8000a5c <MainFunc+0x9c>)
  80009e6:	f001 fca9 	bl	800233c <HAL_LTDC_SetAddress>
 	Graphics_Init(&ds); //инит библиотеки (из структуры ds)
@@ -1101,8 +1101,8 @@ void MainFunc ()
 	gr.FrameColor = green;
  80009f6:	f44f 437f 	mov.w	r3, #65280	; 0xff00
  80009fa:	9306      	str	r3, [sp, #24]
-	gr.LinesColor = yellow;
- 80009fc:	f503 037f 	add.w	r3, r3, #16711680	; 0xff0000
+	gr.LinesColor = red;
+ 80009fc:	f44f 037f 	mov.w	r3, #16711680	; 0xff0000
  8000a00:	9308      	str	r3, [sp, #32]
 	gr.StepX = 10;
  8000a02:	230a      	movs	r3, #10
@@ -1110,66 +1110,67 @@ void MainFunc ()
 	gr.StepY = 10;
  8000a06:	930a      	str	r3, [sp, #40]	; 0x28
 	gr.X1 = 1;
- 8000a08:	9601      	str	r6, [sp, #4]
+ 8000a08:	9501      	str	r5, [sp, #4]
 	gr.X2 = 480;
  8000a0a:	f8cd 8008 	str.w	r8, [sp, #8]
-	gr.XMax = 0;
- 8000a0e:	950b      	str	r5, [sp, #44]	; 0x2c
-	gr.XMin = 100;
- 8000a10:	2364      	movs	r3, #100	; 0x64
- 8000a12:	930c      	str	r3, [sp, #48]	; 0x30
+	gr.XMax = 100;
+ 8000a0e:	2364      	movs	r3, #100	; 0x64
+ 8000a10:	930b      	str	r3, [sp, #44]	; 0x2c
+	gr.XMin = 1;
+ 8000a12:	950c      	str	r5, [sp, #48]	; 0x30
 	gr.Y1 = 1;
- 8000a14:	9603      	str	r6, [sp, #12]
+ 8000a14:	9503      	str	r5, [sp, #12]
 	gr.Y2 = 272;
  8000a16:	9704      	str	r7, [sp, #16]
-	gr.YMax = 0;
- 8000a18:	950d      	str	r5, [sp, #52]	; 0x34
-	gr.YMin = 100;
- 8000a1a:	930e      	str	r3, [sp, #56]	; 0x38
+	gr.YMax = 100;
+ 8000a18:	930d      	str	r3, [sp, #52]	; 0x34
+	gr.YMin = 1;
+ 8000a1a:	950e      	str	r5, [sp, #56]	; 0x38
 	gr.Unvisible = 0;
- 8000a1c:	f88d 503c 	strb.w	r5, [sp, #60]	; 0x3c
-	gr.Thickness = 1;
- 8000a20:	9607      	str	r6, [sp, #28]
- 8000a22:	e014      	b.n	8000a4e <MainFunc+0x8e>
+ 8000a1c:	f88d 603c 	strb.w	r6, [sp, #60]	; 0x3c
+	gr.Thickness = 12;
+ 8000a20:	230c      	movs	r3, #12
+ 8000a22:	9307      	str	r3, [sp, #28]
+ 8000a24:	e014      	b.n	8000a50 <MainFunc+0x90>
 			tra.CurrentValue = i;
 			pvg.CurrentValue = i;
 //
 //			lb.Y += 2;
 //
 			Fill_Display(darkBlue3);
- 8000a24:	2066      	movs	r0, #102	; 0x66
- 8000a26:	f7ff fdf1 	bl	800060c <Fill_Display>
+ 8000a26:	2066      	movs	r0, #102	; 0x66
+ 8000a28:	f7ff fdf0 	bl	800060c <Fill_Display>
 				Fill_Display(black);
- 8000a2a:	2000      	movs	r0, #0
- 8000a2c:	f7ff fdee 	bl	800060c <Fill_Display>
+ 8000a2c:	2000      	movs	r0, #0
+ 8000a2e:	f7ff fded 	bl	800060c <Fill_Display>
 
 //				Fill_Display(black);
-//				LCD_CheckBox(&check, "Lalala");
+
 
 
 				LCD_Graph(&gr);
- 8000a30:	a801      	add	r0, sp, #4
- 8000a32:	f7ff ffa2 	bl	800097a <LCD_Graph>
+ 8000a32:	a801      	add	r0, sp, #4
+ 8000a34:	f7ff ffa1 	bl	800097a <LCD_Graph>
+//				LCD_CheckBox(&check, "Lalala");
 				HAL_Delay(3000);
- 8000a36:	f640 30b8 	movw	r0, #3000	; 0xbb8
- 8000a3a:	f000 ff0f 	bl	800185c <HAL_Delay>
+ 8000a38:	f640 30b8 	movw	r0, #3000	; 0xbb8
+ 8000a3c:	f000 ff0e 	bl	800185c <HAL_Delay>
 		for(i = 0; i < 11; i++)
- 8000a3e:	3401      	adds	r4, #1
- 8000a40:	b2a4      	uxth	r4, r4
- 8000a42:	2c0a      	cmp	r4, #10
- 8000a44:	d9ee      	bls.n	8000a24 <MainFunc+0x64>
+ 8000a40:	3401      	adds	r4, #1
+ 8000a42:	b2a4      	uxth	r4, r4
+ 8000a44:	2c0a      	cmp	r4, #10
+ 8000a46:	d9ee      	bls.n	8000a26 <MainFunc+0x66>
 //		    LCD_DualVGradient(&dvgr);
 //		    LCD_Label(&lb, "Vitea & Iulea = Love");
 //		    LCD_Button(&bt, "Butt1");
 //		    HAL_Delay(800);
 		}
 		HAL_Delay(300);
- 8000a46:	f44f 7096 	mov.w	r0, #300	; 0x12c
- 8000a4a:	f000 ff07 	bl	800185c <HAL_Delay>
+ 8000a48:	f44f 7096 	mov.w	r0, #300	; 0x12c
+ 8000a4c:	f000 ff06 	bl	800185c <HAL_Delay>
 		for(i = 0; i < 11; i++)
- 8000a4e:	2400      	movs	r4, #0
- 8000a50:	e7f7      	b.n	8000a42 <MainFunc+0x82>
- 8000a52:	bf00      	nop
+ 8000a50:	2400      	movs	r4, #0
+ 8000a52:	e7f7      	b.n	8000a44 <MainFunc+0x84>
  8000a54:	20000044 	.word	0x20000044
  8000a58:	20000054 	.word	0x20000054
  8000a5c:	2003fd24 	.word	0x2003fd24

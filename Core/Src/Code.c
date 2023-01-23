@@ -118,7 +118,7 @@ void MainFunc ()
 	check.BackColor = white;
 	check.CheckColor = black;
 	check.Checked = 1;
-	check.TextColor = white;
+	check.TextColor = black;
 
 	tr.X1 = 200;
 	tr.X2 = 400;
@@ -257,19 +257,19 @@ void MainFunc ()
 
 	gr.FillColor = white;
 	gr.FrameColor = green;
-	gr.LinesColor = yellow;
+	gr.LinesColor = red;
 	gr.StepX = 10;
 	gr.StepY = 10;
 	gr.X1 = 1;
 	gr.X2 = 480;
-	gr.XMax = 0;
-	gr.XMin = 100;
+	gr.XMax = 100;
+	gr.XMin = 1;
 	gr.Y1 = 1;
 	gr.Y2 = 272;
-	gr.YMax = 0;
-	gr.YMin = 100;
+	gr.YMax = 100;
+	gr.YMin = 1;
 	gr.Unvisible = 0;
-	gr.Thickness = 1;
+	gr.Thickness = 12;
 
 
 
@@ -331,14 +331,14 @@ void MainFunc ()
 //				HAL_Delay(800);
 
 //				Fill_Display(black);
-//				LCD_CheckBox(&check, "Lalala");
-
 
 				LCD_Graph(&gr);
+//				LCD_CheckBox(&check, "Lalala");
 				HAL_Delay(3000);
+
 //			LCD_Form(&fr, "Form1");
-//            LCD_HGradientForm(&hfr, "HForm1");
-//            LCD_VGradientForm(&vfr, "VForm1");
+//          LCD_HGradientForm(&hfr, "HForm1");
+//          LCD_VGradientForm(&vfr, "VForm1");
 //		    LCD_ProgressBar(&p);
 //		    LCD_ProgressBar(&pa);
 //		    LCD_ProgressBarVGradient(&pvg);
