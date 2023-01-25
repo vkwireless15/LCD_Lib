@@ -974,6 +974,93 @@ void Graph(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 FillColor, uint32 
 		YY -= StY;
 	}
 }
+void GraphLine(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 Color, uint8 Tl, uint32 StepX, uint32 StepY, uint32 XMax, uint32 XMin, int YMax, int YMin, int data[], uint32 Points, uint8 LineTl)
+{
+	uint16 Points_cnt = 0, Yctrl = 0;
+	float LineX = 0, NextX = 0, LineY = 0, NextY = 0;
+	float XC = 0, StX = 0, YY = 0, Ydif = 0, StY = 0, StartY = 0;
+    uint8 owf_flag = 1;
+	YY = Y2 - Y1;
+	Ydif = YMax - YMin;
+
+	if((X2 - X1) >= (XMax - XMin))
+	{
+		XC = (float)XMax;
+		StX = (float)(X2 - X1) / (float)(XMax - XMin) * 0.9902;
+	}
+
+	LineX = (float)X1 + (float)Tl + (float)(LineTl - 1);
+	NextX = LineX;
+	StartY = (float)Y2 - (float)(Tl) - (float)LineTl;
+
+	LineY = StartY - ((YY / Ydif * (float)data[XMin]) * 0.974);
+
+	Yctrl = LineY;
+
+	if(Yctrl < (Y1 + Tl))
+	{
+		Yctrl = Y1 + Tl;
+	}
+
+	NextY = Yctrl;
+
+	for(uint16 x = XMin; x < XC; x++)
+	{
+		StY = (YY / Ydif * (float)data[x]) * 0.974; //расчет дисплейного Y, 0.974 - корректировка погрешности
+		NextX += StX;
+		NextY = StartY - StY;
+
+		if((data[x] >= YMin) && (data[x] <= YMax))
+		{
+		    if(Points_cnt < Points)
+		    {
+		    	if(NextX >= X2 - Tl)
+		    	{NextX = X2 - LineTl;}
+
+		        Line((uint16)LineX, (uint16)LineY, (uint16)NextX, (uint16)NextY, Color, LineTl);
+		        owf_flag = 0;
+	        }
+		    Points_cnt++;
+			LineX = NextX;
+			LineY = NextY;
+	    }
+		else
+		{
+			if(owf_flag == 0)
+			{
+				NextY = Y1 + Tl;
+				Line((uint16)LineX, (uint16)LineY, (uint16)NextX, (uint16)NextY, Color, LineTl);
+				owf_flag = 1;
+			}
+
+			if(data[x] > YMax)
+			{
+			    LineX = NextX;
+			    LineY = Y1 + Tl;
+		    }
+			else
+			{
+			    LineX = NextX;
+			    LineY = StartY;
+			}
+		}
+	}
+
+	//Line(40, 30, 40, 130, green | 0xff000000, 2);
+	//Line(40, 240, 40, 140, green | 0xff000000, 2);
+
+	//Line(50, 30, 150, 30, green | 0xff000000, 2);
+	//Line(260, 30, 160, 30, green | 0xff000000, 2);
+
+	//Line(50, 40, 150, 140, green | 0xff000000, 2);
+	//Line(150, 150, 50, 50, green | 0xff000000, 2);
+
+	//Line(160, 140, 260, 40, green | 0xff000000, 2);
+	//Line(270, 40, 170, 140, green | 0xff000000, 2);
+}
+
+
+
 
 //для внешнего пользования(прикладных программ) Обработка касаний, координатных штучек
 
@@ -1432,6 +1519,16 @@ uint8 LCD_RadioButton(D_RadioButton *RadioButton, char Name[])
 }
 void LCD_Graph(D_Graph *Gr)
 {
-	Graph(Gr->X1, Gr->X2, Gr->Y1, Gr->Y2, Gr->FillColor, Gr->FrameColor, Gr->Thickness, Gr->LinesColor, Gr->StepX, Gr->StepY, Gr->XMax, Gr->XMin, Gr->YMax, Gr->YMin);
+	if(Gr->Unvisible == 0)
+	{
+	   Graph(Gr->X1, Gr->X2, Gr->Y1, Gr->Y2, Gr->FillColor, Gr->FrameColor, Gr->Thickness, Gr->LinesColor, Gr->StepX, Gr->StepY, Gr->XMax, Gr->XMin, Gr->YMax, Gr->YMin);
+	}
+}
+void LCD_GraphLine(D_Graph *Gr, D_GraphLine *GrL, int data[])
+{
+	if(GrL->Unvisible == 0)
+	{
+	   GraphLine(Gr->X1, Gr->X2, Gr->Y1, Gr->Y2, GrL->LineColor, Gr->Thickness, Gr->StepX, Gr->StepY, Gr->XMax, Gr->XMin, Gr->YMax, Gr->YMin, data, GrL->Points_count, GrL->Thickness);
+	}
 }
 

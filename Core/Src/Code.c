@@ -45,6 +45,7 @@ void MainFunc ()
     D_TextBox tb;
     D_RadioButton rb;
     D_Graph gr;
+    D_GraphLine grL;
 
 
 	kv.X1 = 200;
@@ -118,7 +119,7 @@ void MainFunc ()
 	check.BackColor = white;
 	check.CheckColor = black;
 	check.Checked = 1;
-	check.TextColor = black;
+	check.TextColor = white;
 
 	tr.X1 = 200;
 	tr.X2 = 400;
@@ -258,18 +259,23 @@ void MainFunc ()
 	gr.FillColor = white;
 	gr.FrameColor = green;
 	gr.LinesColor = red;
-	gr.StepX = 10;
+	gr.StepX = 1;
 	gr.StepY = 10;
 	gr.X1 = 1;
 	gr.X2 = 480;
-	gr.XMax = 100;
-	gr.XMin = 1;
+	gr.XMax = 10;
+	gr.XMin = 0;
 	gr.Y1 = 1;
 	gr.Y2 = 272;
 	gr.YMax = 100;
-	gr.YMin = 1;
+	gr.YMin = 0;
 	gr.Unvisible = 0;
-	gr.Thickness = 12;
+	gr.Thickness = 2;
+
+	grL.LineColor = black;
+	grL.Points_count = 10;
+	grL.Thickness = 2;
+
 
 
 
@@ -326,15 +332,25 @@ void MainFunc ()
 //			lb.Y += 2;
 //
 			Fill_Display(darkBlue3);
-				Fill_Display(black);
-//				LCD_RadioButton(&rb, "Uraaaa");
+			Fill_Display(black);
+//			LCD_RadioButton(&rb, "Uraaaa");
+//			LCD_CheckBox(&check, "Lalala");
+
 //				HAL_Delay(800);
 
 //				Fill_Display(black);
 
 				LCD_Graph(&gr);
-//				LCD_CheckBox(&check, "Lalala");
+
+				int data[] = {90, 80, 70, 60, 50, 40, 30, 20, 10, 0};
+				LCD_GraphLine(&gr, &grL, data);
+
+
+
 				HAL_Delay(3000);
+
+
+
 
 //			LCD_Form(&fr, "Form1");
 //          LCD_HGradientForm(&hfr, "HForm1");

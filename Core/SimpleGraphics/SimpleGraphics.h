@@ -485,6 +485,14 @@ typedef struct
 	char Unvisible;
 } D_Graph;
 
+typedef struct
+{
+	uint32 Points_count;
+	uint32 LineColor;
+	uint8 Thickness;
+	uint8 Unvisible;
+} D_GraphLine;
+
 /*typedef struct
 {
 	unsigned int X1;
@@ -737,6 +745,7 @@ void LCD_ProgressBarVGradient(D_ProgressBarVGradient *ProgressBarVGradient);
 uint8 LCD_TextBox(D_TextBox *textBox, char Text[]);
 uint8 LCD_RadioButton(D_RadioButton *RadioButton, char Name[]);
 void LCD_Graph(D_Graph *Gr);
+void LCD_GraphLine(D_Graph *Gr, D_GraphLine *GrL, int data[]);
 
 void Show_to_layer(uint8 Layer);
 
