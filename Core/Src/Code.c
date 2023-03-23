@@ -200,9 +200,9 @@ void MainFunc ()
     bt.PressedColor = white;
     bt.TextColor = black;
     bt.Thickness = 1;
-    bt.X1 = 220;
+    bt.X1 = 230;
     bt.X2 = 310;
-    bt.Y1 = 90;
+    bt.Y1 = 100;
     bt.Y2 = 120;
 
     hfr.X1 = 2;
@@ -288,25 +288,29 @@ void MainFunc ()
 	while(1) // бесконечный цикл
 	{
 
+		LCD_Graph(&gr);
+		int data[] = {90, 80, 70, 60, 50, 40, 30, 20, 10, 0};
+		LCD_GraphLine(&gr, &grL, data);
+		HAL_Delay(3000);
 
-//		Fill_Display(black);
-//		LCD_Fill_Rectangle(&kv);
-//		HAL_Delay(3000);
-//
-//		LCD_FramePanel(&pan);
-//		HAL_Delay(3000);
-//
+		Fill_Display(black);
+		LCD_Fill_Rectangle(&kv);
+		HAL_Delay(3000);
+
+		LCD_FramePanel(&pan);
+		HAL_Delay(3000);
+
 //		Fill_Display(black);
 //		LCD_Fill_Rectangle(&rec);
 //		HAL_Delay(3000);
-//
-//		Fill_Display(black);
-//		LCD_HLine(&line);
-//		HAL_Delay(3000);
-//
-//		Fill_Display(black);
-//		LCD_FillCircle(&ball);
-//		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_HLine(&line);
+		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_FillCircle(&ball);
+		HAL_Delay(3000);
 
 		vgr.X1 = 240;
 		vgr.X2 = 340;
@@ -318,8 +322,10 @@ void MainFunc ()
 		hgr.Y1 = 190;
 		hgr.Y2 = 262;
 
-		lb.X = 80;
-		lb.Y = 120;
+		lb.X = 100;
+		lb.Y = 60;
+		lb.Color = black;
+
 
 		for(i = 0; i < 11; i++)
 		{
@@ -328,70 +334,61 @@ void MainFunc ()
 			tr.CurrentValue = i;
 			tra.CurrentValue = i;
 			pvg.CurrentValue = i;
-//
-//			lb.Y += 2;
-//
+
+			lb.Y += 2;
+
 			Fill_Display(darkBlue3);
-			Fill_Display(black);
-//			LCD_RadioButton(&rb, "Uraaaa");
-//			LCD_CheckBox(&check, "Lalala");
-
-//				HAL_Delay(800);
-
-//				Fill_Display(black);
-
-				LCD_Graph(&gr);
-
-				int data[] = {90, 80, 70, 60, 50, 40, 30, 20, 10, 0};
-				LCD_GraphLine(&gr, &grL, data);
-
-
-
-				HAL_Delay(3000);
-
+			LCD_Form(&fr, "Form1");
+			LCD_HGradientForm(&hfr, "HForm1");
+			LCD_VGradientForm(&vfr, "VForm1");
+		    LCD_ProgressBar(&p);
+		    LCD_ProgressBar(&pa);
+		    LCD_ProgressBarVGradient(&pvg);
+		    LCD_TrackBar(&tr);
+		    LCD_TrackBar(&tra);
+		    LCD_VGradient(&vgr);
+		    LCD_HGradient(&hgr);
+		    LCD_DualHGradient(&dhgr);
+		    LCD_DualVGradient(&dvgr);
+		    LCD_Label(&lb, "Hello!");
+		    LCD_Button(&bt, "Butt1");
+		    HAL_Delay(800);
 
 
 
-//			LCD_Form(&fr, "Form1");
-//          LCD_HGradientForm(&hfr, "HForm1");
-//          LCD_VGradientForm(&vfr, "VForm1");
-//		    LCD_ProgressBar(&p);
-//		    LCD_ProgressBar(&pa);
-//		    LCD_ProgressBarVGradient(&pvg);
-//		    LCD_TrackBar(&tr);
-//		    LCD_TrackBar(&tra);
-//		    LCD_VGradient(&vgr);
-//		    LCD_HGradient(&hgr);
-//		    LCD_DualHGradient(&dhgr);
-//		    LCD_DualVGradient(&dvgr);
-//		    LCD_Label(&lb, "Vitea & Iulea = Love");
-//		    LCD_Button(&bt, "Butt1");
-//		    HAL_Delay(800);
+
+
 		}
 		HAL_Delay(300);
-//
-//		vgr.X1 = 2;
-//		vgr.X2 = 479;
-//		vgr.Y1 = 2;
-//		vgr.Y2 = 271;
-//
-//		hgr.X1 = 2;
-//		hgr.X2 = 479;
-//		hgr.Y1 = 2;
-//		hgr.Y2 = 271;
-//
-//		Fill_Display(green);
-//		LCD_VGradient(&vgr);
-//		HAL_Delay(1000);
-//
-//		Fill_Display(green);
-//		LCD_Form(&fr, "Form1");
-//		LCD_HGradient(&hgr);
-//		HAL_Delay(5000);
 
-//		Fill_Display(black);
-//		LCD_Circle(&round);
-//		HAL_Delay(3000);
+		Fill_Display(black);
+		LCD_RadioButton(&rb, "Radiobutton1");
+		LCD_CheckBox(&check, "CheckButton 1");
+		HAL_Delay(3000);
+
+
+		vgr.X1 = 2;
+		vgr.X2 = 479;
+		vgr.Y1 = 2;
+		vgr.Y2 = 271;
+
+		hgr.X1 = 2;
+		hgr.X2 = 479;
+		hgr.Y1 = 2;
+		hgr.Y2 = 271;
+
+		Fill_Display(green);
+		LCD_VGradient(&vgr);
+		HAL_Delay(1000);
+
+		Fill_Display(green);
+		LCD_Form(&fr, "Form1");
+		LCD_HGradient(&hgr);
+		HAL_Delay(5000);
+
+		Fill_Display(black);
+		LCD_Circle(&round);
+		HAL_Delay(3000);
 
 
 
