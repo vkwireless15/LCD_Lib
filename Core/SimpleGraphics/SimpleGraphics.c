@@ -48,6 +48,18 @@ uint8 is_Disp_Res(int32 x1, int32 x2, int32 y1, int32 y2) //
 	}
 	return Error;
 }
+void SymbolParameters(uint16 X, uint16 Y, uint16 *NextX, uint16 *NextY, uint8 *CharWt, uint8 *CharHt, uint32 Color, char Symbol)
+{
+	uint8 FontH = calibri[1];
+	uint8 FirstChar = calibri[2];
+	uint8 Cursor = Symbol - FirstChar;
+	uint8 CharW = calibri[Cursor + 4];
+
+	*NextX = X + CharW;
+	*NextY = Y + FontH;
+	*CharWt = CharW;
+	*CharHt = FontH;
+}
 
 void Graphics_Init(DisplayConfig *dcf) //Инициализация самой бибиллиотеки а также инициализация графических устройств(дисплей, графические ускорители, тач-панели)
 {
@@ -69,7 +81,14 @@ void Pixel(uint16 x, uint16 y, uint32 Color, uint16 Tolshina)
 	  {
 		  if(i < DispHeight && j < DispWidth)
 		  {
-			  MemPoint(j,i,Color);
+			  if(ColorType == Color565)
+			  { MemPoint(j,i,Get565Color(Color)); }
+
+			  if(ColorType == Color888)
+			  { MemPoint(j,i,Color | 0xFF << 24); }
+
+			  if(ColorType == Color_A888)
+			  { MemPoint(j,i,Color); }
 	      }
 	  }
   }
@@ -691,7 +710,14 @@ void Symbol(uint16 X, uint16 Y, uint16 *NextX, uint16 *NextY, uint8 *CharWt, uin
             {
       		    if(i < DispHeight && j < DispWidth)
       		    {
-      		    	MemPoint(j,i,Color);
+      			    if(ColorType == Color565)
+      			    { MemPoint(j,i,Get565Color(Color)); }
+
+      			    if(ColorType == Color888)
+      			    { MemPoint(j,i,Color | 0xFF << 24); }
+
+      			    if(ColorType == Color_A888)
+      			    { MemPoint(j,i,Color); }
       	        }
             }
             CharBit = CharBit << 1;
@@ -1058,7 +1084,51 @@ void GraphLine(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 Color, uint8 T
 	//Line(160, 140, 260, 40, green | 0xff000000, 2);
 	//Line(270, 40, 170, 140, green | 0xff000000, 2);
 }
+void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Tolshina, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[])//++
+{
+    uint16 Sym_count = 0;
+    uint16 Nx = 0, Ny = 0;
+    uint16 x = 0, y = 0;
+    uint8 ChWt = 0;
+    uint8 ChH = 0;
 
+    x = x1 + Tolshina;
+    y = y1;
+    while(Text[Sym_count]!=0)
+    {
+      Sym_count++;
+    }
+    FramePanel(BColor,FloodColor,x1,x2,y1,y2,Tolshina);
+
+    for(int i = 0; i < Sym_count; i++)
+    {
+       if((Text[i] >= 0x20) | (Text[i] == 10))
+       {
+          if(Text[i] == 10)
+          {
+     	     y = Ny;
+     	     x = x1 + Tolshina;
+          }
+
+          if(y + ChH + Tolshina >= y2)
+          {
+    	     break;
+          }
+
+          Symbol(x, y, &Nx, &Ny, &ChWt,&ChH, TextColor, Text[i]);
+
+          if(Nx + ChWt + Tolshina >= x2)
+          {
+    	     y = Ny;
+    	     x = x1 + Tolshina;
+          }
+          else
+          {
+    	     x = Nx;
+          }
+       }
+    }
+}
 
 
 
@@ -1531,4 +1601,35 @@ void LCD_GraphLine(D_Graph *Gr, D_GraphLine *GrL, int data[])
 	   GraphLine(Gr->X1, Gr->X2, Gr->Y1, Gr->Y2, GrL->LineColor, Gr->Thickness, Gr->StepX, Gr->StepY, Gr->XMax, Gr->XMin, Gr->YMax, Gr->YMin, data, GrL->Points_count, GrL->Thickness);
 	}
 }
+uint8 LCD_RichTextBox(D_RichTextBox *richTextBox, char Text[])
+{
+	//uint8 TouchDet = GetCursorPosition();
+	RichTextBox(richTextBox->X1, richTextBox->X2, richTextBox->Y1, richTextBox->Y2, richTextBox->Thickness, richTextBox->FrameColor, richTextBox->FillColor, richTextBox->TextColor, Text);
+//	if(CursorX >= richTextBox->X1 && CursorX <= richTextBox->X2 && CursorY >= richTextBox->Y1 && CursorY <= richTextBox->Y2 && TouchDet == Clicked)
+//	{
+//		richTextBox->Is_pressed = Clicked;
+//	 	return Clicked;
+//	}
+//	else
+//	{
+//		if(TouchDet == NotClicked)
+//		{
+//		    if(CursorX >= richTextBox->X1 && CursorX <= richTextBox->X2 && CursorY >= richTextBox->Y1 && CursorY <= richTextBox->Y2 && TouchDet == NotClicked)
+//		    {
+//		    	if(richTextBox->Is_pressed == Clicked)
+//		    	{
+//		    		richTextBox->Is_pressed = NotClicked;
+//			        return Unclicked;
+//		    	}
+//		    }
+//	    }
+//		else
+//		{
+//			return NotClicked;
+//		}
+//	}
+	return NotClicked;
+}
+
+
 

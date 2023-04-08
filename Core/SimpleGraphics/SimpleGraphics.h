@@ -493,6 +493,20 @@ typedef struct
 	uint8 Unvisible;
 } D_GraphLine;
 
+typedef struct
+{
+	unsigned int X1;
+	unsigned int X2;
+	unsigned int Y1;
+	unsigned int Y2;
+	unsigned int Thickness;
+	unsigned int FrameColor;
+	unsigned int FillColor;
+	unsigned int TextColor;
+	char Is_pressed;
+	char Unvisible;
+} D_RichTextBox;
+
 /*typedef struct
 {
 	unsigned int X1;
@@ -717,7 +731,7 @@ typedef struct
 } D_GraphLine;
 */
 
-uint32 LCD_FRAME_BUFFER1;
+//uint32 LCD_FRAME_BUFFER1;
 
 
 void Graphics_Init(DisplayConfig *dcf);

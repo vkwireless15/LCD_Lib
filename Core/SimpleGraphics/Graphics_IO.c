@@ -208,32 +208,32 @@ void MemPoint(int32 x, int32 y, int32 Color) //Отрисовка одного �
 
 void Show(uint8 Layer) // Отобразить содержимое на выбранный слой экрана
 {
-	unsigned int RAddr = 0;
-	if(Layer == 0)
-	{
-		//RAddr = LCD_FRAME_BUFFER0;
-	}
-	else
-	{
-		//RAddr = LCD_FRAME_BUFFER2;
-	}
-	hdma2d.Init.Mode = DMA2D_M2M_PFC;
-    hdma2d.Init.ColorMode = DMA2D_ARGB8888;
-	hdma2d.Init.OutputOffset = 0;
-	hdma2d.LayerCfg[1].AlphaMode = DMA2D_NO_MODIF_ALPHA;
-	hdma2d.LayerCfg[1].InputAlpha = 0xFF;
-	hdma2d.LayerCfg[1].InputColorMode = DMA2D_INPUT_ARGB8888;
-	hdma2d.LayerCfg[1].InputOffset = 0;
-	if(HAL_DMA2D_Init(&hdma2d) == HAL_OK)
-	{
-	  if(HAL_DMA2D_ConfigLayer(&hdma2d, 1) == HAL_OK)
-	  {
-	    if (HAL_DMA2D_Start(&hdma2d, LCD_FRAME_BUFFER1, RAddr, Width, Height) == HAL_OK)
-	    {
-	      HAL_DMA2D_PollForTransfer(&hdma2d, TransferDelay);
-	    }
-	  }
-	}
+//	unsigned int RAddr = 0;
+//	if(Layer == 0)
+//	{
+//		//RAddr = LCD_FRAME_BUFFER0;
+//	}
+//	else
+//	{
+//		//RAddr = LCD_FRAME_BUFFER2;
+//	}
+//	hdma2d.Init.Mode = DMA2D_M2M_PFC;
+//    hdma2d.Init.ColorMode = DMA2D_ARGB8888;
+//	hdma2d.Init.OutputOffset = 0;
+//	hdma2d.LayerCfg[1].AlphaMode = DMA2D_NO_MODIF_ALPHA;
+//	hdma2d.LayerCfg[1].InputAlpha = 0xFF;
+//	hdma2d.LayerCfg[1].InputColorMode = DMA2D_INPUT_ARGB8888;
+//	hdma2d.LayerCfg[1].InputOffset = 0;
+//	if(HAL_DMA2D_Init(&hdma2d) == HAL_OK)
+//	{
+//	  if(HAL_DMA2D_ConfigLayer(&hdma2d, 1) == HAL_OK)
+//	  {
+//	    if (HAL_DMA2D_Start(&hdma2d, LCD_FRAME_BUFFER1, RAddr, Width, Height) == HAL_OK)
+//	    {
+//	      HAL_DMA2D_PollForTransfer(&hdma2d, TransferDelay);
+//	    }
+//	  }
+//	}
 }
 
 void Backlight(uint32 Brightness, uint8 State) //Управление подсветкой

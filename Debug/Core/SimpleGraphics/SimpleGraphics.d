@@ -3,11 +3,7 @@ Core/SimpleGraphics/SimpleGraphics.o: \
  ../Core/SimpleGraphics/SimpleGraphics.h \
  ../Core/SimpleGraphics/Graphics_IO.h \
  ../Core/SimpleGraphics/Coordinates.h ../Core/SimpleGraphics/Font.h
-
 ../Core/SimpleGraphics/SimpleGraphics.h:
-
 ../Core/SimpleGraphics/Graphics_IO.h:
-
 ../Core/SimpleGraphics/Coordinates.h:
-
 ../Core/SimpleGraphics/Font.h:

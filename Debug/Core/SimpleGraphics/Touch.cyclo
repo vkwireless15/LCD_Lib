@@ -1,0 +1,10 @@
+Touch.c:10:9:TS_IO_Read	1
+Touch.c:16:6:TS_IO_Write	1
+Touch.c:23:6:ft5336_TS_GetGestureID	1
+Touch.c:30:6:TS_GetTouchInfo	12
+Touch.c:101:10:Touch_ReadID	3
+Touch.c:116:9:TS_DetectTouch	2
+Touch.c:129:6:TS_GetXY	12
+Touch.c:228:9:TS_Get_GestureId	9
+Touch.c:262:9:TS_GetState	14
+Touch.c:337:6:Touch_Init	1
