@@ -335,6 +335,7 @@ void MainFunc ()
 
 		RTB.X1 = 10;
 		RTB.X2 = 20;
+		RTB.Y2 = 40;
 
 		for(i = 0; i < 220; i++)
 		{
