@@ -11,6 +11,7 @@ extern LTDC_HandleTypeDef hltdc;
 extern DMA2D_HandleTypeDef hdma2d;
 
 unsigned int Height = 0, Width = 0, LCD_FRAME_BUFFER0 = 0;
+uint16 CrPosX1 = 0, CrPosX2 = 0, CrPosX3 = 0, CrPosX4 = 0, CrPosX5 = 0, CrPosY1 = 0, CrPosY2 = 0, CrPosY3 = 0, CrPosY4 = 0, CrPosY5 = 0;
 
 
 void Init_Graphics_System(uint32 H, uint32 W, uint32 LCD_RAM_START_ADDRESS, uint8 Layers, uint8 ColorType) //Инициализация драйвера дисплея, графического ускорителя и т.п.
@@ -246,4 +247,10 @@ void Backlight(uint32 Brightness, uint8 State) //Управление подсв
 	{
 		HAL_GPIO_WritePin(GPIOK, GPIO_PIN_3, SET);
 	}
+}
+
+uint8 GetCursorPosition()
+{
+
+	return 0;
 }

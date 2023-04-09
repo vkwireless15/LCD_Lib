@@ -2,9 +2,11 @@
 #include "Graphics_IO.h"
 #include "Coordinates.h"
 #include "Font.h"
+#include "Touch.h"
 
 uint32 DispHeight = 0, DispWidth = 0;
 uint8 ColorType = Color565;
+extern uint16 CrPosX1, CrPosX2, CrPosX3, CrPosX4, CrPosX5, CrPosY1, CrPosY2, CrPosY3, CrPosY4, CrPosY5;
 
 uint32 Color_A888_(uint32 Color, uint8 Alpha) //преобразует отдельные значения цвета  и прозрачности в формат А888(альфа канал + 24 бита цвета)
 {
@@ -1148,9 +1150,9 @@ void LCD_VLine(D_VLine *vline)
 }
 uint8 LCD_FramePanel(D_FramePanel *framePanel)
 {
-	//uint8 TouchDet = GetCursorPosition();
+	uint8 TouchDet = GetCursorPosition();
 	FramePanel(framePanel->FrameColor, framePanel->FillColor, framePanel->X1, framePanel->X2, framePanel->Y1, framePanel->Y2, framePanel->Thickness);
-	/*if(CursorX >= framePanel->X1 && CursorX <= framePanel->X2 && CursorY >= framePanel->Y1 && CursorY <= framePanel->Y2 && TouchDet == Clicked)
+	if(CrPosX1 >= framePanel->X1 && CrPosX1 <= framePanel->X2 && CrPosY1 >= framePanel->Y1 && CrPosY1 <= framePanel->Y2 && TouchDet == Clicked)
 	{
 		framePanel->Is_pressed = Clicked;
 	 	return Clicked;
@@ -1159,7 +1161,7 @@ uint8 LCD_FramePanel(D_FramePanel *framePanel)
 	{
 		if(TouchDet == NotClicked)
 		{
-		    if(CursorX >= framePanel->X1 && CursorX <= framePanel->X2 && CursorY >= framePanel->Y1 && CursorY <= framePanel->Y2 && TouchDet == NotClicked)
+		    if(CrPosX1 >= framePanel->X1 && CrPosX1 <= framePanel->X2 && CrPosY1 >= framePanel->Y1 && CrPosY1 <= framePanel->Y2 && TouchDet == NotClicked)
 		    {
 		    	if(framePanel->Is_pressed == Clicked)
 		    	{
@@ -1173,7 +1175,7 @@ uint8 LCD_FramePanel(D_FramePanel *framePanel)
 			framePanel->Is_pressed = NotClicked;
 			return NotClicked;
 		}
-	} */
+	}
 	return NotClicked;
 }
 void LCD_Circle(D_Circle *circle)
