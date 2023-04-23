@@ -2,18 +2,20 @@
 #include "SDRAM.h"
 #include "SimpleGraphics.h"
 
-short unsigned int RGB[272*480];
 
-extern LTDC_HandleTypeDef hltdc;
-DisplayConfig ds;
+extern LTDC_HandleTypeDef hltdc; // Структура для управления параметрами контроллера дисплея
+
+short unsigned int RGB[272*480]; //Резервируем память для буффера дисплея
+DisplayConfig ds;                //Основные параметры библиотеки
+
 
 void MainFunc ()
 {
-	ds.Color_Type = Color565;
+	ds.Color_Type = Color565; //Бит на пиксель
 	ds.Display_Height = 272;
 	ds.Display_Width = 480;
-	ds.Layers = 1;
-	ds.Start_RAM_Address = (uint32_t)&RGB;
+	ds.Layers = 1;            //Количество слоев
+	ds.Start_RAM_Address = (uint32_t)&RGB; //Адрес начала кадрового буффера
 
 	HAL_LTDC_SetAddress(&hltdc,(uint32_t)&RGB,0);  // запускаем модуль LTDC (железный)
 	Graphics_Init(&ds); //инит библиотеки (из структуры ds)
@@ -288,7 +290,7 @@ void MainFunc ()
 
 
 
-
+     char S[] = {"wwwWWWW\nPrivet Iulia!! Davai pisi diplomnuiu rabotu, a to budesh aiaiai\n123456789\nQWERTYUIOP{}ASDFGHJKL:ZXCVBNM<>?"};
 
     uint16 i = 0;
 
@@ -362,7 +364,7 @@ void MainFunc ()
 //		    LCD_DualVGradient(&dvgr);
 //		    LCD_Label(&lb, "Hello!");
 //		    LCD_Button(&bt, "Butt1");
-		    LCD_RichTextBox(&RTB, "QWERTYUIOPASDFGHJKL;'ZXCVBNM,./qwertyuiop[]asdfghjkl;'zxcvbnm,./");
+		    LCD_RichTextBox(&RTB, S);
 		    HAL_Delay(300);
 
 		    RTB.X2+=1;

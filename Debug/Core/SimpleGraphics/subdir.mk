@@ -5,21 +5,18 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
-../Core/SimpleGraphics/Coordinates.c \
 ../Core/SimpleGraphics/Font.c \
 ../Core/SimpleGraphics/Graphics_IO.c \
 ../Core/SimpleGraphics/SimpleGraphics.c \
 ../Core/SimpleGraphics/Touch.c 
 
 OBJS += \
-./Core/SimpleGraphics/Coordinates.o \
 ./Core/SimpleGraphics/Font.o \
 ./Core/SimpleGraphics/Graphics_IO.o \
 ./Core/SimpleGraphics/SimpleGraphics.o \
 ./Core/SimpleGraphics/Touch.o 
 
 C_DEPS += \
-./Core/SimpleGraphics/Coordinates.d \
 ./Core/SimpleGraphics/Font.d \
 ./Core/SimpleGraphics/Graphics_IO.d \
 ./Core/SimpleGraphics/SimpleGraphics.d \
@@ -33,7 +30,7 @@ Core/SimpleGraphics/%.o Core/SimpleGraphics/%.su Core/SimpleGraphics/%.cyclo: ..
 clean: clean-Core-2f-SimpleGraphics
 
 clean-Core-2f-SimpleGraphics:
-	-$(RM) ./Core/SimpleGraphics/Coordinates.cyclo ./Core/SimpleGraphics/Coordinates.d ./Core/SimpleGraphics/Coordinates.o ./Core/SimpleGraphics/Coordinates.su ./Core/SimpleGraphics/Font.cyclo ./Core/SimpleGraphics/Font.d ./Core/SimpleGraphics/Font.o ./Core/SimpleGraphics/Font.su ./Core/SimpleGraphics/Graphics_IO.cyclo ./Core/SimpleGraphics/Graphics_IO.d ./Core/SimpleGraphics/Graphics_IO.o ./Core/SimpleGraphics/Graphics_IO.su ./Core/SimpleGraphics/SimpleGraphics.cyclo ./Core/SimpleGraphics/SimpleGraphics.d ./Core/SimpleGraphics/SimpleGraphics.o ./Core/SimpleGraphics/SimpleGraphics.su ./Core/SimpleGraphics/Touch.cyclo ./Core/SimpleGraphics/Touch.d ./Core/SimpleGraphics/Touch.o ./Core/SimpleGraphics/Touch.su
+	-$(RM) ./Core/SimpleGraphics/Font.cyclo ./Core/SimpleGraphics/Font.d ./Core/SimpleGraphics/Font.o ./Core/SimpleGraphics/Font.su ./Core/SimpleGraphics/Graphics_IO.cyclo ./Core/SimpleGraphics/Graphics_IO.d ./Core/SimpleGraphics/Graphics_IO.o ./Core/SimpleGraphics/Graphics_IO.su ./Core/SimpleGraphics/SimpleGraphics.cyclo ./Core/SimpleGraphics/SimpleGraphics.d ./Core/SimpleGraphics/SimpleGraphics.o ./Core/SimpleGraphics/SimpleGraphics.su ./Core/SimpleGraphics/Touch.cyclo ./Core/SimpleGraphics/Touch.d ./Core/SimpleGraphics/Touch.o ./Core/SimpleGraphics/Touch.su
 
 .PHONY: clean-Core-2f-SimpleGraphics
 

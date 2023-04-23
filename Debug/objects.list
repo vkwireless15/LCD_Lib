@@ -1,4 +1,3 @@
-"./Core/SimpleGraphics/Coordinates.o"
 "./Core/SimpleGraphics/Font.o"
 "./Core/SimpleGraphics/Graphics_IO.o"
 "./Core/SimpleGraphics/SimpleGraphics.o"

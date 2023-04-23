@@ -2,6 +2,8 @@
 #include "stm32f7xx_hal.h"
 #include <string.h>
 
+extern uint16 CrPosX1, CrPosX2, CrPosX3, CrPosX4, CrPosX5, CrPosY1, CrPosY2, CrPosY3, CrPosY4, CrPosY5;
+
 
 extern I2C_HandleTypeDef hi2c3;
 static ft5336_handle_TypeDef ft5336_handle = {FT5336_I2C_NOT_INITIALIZED, 0, 0};
@@ -334,6 +336,8 @@ uint8_t TS_GetState(TS_StateTypeDef *TS_State)
   }
   return (ts_status);
 }
+
+
 void Touch_Init(void)
 {
   uint8_t regValue = 0;
@@ -345,8 +349,10 @@ void Touch_Init(void)
   regValue = (FT5336_G_MODE_INTERRUPT_POLLING & (FT5336_G_MODE_INTERRUPT_MASK >> FT5336_G_MODE_INTERRUPT_SHIFT)) << FT5336_G_MODE_INTERRUPT_SHIFT;
   TS_IO_Write(TS_I2C_ADDRESS, FT5336_GMODE_REG, regValue);
   ft5336_handle.i2cInitialized = FT5336_I2C_INITIALIZED;
-
-
 }
+uint8 GetCursorPosition()
+{
 
+	return 0;
+}
 

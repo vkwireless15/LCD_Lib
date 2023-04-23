@@ -1,12 +1,11 @@
 #include "SimpleGraphics.h"
 #include "Graphics_IO.h"
-#include "Coordinates.h"
 #include "Font.h"
 #include "Touch.h"
 
 uint32 DispHeight = 0, DispWidth = 0;
 uint8 ColorType = Color565;
-extern uint16 CrPosX1, CrPosX2, CrPosX3, CrPosX4, CrPosX5, CrPosY1, CrPosY2, CrPosY3, CrPosY4, CrPosY5;
+uint16 CrPosX1 = 0, CrPosX2 = 0, CrPosX3 = 0, CrPosX4 = 0, CrPosX5 = 0, CrPosY1 = 0, CrPosY2 = 0, CrPosY3 = 0, CrPosY4 = 0, CrPosY5 = 0;
 
 uint32 Color_A888_(uint32 Color, uint8 Alpha) //преобразует отдельные значения цвета  и прозрачности в формат А888(альфа канал + 24 бита цвета)
 {
@@ -39,7 +38,7 @@ void Set_Backlight(uint8 State, uint32 Brightness) //Управление под
 {
 	Backlight(Brightness, State);
 }
-uint8 is_Disp_Res(int32 x1, int32 x2, int32 y1, int32 y2) //
+uint8 is_Disp_Res(int32 x1, int32 x2, int32 y1, int32 y2) //Проверка элемента на выход за пределы дисплея
 {
 	if((x1 > 0)&&(x2 <= DispWidth))
 	{
@@ -50,9 +49,9 @@ uint8 is_Disp_Res(int32 x1, int32 x2, int32 y1, int32 y2) //
 	}
 	return Error;
 }
-void SymbolParameters(uint16 X, uint16 Y, uint16 *NextX, uint16 *NextY, uint8 *CharWt, uint8 *CharHt, uint32 Color, char Symbol)
+void SymbolParameters(uint16 X, uint16 Y, uint16 *NextX, uint16 *NextY, uint8 *CharWt, uint8 *CharHt, char Symbol) //Параметры положения текущего символа и положения следующих возможных.
 {
-	uint8 FontH = calibri[1];
+	uint8 FontH = FontHParameter();
 	uint8 FirstChar = calibri[2];
 	uint8 Cursor = Symbol - FirstChar;
 	uint8 CharW = calibri[Cursor + 4];
@@ -62,13 +61,86 @@ void SymbolParameters(uint16 X, uint16 Y, uint16 *NextX, uint16 *NextY, uint8 *C
 	*CharWt = CharW;
 	*CharHt = FontH;
 }
+uint32 SymbolLengthPixels(char String[]) //Длина строки в пикселях
+{
+	uint8 FirstChar = calibri[2];
+	uint8 Cursor = 0;
+	uint8 CharW = 0;
+	uint32 Len = 0;
+	uint32 SymCh = 0;
+
+	while(String[SymCh] != 0)
+	{
+		Cursor = String[SymCh] - FirstChar;
+		CharW = calibri[Cursor + 4];
+		Len += CharW;
+		SymCh++;
+	}
+	return Len;
+}
+uint8 RU_EN_UTF16ToASCII(char S1, char S2)
+{
+	char S = S2 - 16;
+
+	if(S1 == 0xD1 && S2 == 145)
+	{
+		return 184;
+	}
+
+	if(S1 == 0xD0 && S2 == 129)
+	{
+		return 168;
+	}
+
+	if(S <= 175 && S>= 128)
+	{
+	    return S2 + 48;
+    }
+	else
+	{
+		return S + 128;
+	}
+	return Error;
+}
+void Get1251(char Str[])
+{
+	 uint32 W1 = 0, cnt = 0;
+	 while(Str[W1] != 0)
+	 { W1++ ;}
+
+	 for(uint32	s = 0; s < W1;)
+	 {
+		 if(Str[s] == 0xD0 || Str[s] == 0xD1)
+		 {
+			 Str[cnt] = RU_EN_UTF16ToASCII(Str[s], Str[s+1]);
+			 if(s!=cnt)
+			 {
+				 Str[s] = 0;
+				 Str[s + 1] = 0;
+			 }
+			 cnt++;
+			 s+=2;
+		 }
+		 else
+		 {
+			 Str[cnt] = Str[s];
+			 if(s!=cnt)
+			 {
+				 Str[s] = 0;
+			 }
+			 cnt++;
+			 s++;
+		 }
+	 }
+}
 
 void Graphics_Init(DisplayConfig *dcf) //Инициализация самой бибиллиотеки а также инициализация графических устройств(дисплей, графические ускорители, тач-панели)
 {
 	DispHeight = dcf->Display_Height;
 	DispWidth = dcf->Display_Width;
 	ColorType = dcf->Color_Type;
-	Init_Graphics_System(dcf->Display_Height, dcf->Display_Width, dcf->Start_RAM_Address, dcf->Layers, dcf->Color_Type);
+	Init_Graphics_System(dcf->Start_RAM_Address, dcf->Layers, dcf->Color_Type);
+	Touch_Init();
 }
 
 void Pixel(uint16 x, uint16 y, uint32 Color, uint16 Tolshina)
@@ -624,7 +696,7 @@ uint8 Inverse(uint8 S)
 	}
 	return K;
 }
-void Symbol(uint16 X, uint16 Y, uint16 *NextX, uint16 *NextY, uint8 *CharWt, uint8 *CharHt, uint32 Color, char Symbol)
+void Symbol(uint16 X, uint16 Y, uint32 Color, char Symbol)
 {
 	uint8 FontH = calibri[1];
 	uint8 FirstChar = calibri[2];
@@ -635,10 +707,6 @@ void Symbol(uint16 X, uint16 Y, uint16 *NextX, uint16 *NextY, uint8 *CharWt, uin
 	uint16 i, j, k = 0;
 	uint32 CharBit = 0;
 
-	*NextX = X + CharW;
-	*NextY = Y + FontH;
-	*CharWt = CharW;
-	*CharHt = FontH;
 	for(i = 4; i < Cursor + 4; i++)
 	{
 	   	if(calibri[i] <= 8)
@@ -741,7 +809,8 @@ void Label (uint16 X, uint16 Y, uint32 Color, char String[])//++
   	if(String[i]>= 0x20 && String[i]<= 0xFF)
   	{
 
-  		Symbol(X, Y, &Nx, &Ny,&ChW,&ChH, Color, String[i]);
+  		Symbol(X, Y, Color, String[i]);
+  		SymbolParameters(X, Y, &Nx, &Ny,&ChW,&ChH, String[i]);
 
   		if(X + ChW < DispWidth)
   		{
@@ -809,78 +878,6 @@ void TrackBar(int16 XStart, int16 XEnd, int16 YStart, int16 YEnd, int16 StartPos
 		  FillCircle(XStart + ((XEnd - XStart) / 2),YPOS,Rad,TrackerColor);
 	  }
 }
-uint32 SymbolLength(char String[])
-{
-	uint8 FirstChar = calibri[2];
-	uint8 Cursor = 0;
-	uint8 CharW = 0;
-	uint32 Len = 0;
-	uint32 SymCh = 0;
-
-	while(String[SymCh] != 0)
-	{
-		Cursor = String[SymCh] - FirstChar;
-		CharW = calibri[Cursor + 4];
-		Len += CharW;
-		SymCh++;
-	}
-	return Len;
-}
-uint8 RU_EN_UTF16ToASCII(char S1, char S2)
-{
-	char S = S2 - 16;
-
-	if(S1 == 0xD1 && S2 == 145)
-	{
-		return 184;
-	}
-
-	if(S1 == 0xD0 && S2 == 129)
-	{
-		return 168;
-	}
-
-	if(S <= 175 && S>= 128)
-	{
-	    return S2 + 48;
-    }
-	else
-	{
-		return S + 128;
-	}
-	return Error;
-}
-void Get1251(char Str[])
-{
-	 uint32 W1 = 0, cnt = 0;
-	 while(Str[W1] != 0)
-	 { W1++ ;}
-
-	 for(uint32	s = 0; s < W1;)
-	 {
-		 if(Str[s] == 0xD0 || Str[s] == 0xD1)
-		 {
-			 Str[cnt] = RU_EN_UTF16ToASCII(Str[s], Str[s+1]);
-			 if(s!=cnt)
-			 {
-				 Str[s] = 0;
-				 Str[s + 1] = 0;
-			 }
-			 cnt++;
-			 s+=2;
-		 }
-		 else
-		 {
-			 Str[cnt] = Str[s];
-			 if(s!=cnt)
-			 {
-				 Str[s] = 0;
-			 }
-			 cnt++;
-			 s++;
-		 }
-	 }
-}
 void Form(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 TolshinaB, uint32 ColorL, uint32 ColorS, uint32 ColorW,uint32 ColorT,char FormName[])//++
 {
   uint16 k = TolshinaB - 1,txty;
@@ -899,7 +896,7 @@ void Button(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 TolshinaB, uint32
 {
   uint16 txtX, txtY, g = 0;
   txtY = y1+((y2 - y1)/2 - 8);
-  g = SymbolLength(Text);
+  g = SymbolLengthPixels(Text);
   txtX = x1+((x2 - x1)/2)-(g/2);
   FramePanel(BorderColor,BtColor,x1,x2,y1,y2,TolshinaB);
   Label(txtX, txtY, TextColor,Text);
@@ -1086,7 +1083,7 @@ void GraphLine(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 Color, uint8 T
 	//Line(160, 140, 260, 40, green | 0xff000000, 2);
 	//Line(270, 40, 170, 140, green | 0xff000000, 2);
 }
-void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Tolshina, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[])//++
+void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Tolshina, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[] )//++
 {
     uint16 Sym_count = 0;
     uint16 Nx = 0, Ny = 0;
@@ -1100,35 +1097,40 @@ void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Tolshina, uin
     {
       Sym_count++;
     }
+
     FramePanel(BColor,FloodColor,x1,x2,y1,y2,Tolshina);
 
     for(int i = 0; i < Sym_count; i++)
     {
-       if((Text[i] >= 0x20) | (Text[i] == 10))
-       {
-          if(Text[i] == 10)
-          {
-     	     y = Ny;
-     	     x = x1 + Tolshina;
-          }
+//       if((Text[i] >= 0x20) | (Text[i] == 10))
+//       {
+//          if(Text[i] == 10)
+//          {
+//     	     y = Ny;
+//     	     x = x1 + Tolshina;
+//          }
+//          else
+//          {
+//        	  Symbol(x, y,TextColor, Text[i]);
+//
+//        	  if(y + ChH + Tolshina >= y2)
+//        	  {
+//        	    break;
+//        	  }
+//
+//        	  if(Nx + ChWt + Tolshina >= x2)
+//        	  {
+//        	     y = Ny;
+//        	     x = x1 + Tolshina;
+//        	  }
+//        	  else
+//        	  {
+//        	    x = Nx;
+//        	  }
+//        	  SymbolParameters(x, y, &Nx, &Ny, &ChWt, &ChH, Text[i]);
+//          }
 
-          if(y + ChH + Tolshina >= y2)
-          {
-    	     break;
-          }
-
-          Symbol(x, y, &Nx, &Ny, &ChWt,&ChH, TextColor, Text[i]);
-
-          if(Nx + ChWt + Tolshina >= x2)
-          {
-    	     y = Ny;
-    	     x = x1 + Tolshina;
-          }
-          else
-          {
-    	     x = Nx;
-          }
-       }
+//       }
     }
 }
 

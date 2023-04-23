@@ -1,5 +1,6 @@
 #ifndef _TOUCH_H_
 #define _TOUCH_H_
+#include "SimpleGraphics.h"
 #include "stm32f7xx_hal.h"
 #include <string.h>
 #include <stdlib.h>
@@ -178,5 +179,6 @@ typedef enum
 
 void Touch_Init(void);
 uint8_t TS_GetState(TS_StateTypeDef *TS_State);
+uint8 GetCursorPosition();
 
 #endif

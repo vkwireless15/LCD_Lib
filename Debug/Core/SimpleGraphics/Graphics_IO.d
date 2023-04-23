@@ -1,6 +1,6 @@
 Core/SimpleGraphics/Graphics_IO.o: ../Core/SimpleGraphics/Graphics_IO.c \
  ../Core/SimpleGraphics/Graphics_IO.h \
- ../Core/SimpleGraphics/SimpleGraphics.h ../Core/Inc/main.h \
+ ../Core/SimpleGraphics/SimpleGraphics.h ../Core/SimpleGraphics/Touch.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h \
  ../Core/Inc/stm32f7xx_hal_conf.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc.h \
@@ -37,10 +37,11 @@ Core/SimpleGraphics/Graphics_IO.o: ../Core/SimpleGraphics/Graphics_IO.c \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_sd.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_sdmmc.h \
  ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim.h \
- ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h
+ ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h \
+ ../Core/Inc/main.h
 ../Core/SimpleGraphics/Graphics_IO.h:
 ../Core/SimpleGraphics/SimpleGraphics.h:
-../Core/Inc/main.h:
+../Core/SimpleGraphics/Touch.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal.h:
 ../Core/Inc/stm32f7xx_hal_conf.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_rcc.h:
@@ -78,3 +79,4 @@ Core/SimpleGraphics/Graphics_IO.o: ../Core/SimpleGraphics/Graphics_IO.c \
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_ll_sdmmc.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim.h:
 ../Drivers/STM32F7xx_HAL_Driver/Inc/stm32f7xx_hal_tim_ex.h:
+../Core/Inc/main.h:
