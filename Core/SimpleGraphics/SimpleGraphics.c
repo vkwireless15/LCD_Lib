@@ -1,20 +1,44 @@
 #include "SimpleGraphics.h"
 #include "Graphics_IO.h"
 #include "Font.h"
-#include "Touch.h"
 
-uint32 DispHeight = 0, DispWidth = 0;
-uint8 ColorType = Color565;
-uint16 CrPosX1 = 0, CrPosX2 = 0, CrPosX3 = 0, CrPosX4 = 0, CrPosX5 = 0, CrPosY1 = 0, CrPosY2 = 0, CrPosY3 = 0, CrPosY4 = 0, CrPosY5 = 0;
+
+
+ uint32 DispHeight = 0, DispWidth = 0;
+ uint8 ColorType = Color565;
+ uint16 CrPosX1 = 0, CrPosX2 = 0, CrPosX3 = 0, CrPosX4 = 0, CrPosX5 = 0, CrPosY1 = 0, CrPosY2 = 0, CrPosY3 = 0, CrPosY4 = 0, CrPosY5 = 0;
+
+ uint8 Current_Layer;
+
+ uint32 WindowFrameColor;
+ uint32 WindowBarColor;
+ uint32 WindowBarHColor;
+ uint32 WindowBarLColor;
+ uint32 WindowColor;
+ uint32 WindowTextColor;
+ uint8 WindowFrameThickness;
+
+ uint32 ButtonFrameColor;
+ uint32 ButtonColor;
+ uint32 ButtonSelectedColor;
+ uint32 ButtonTextColor;
+
+ uint32 LabelColor;
+ uint32 LabelSelectedColor;
+ uint32 LabelBackgroundColor;
+
+ uint32 BarColor;
+ uint32 BarColor2;
+ uint32 BarColor3;
+
+ //User Fn
+
+
+ //
 
 uint32 Color_A888_(uint32 Color, uint8 Alpha) //преобразует отдельные значения цвета  и прозрачности в формат А888(альфа канал + 24 бита цвета)
 {
 	return Color | Alpha << 24;
-}
-uint32 FontHParameter() //Возвращает значение высоты шрифта
-{
-	uint8 FontH = calibri[1];
-	return FontH;
 }
 uint16 Get565Color(uint32 Color) //Возвращает значение цвета в формате пикселя 565(5 бит - красный цвет, 6 - зеленый, 5 - синий)
 {
@@ -33,6 +57,11 @@ uint16 Get565Color(uint32 Color) //Возвращает значение цве�
    RezColor |= (R << 11);
 
    return RezColor;
+}
+uint32 FontHParameter() //Возвращает значение высоты шрифта
+{
+	uint8 FontH = calibri[1];
+	return FontH;
 }
 void Set_Backlight(uint8 State, uint32 Brightness) //Управление подсветкой и ее яркостью(не поддерживается упр. яркостью для платы STM32F746Disco)
 {
@@ -133,22 +162,73 @@ void Get1251(char Str[])
 		 }
 	 }
 }
+uint8 Inverse(uint8 S)
+{
+	uint8 K = 0;
+	for(uint8 i = 0; i<8; i++)
+	{
+		if((S & 0x01) != 0)
+		{
+			K = K | 0x01;
+		}
+		S = S >> 1;
+		if(i<7)
+		{
+		  K = K << 1;
+	    }
+	}
+	return K;
+}
+
+
 
 void Graphics_Init(DisplayConfig *dcf) //Инициализация самой бибиллиотеки а также инициализация графических устройств(дисплей, графические ускорители, тач-панели)
 {
 	DispHeight = dcf->Display_Height;
 	DispWidth = dcf->Display_Width;
 	ColorType = dcf->Color_Type;
-	Init_Graphics_System(dcf->Start_RAM_Address, dcf->Layers, dcf->Color_Type);
-	Touch_Init();
-}
 
-void Pixel(uint16 x, uint16 y, uint32 Color, uint16 Tolshina)
+	WindowFrameColor = dcf->Window_Frame_Color;
+    WindowBarColor = dcf->Window_Bar_Color;
+    WindowBarHColor = dcf->Window_Bar_H_Color;
+    WindowBarLColor = dcf->Window_Bar_L_Color;
+    WindowColor = dcf->Window_Color;
+    WindowTextColor = dcf->Window_Text_Color;
+    WindowFrameThickness = dcf->Window_Frame_Thickness;
+
+    ButtonFrameColor = dcf->Button_Frame_Color;
+    ButtonColor = dcf->Button_Color;
+    ButtonSelectedColor = dcf->Button_Selected_Color;
+    ButtonTextColor = dcf->Button_Text_Color;
+
+    LabelColor = dcf->Label_Color;
+    LabelSelectedColor = dcf->Label_Selected_Color;
+    LabelBackgroundColor = dcf->Label_Background_Color;
+
+	BarColor = dcf-> Bar_Color;
+    BarColor2 = dcf-> Bar_Color2;
+    BarColor3 = dcf-> Bar_Color3;
+
+	Init_Graphics_System(dcf->Start_RAM_Address, dcf->Layers, dcf->Color_Type);
+}
+void Fill_Display(uint32 Color) //Заливает весь дисплей определенным цветом
+{
+
+	if(ColorType == Color565)
+	{ Fill_all(Get565Color(Color)); }
+
+	if(ColorType == Color888)
+	{ Fill_all(Color | 0xFF << 24); }
+
+	if(ColorType == Color_A888)
+	{ Fill_all(Color); }
+}
+void Pixel(uint16 x, uint16 y, uint32 Color, uint16 Thickness)
 {
   uint16 i, j, tolsx, tolsy;
   x--; y--;
-  tolsy = y+Tolshina;
-  tolsx = x+Tolshina;
+  tolsy = y+Thickness;
+  tolsx = x+Thickness;
   for(i = y; i<tolsy; i++)
   {
 	  for(j = x; j<tolsx; j++)
@@ -166,18 +246,6 @@ void Pixel(uint16 x, uint16 y, uint32 Color, uint16 Tolshina)
 	      }
 	  }
   }
-}
-void Fill_Display(uint32 Color) //Заливает весь дисплей определенным цветом
-{
-
-	if(ColorType == Color565)
-	{ Fill_all(Get565Color(Color)); }
-
-	if(ColorType == Color888)
-	{ Fill_all(Color | 0xFF << 24); }
-
-	if(ColorType == Color_A888)
-	{ Fill_all(Color); }
 }
 void Fill_Rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32 StopY) //заливает цветом прямоугольную область
 {
@@ -202,36 +270,36 @@ void Fill_Rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32
 			{ Fill_rectangle(Color | 0xFF << 24, StartX, StopX, StartY, StopY); }
 
 			if(ColorType == Color_A888)
-			{ Fill_all(Color); }
+			{ Fill_rectangle(Color | 0xFF << 24, StartX, StopX, StartY, StopY); }
 		}
 	}
 }
-void HLine(uint32 Color, int16 x1, int16 x2, int16 y1, uint8 Tolshina)//
+void HLine(uint32 Color, int16 x1, int16 x2, int16 y1, uint8 Thickness)//
 {
-    if(Tolshina > 0)
+    if(Thickness > 0)
     {
-    	Tolshina--;
-    	Fill_Rectangle(Color, x1, x2, y1, y1+Tolshina);
+    	Thickness--;
+    	Fill_Rectangle(Color, x1, x2, y1, y1+Thickness);
     }
 }
-void VLine(uint32 Color, int16 x1, int16 y1, int16 y2, uint8 Tolshina)
+void VLine(uint32 Color, int16 x1, int16 y1, int16 y2, uint8 Thickness)
 {
-	if(Tolshina > 0)
+	if(Thickness > 0)
 	{
-		Tolshina--;
-		Fill_Rectangle(Color, x1, x1+Tolshina, y1, y2);
+		Thickness--;
+		Fill_Rectangle(Color, x1, x1+Thickness, y1, y2);
 	}
 }
-void FramePanel(uint32 BorderColor, uint32 FloodColor, int16 x1, int16 x2, int16 y1, int16 y2, uint8 Tolshina)
+void FramePanel(uint32 BorderColor, uint32 FloodColor, int16 x1, int16 x2, int16 y1, int16 y2, uint8 Thickness)
 {
-	Tolshina --;
+	Thickness --;
 	Fill_Rectangle(FloodColor,x1,x2,y1,y2);
-    HLine(BorderColor,x1,x2,y1,Tolshina + 1);
-    HLine(BorderColor,x1,x2,y2 - Tolshina,Tolshina +1);
-    VLine(BorderColor,x1,y1,y2,Tolshina + 1);
-    VLine(BorderColor,x2 - Tolshina,y1,y2,Tolshina + 1);
+    HLine(BorderColor,x1,x2,y1,Thickness + 1);
+    HLine(BorderColor,x1,x2,y2 - Thickness,Thickness +1);
+    VLine(BorderColor,x1,y1,y2,Thickness + 1);
+    VLine(BorderColor,x2 - Thickness,y1,y2,Thickness + 1);
 }
-void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)//++
+void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Thickness)//++
 {
    uint16 y = 0, k = 0;
    if(x1 <= x2)
@@ -243,7 +311,7 @@ void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)
 		       k = (y2 - y1)/(x2 - x1);
 		       if((y2 - y1)%(x2 - x1) != 0)
 		       {
-		    	   if(Tolshina == 1)
+		    	   if(Thickness == 1)
 		    	   {
 		    	       k++;
 		           }
@@ -263,7 +331,7 @@ void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)
 			   y = (xp - x1) * (y2 - y1) / (x2 - x1) + y1;
 			   for(uint16 yp = 0; yp < k; yp++)
 			   {
-				   Pixel(xp, y, Color, Tolshina);
+				   Pixel(xp, y, Color, Thickness);
 				   y++;
 				   if(y > DispHeight)
 				   {break; }
@@ -277,7 +345,7 @@ void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)
 		       k = (y1 - y2)/(x2 - x1);
 		       if((y1 - y2)%(x2 - x1) != 0)
 		       {
-		    	   if(Tolshina == 1)
+		    	   if(Thickness == 1)
 	    	       {
 	    	           k++;
 	               }
@@ -297,7 +365,7 @@ void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)
 			   y = (xp - x1) * (y2 - y1) / (x2 - x1) + y1;
 			   for(uint16 yp = 0; yp < k; yp++)
 			   {
-				   Pixel(xp, y, Color, Tolshina);
+				   Pixel(xp, y, Color, Thickness);
 				   y--;
 				   if(y > DispHeight)
 				   {break; }
@@ -314,7 +382,7 @@ void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)
 		       k = (y2 - y1)/(x1 - x2);
 		       if((y2 - y1)%(x1 - x2) != 0)
 		       {
-		    	   if(Tolshina == 1)
+		    	   if(Thickness == 1)
 		    	   {
 		    	       k++;
 		           }
@@ -334,7 +402,7 @@ void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)
 			   y = (xp - x1) * (y2 - y1) / (x2 - x1) + y1;
 			   for(uint16 yp = 0; yp < k; yp++)
 			   {
-				   Pixel(xp, y, Color, Tolshina);
+				   Pixel(xp, y, Color, Thickness);
 				   y++;
 				   if(y > DispHeight)
 				   {break; }
@@ -348,7 +416,7 @@ void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)
 		       k = (y1 - y2)/(x2 - x1);
 		       if((y1 - y2)%(x2 - x1) != 0)
 		       {
-		    	   if(Tolshina == 1)
+		    	   if(Thickness == 1)
 	    	       {
 	    	           k++;
 	               }
@@ -368,7 +436,7 @@ void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)
 			   y = (xp - x1) * (y2 - y1) / (x2 - x1) + y1;
 			   for(uint16 yp = 0; yp < k; yp++)
 			   {
-				   Pixel(xp, y, Color, Tolshina);
+				   Pixel(xp, y, Color, Thickness);
 				   y++;
 				   if(y > DispHeight)
 				   {break; }
@@ -377,14 +445,14 @@ void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Tolshina)
 	   }
    }
 }
-void Circle (int16 x1, int16 y1, int16 r,uint32 Color, uint16 Tolshina)
+void Circle (int16 x1, int16 y1, int16 r,uint32 Color, uint16 Thickness)
 {
     int x = -r, y = 0, err = 2-2*r, e2;
 	do {
-		Pixel(x1-x, y1+y,Color,Tolshina);
-		Pixel(x1+x, y1+y,Color,Tolshina);
-		Pixel(x1+x, y1-y,Color,Tolshina);
-		Pixel(x1-x, y1-y,Color,Tolshina);
+		Pixel(x1-x, y1+y,Color,Thickness);
+		Pixel(x1+x, y1+y,Color,Thickness);
+		Pixel(x1+x, y1-y,Color,Thickness);
+		Pixel(x1-x, y1-y,Color,Thickness);
 		e2 = err;
 		if (e2 <= y) {
 			err += ++y*2+1;
@@ -579,9 +647,9 @@ void HGradB(int16 x1, int16 x2, int16 y1, int16 y2, uint32 ColorH, uint32 ColorC
  HGradA(x1,x1+((x2 - x1)/2),y1,y2,ColorH,ColorC);
  HGradA(x1+((x2 - x1)/2),x2,y1,y2,ColorC,ColorL);
 }
-void Progress_bar(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint32 BorderColor, uint32 FloodColor, uint32 BarColor, uint16 Tolshina, uint8 Orient)
+void Progress_bar(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint32 BorderColor, uint32 FloodColor, uint32 BarColor, uint16 Thickness, uint8 Orient)
 {
-  uint16 Tr = Tolshina - 1;
+  uint16 Tr = Thickness - 1;
   float STPOS;
   float POSCOUNT;
   uint16 XPOS = 0, YPOS = 0;
@@ -615,23 +683,23 @@ void Progress_bar(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16
       STPOS = StopPos - StartPos;
       POSCOUNT = (YEnd - YStart)/STPOS;
       YPOS = (uint16)(YEnd - (POSN * POSCOUNT));
-      YPOS += Tolshina;
+      YPOS += Thickness;
   }
 
   if(Orient == Horisontal)
   {
-      FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Tolshina);
+      FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Thickness);
       Fill_Rectangle(BarColor,XStart + 1 + Tr,XPOS-1,YStart + 1 + Tr,YEnd - Tr - 1);
   }
   else
   {
-	  FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Tolshina);
+	  FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Thickness);
 	  Fill_Rectangle(BarColor, XStart + 1 + Tr,XEnd - Tr - 1, YPOS, YEnd - Tr - 1);
   }
 }
-void Progress_bar_gradientB_V(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint32 BorderColor, uint32 FloodColor, uint32 BarColorH, uint32 BarColorC, uint16 Tolshina, uint8 Orient)//++
+void Progress_bar_gradient(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint32 BorderColor, uint32 FloodColor, uint32 BarColorH, uint32 BarColorC, uint16 Thickness, uint8 Orient)//++
 {
-	  uint16 Tr = Tolshina - 1;
+	  uint16 Tr = Thickness - 1;
 	  float STPOS;
 	  float POSCOUNT;
 	  uint16 XPOS = 0, YPOS = 0;
@@ -665,36 +733,19 @@ void Progress_bar_gradientB_V(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 
 	      STPOS = StopPos - StartPos;
 	      POSCOUNT = (YEnd - YStart)/STPOS;
 	      YPOS = (uint16)(YEnd - (POSN * POSCOUNT));
-	      YPOS += Tolshina;
+	      YPOS += Thickness;
 	  }
 
 	  if(Orient == Horisontal)
 	  {
-	      FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Tolshina);
+	      FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Thickness);
 	      VGradB(XStart + 1 + Tr,XPOS-1,YStart + 1 + Tr,YEnd - 1 - Tr,BarColorH,BarColorC,BarColorH);
 	  }
 	  else
 	  {
-		  FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Tolshina);
-		  VGradB(XStart + 1 + Tr, XEnd - Tr - 1, YPOS, YEnd - Tr - 1, BarColorH, BarColorC, BarColorH);
+		  FramePanel(BorderColor,FloodColor,XStart,XEnd,YStart, YEnd,Thickness);
+		  HGradB(XStart + 1 + Tr, XEnd - Tr - 1, YPOS, YEnd - Tr - 1, BarColorH, BarColorC, BarColorH);
 	  }
-}
-uint8 Inverse(uint8 S)
-{
-	uint8 K = 0;
-	for(uint8 i = 0; i<8; i++)
-	{
-		if((S & 0x01) != 0)
-		{
-			K = K | 0x01;
-		}
-		S = S >> 1;
-		if(i<7)
-		{
-		  K = K << 1;
-	    }
-	}
-	return K;
 }
 void Symbol(uint16 X, uint16 Y, uint32 Color, char Symbol)
 {
@@ -825,9 +876,9 @@ void Label (uint16 X, uint16 Y, uint32 Color, char String[])//++
   }
 
 }
-void TextBox(uint16 x1, uint16 x2, uint16 y1,uint16 Tolshina, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[])//++
+void TextBox(uint16 x1, uint16 x2, uint16 y1,uint16 Thickness, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[])//++
 {
-  FramePanel(BColor,FloodColor,x1, x2, y1, y1+19, Tolshina);
+  FramePanel(BColor,FloodColor,x1, x2, y1, y1+19, Thickness);
   Label(x1+2,y1+1, TextColor, Text);
 }
 void TrackBar(int16 XStart, int16 XEnd, int16 YStart, int16 YEnd, int16 StartPos, int16 StopPos, int16 CurrPos, int32 BorderColor, uint32 FloodColor, uint32 TrackerColor, uint8 Orient, uint8 Rad)
@@ -878,53 +929,53 @@ void TrackBar(int16 XStart, int16 XEnd, int16 YStart, int16 YEnd, int16 StartPos
 		  FillCircle(XStart + ((XEnd - XStart) / 2),YPOS,Rad,TrackerColor);
 	  }
 }
-void Form(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 TolshinaB, uint32 ColorL, uint32 ColorS, uint32 ColorW,uint32 ColorT,char FormName[])//++
+void Form(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 Thickness, uint32 ColorL, uint32 ColorS, uint32 ColorW,uint32 ColorT,char FormName[])//++
 {
-  uint16 k = TolshinaB - 1,txty;
+  uint16 k = Thickness - 1,txty;
   txty = y1+((y1+y_S - y1)/2 - 8);
 
   Fill_Rectangle(ColorW,x1,x2,y1,y2);
   Fill_Rectangle(ColorS,x1,x2,y1,y1+y_S);
-  VLine(ColorL,x1,y1,y2,TolshinaB);
-  VLine(ColorL,x2-k,y1,y2,TolshinaB);
-  HLine(ColorL,x1,x2,y1,TolshinaB);
-  HLine(ColorL,x1,x2,y2-k,TolshinaB);
-  HLine(ColorL,x1+k,x2 - k,y_S+y1,TolshinaB);
+  VLine(ColorL,x1,y1,y2,Thickness);
+  VLine(ColorL,x2-k,y1,y2,Thickness);
+  HLine(ColorL,x1,x2,y1,Thickness);
+  HLine(ColorL,x1,x2,y2-k,Thickness);
+  HLine(ColorL,x1+k,x2 - k,y_S+y1,Thickness);
   Label(x1+k+2,txty+k,ColorT,FormName);
 }
-void Button(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 TolshinaB, uint32 BorderColor, uint32 BtColor, char Text[],uint32 TextColor)//++
+void Button(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 Thickness, uint32 BorderColor, uint32 BtColor, char Text[],uint32 TextColor)//++
 {
   uint16 txtX, txtY, g = 0;
   txtY = y1+((y2 - y1)/2 - 8);
   g = SymbolLengthPixels(Text);
   txtX = x1+((x2 - x1)/2)-(g/2);
-  FramePanel(BorderColor,BtColor,x1,x2,y1,y2,TolshinaB);
+  FramePanel(BorderColor,BtColor,x1,x2,y1,y2,Thickness);
   Label(txtX, txtY, TextColor,Text);
 }
-void GradientFormA(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 TolshinaB, uint32 ColorL, uint32 ColorSH, uint32 ColorSL, uint32 ColorW,uint32 ColorT,char FormName[])//++
+void GradientFormA(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 Thickness, uint32 ColorL, uint32 ColorSH, uint32 ColorSL, uint32 ColorW,uint32 ColorT,char FormName[])//++
 {
-  uint16 k = TolshinaB - 1,txty;
+  uint16 k = Thickness - 1,txty;
   txty = y1+(y_S / 2 - 8);
   Fill_Rectangle(ColorW,x1,x2,y1,y2);
   HGradA(x1,x2,y1,y1+y_S,ColorSH,ColorSL);
-  VLine(ColorL,x1,y1,y2,TolshinaB);
-  VLine(ColorL,x2-k,y1,y2,TolshinaB);
-  HLine(ColorL,x1,x2,y1,TolshinaB);
-  HLine(ColorL,x1,x2,y2-k,TolshinaB);
-  HLine(ColorL,x1+k,x2 - k,y_S+y1,TolshinaB);
+  VLine(ColorL,x1,y1,y2,Thickness);
+  VLine(ColorL,x2-k,y1,y2,Thickness);
+  HLine(ColorL,x1,x2,y1,Thickness);
+  HLine(ColorL,x1,x2,y2-k,Thickness);
+  HLine(ColorL,x1+k,x2 - k,y_S+y1,Thickness);
   Label(x1+k+2,txty+k,ColorT,FormName);
 }
-void GradientFormB(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 TolshinaB, uint32 ColorL, uint32 ColorSH, uint32 ColorSL, uint32 ColorW,uint32 ColorT,char FormName[])//++
+void GradientFormB(uint16 x1, uint16 x2, uint16 y1, uint16 y2, uint16 y_S, uint16 Thickness, uint32 ColorL, uint32 ColorSH, uint32 ColorSL, uint32 ColorW,uint32 ColorT,char FormName[])//++
 {
-  uint16 k = TolshinaB - 1,txty;
+  uint16 k = Thickness - 1,txty;
   txty = y1+(y_S/2 - 8);
   Fill_Rectangle(ColorW,x1,x2,y1,y2);
   VGradA(x1,x2,y1,y1+y_S,ColorSH,ColorSL);
-  VLine(ColorL,x1,y1,y2,TolshinaB);
-  VLine(ColorL,x2-k,y1,y2,TolshinaB);
-  HLine(ColorL,x1,x2,y1,TolshinaB);
-  HLine(ColorL,x1,x2,y2-k,TolshinaB);
-  HLine(ColorL,x1+k,x2 - k,y_S+y1,TolshinaB);
+  VLine(ColorL,x1,y1,y2,Thickness);
+  VLine(ColorL,x2-k,y1,y2,Thickness);
+  HLine(ColorL,x1,x2,y1,Thickness);
+  HLine(ColorL,x1,x2,y2-k,Thickness);
+  HLine(ColorL,x1+k,x2 - k,y_S+y1,Thickness);
   Label(x1+k+2,txty+k,ColorT,FormName);
 }
 void CheckBox(int16 x1, int16 x2, int16 y1, int16 y2, uint32 BrColor, uint32 BackColor, uint32 ChColor, uint8 Checked, uint32 TextColor, char Name[])
@@ -956,50 +1007,50 @@ void Radiobutton(uint16 x, uint16 y, uint16 Radius, uint32 ExCirColor, uint32 In
 		Circle(x,y,Radius,ExCirColor,2);
 	}
 }
-void Graph(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 FillColor, uint32 FrColor, uint8 Tl, uint32 LinColor, uint32 StepX, uint32 StepY, int32 XMax, int32 XMin, int32 YMax, int32 YMin)
+void Graph(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 FillColor, uint32 FrColor, uint8 Thickness, uint32 LinColor, uint32 StepX, uint32 StepY, int32 XMax, int32 XMin, int32 YMax, int32 YMin)
 {
 	float XC, YC, StX, StY, XX, YY;;
 
 	XC = ((float)XMax - (float)XMin) / (float)StepX;
 	YC = ((float)YMax - (float)YMin) / (float)StepY;
-	FramePanel(FrColor, FillColor, X1, X2, Y1, Y2, Tl);
+	FramePanel(FrColor, FillColor, X1, X2, Y1, Y2, Thickness);
 
-	StX = (((float)X2 - (float)Tl) - ((float)X1 + (float)Tl)) / XC;
-	StY = (((float)Y2 - (float)Tl) - ((float)Y1 + (float)Tl)) / YC;
-	XX = (float)X1 + (float)Tl;
-	YY = (float)Y2 - (float)Tl;
+	StX = (((float)X2 - (float)Thickness) - ((float)X1 + (float)Thickness)) / XC;
+	StY = (((float)Y2 - (float)Thickness) - ((float)Y1 + (float)Thickness)) / YC;
+	XX = (float)X1 + (float)Thickness;
+	YY = (float)Y2 - (float)Thickness;
 
-	VLine(LinColor, (uint16)XX, Y1+Tl, Y2-Tl, 1);
+	VLine(LinColor, (uint16)XX, Y1+Thickness, Y2-Thickness, 1);
 	XX += StX;
 	for(uint16 x = 0; x < XC; x++)
 	{
 		if(x < XC - 1)
 		{
-		    VLine(LinColor, (uint16)XX, Y1+Tl, Y2-Tl, 1);
+		    VLine(LinColor, (uint16)XX, Y1+Thickness, Y2-Thickness, 1);
 		    XX += StX;
 	    }
 		else
 		{
-		    VLine(LinColor, X2 - Tl, Y1+Tl, Y2-Tl, 1);
+		    VLine(LinColor, X2 - Thickness, Y1+Thickness, Y2-Thickness, 1);
 		    XX += StX;
 		}
 	}
-	HLine(LinColor, X1+Tl, X2-Tl, (uint16)YY, 1);
+	HLine(LinColor, X1+Thickness, X2-Thickness, (uint16)YY, 1);
 	YY -= StY;
 	for(uint16 y = 0; y < YC; y++)
 	{
-		if((uint16)YY >= Y1 && (uint16)YY <= Y1 + Tl)
+		if((uint16)YY >= Y1 && (uint16)YY <= Y1 + Thickness)
 		{
-		    HLine(LinColor, X1+Tl, X2-Tl, Y1 + Tl, 1);
+		    HLine(LinColor, X1+Thickness, X2-Thickness, Y1 + Thickness, 1);
 	    }
 		else
 		{
-			HLine(LinColor, X1+Tl, X2-Tl, (uint16)YY, 1);
+			HLine(LinColor, X1+Thickness, X2-Thickness, (uint16)YY, 1);
 		}
 		YY -= StY;
 	}
 }
-void GraphLine(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 Color, uint8 Tl, uint32 StepX, uint32 StepY, uint32 XMax, uint32 XMin, int YMax, int YMin, int data[], uint32 Points, uint8 LineTl)
+void GraphLine(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 Color, uint8 Thickness, uint32 StepX, uint32 StepY, uint32 XMax, uint32 XMin, int YMax, int YMin, int data[], uint32 Points, uint8 LineThickness)
 {
 	uint16 Points_cnt = 0, Yctrl = 0;
 	float LineX = 0, NextX = 0, LineY = 0, NextY = 0;
@@ -1014,17 +1065,17 @@ void GraphLine(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 Color, uint8 T
 		StX = (float)(X2 - X1) / (float)(XMax - XMin) * 0.9902;
 	}
 
-	LineX = (float)X1 + (float)Tl + (float)(LineTl - 1);
+	LineX = (float)X1 + (float)Thickness + (float)(LineThickness - 1);
 	NextX = LineX;
-	StartY = (float)Y2 - (float)(Tl) - (float)LineTl;
+	StartY = (float)Y2 - (float)(Thickness) - (float)LineThickness;
 
 	LineY = StartY - ((YY / Ydif * (float)data[XMin]) * 0.974);
 
 	Yctrl = LineY;
 
-	if(Yctrl < (Y1 + Tl))
+	if(Yctrl < (Y1 + Thickness))
 	{
-		Yctrl = Y1 + Tl;
+		Yctrl = Y1 + Thickness;
 	}
 
 	NextY = Yctrl;
@@ -1039,10 +1090,10 @@ void GraphLine(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 Color, uint8 T
 		{
 		    if(Points_cnt < Points)
 		    {
-		    	if(NextX >= X2 - Tl)
-		    	{NextX = X2 - LineTl;}
+		    	if(NextX >= X2 - Thickness)
+		    	{NextX = X2 - LineThickness;}
 
-		        Line((uint16)LineX, (uint16)LineY, (uint16)NextX, (uint16)NextY, Color, LineTl);
+		        Line((uint16)LineX, (uint16)LineY, (uint16)NextX, (uint16)NextY, Color, LineThickness);
 		        owf_flag = 0;
 	        }
 		    Points_cnt++;
@@ -1053,15 +1104,15 @@ void GraphLine(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 Color, uint8 T
 		{
 			if(owf_flag == 0)
 			{
-				NextY = Y1 + Tl;
-				Line((uint16)LineX, (uint16)LineY, (uint16)NextX, (uint16)NextY, Color, LineTl);
+				NextY = Y1 + Thickness;
+				Line((uint16)LineX, (uint16)LineY, (uint16)NextX, (uint16)NextY, Color, LineThickness);
 				owf_flag = 1;
 			}
 
 			if(data[x] > YMax)
 			{
 			    LineX = NextX;
-			    LineY = Y1 + Tl;
+			    LineY = Y1 + Thickness;
 		    }
 			else
 			{
@@ -1070,20 +1121,8 @@ void GraphLine(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 Color, uint8 T
 			}
 		}
 	}
-
-	//Line(40, 30, 40, 130, green | 0xff000000, 2);
-	//Line(40, 240, 40, 140, green | 0xff000000, 2);
-
-	//Line(50, 30, 150, 30, green | 0xff000000, 2);
-	//Line(260, 30, 160, 30, green | 0xff000000, 2);
-
-	//Line(50, 40, 150, 140, green | 0xff000000, 2);
-	//Line(150, 150, 50, 50, green | 0xff000000, 2);
-
-	//Line(160, 140, 260, 40, green | 0xff000000, 2);
-	//Line(270, 40, 170, 140, green | 0xff000000, 2);
 }
-void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Tolshina, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[] )//++
+void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Thickness, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[] )//++
 {
     uint16 Sym_count = 0;
     uint16 Nx = 0, Ny = 0;
@@ -1091,14 +1130,14 @@ void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Tolshina, uin
     uint8 ChWt = 0;
     uint8 ChH = 0;
 
-    x = x1 + Tolshina;
+    x = x1 + Thickness;
     y = y1;
     while(Text[Sym_count]!=0)
     {
       Sym_count++;
     }
 
-    FramePanel(BColor,FloodColor,x1,x2,y1,y2,Tolshina);
+    FramePanel(BColor,FloodColor,x1,x2,y1,y2,Thickness);
 
     for(int i = 0; i < Sym_count; i++)
     {
@@ -1136,504 +1175,43 @@ void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Tolshina, uin
 
 
 
-//для внешнего пользования(прикладных программ) Обработка касаний, координатных штучек
+void LCD_FramePanel()
+{
+   FramePanel(WindowFrameColor, WindowColor, 1, DispWidth, 1, DispHeight, WindowFrameThickness);
+}
+void LCD_Progress_bar(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint8 Orient)
+{
+   Progress_bar(X1, X2, Y1, Y2, StartPos, StopPos, CurrPos, WindowFrameColor, WindowColor, BarColor, WindowFrameThickness, Orient);
+}
+void LCD_Progress_bar_gradient(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint8 Orient)
+{
+   Progress_bar_gradient(X1, X2, Y1, Y2, StartPos, StopPos, CurrPos, WindowFrameColor, WindowColor, BarColor2, BarColor3, WindowFrameThickness, Orient);
+}
+void LCD_Label(uint16 X, uint16 Y, char String[])
+{
+   Label (X, Y, LabelColor, String);
+}
+void LCD_TextBox(uint16 x1, uint16 x2, uint16 y1, char Text[])
+{
+    TextBox(x1, x2, y1, WindowFrameThickness, WindowFrameColor, WindowColor, WindowTextColor, Text);
+}
+void LCD_Form(char FormName[])
+{
+   Form(1, DispWidth, 1, DispHeight, 25, WindowFrameThickness, WindowFrameColor, WindowBarColor, WindowColor, WindowTextColor, FormName);
+}
+void LCD_Button(uint16 x1, uint16 x2, uint16 y1, uint16 y2, char Text[])
+{
+   Button(x1, x2, y1, y2, WindowFrameThickness, ButtonFrameColor, ButtonColor, Text, ButtonTextColor);
+}
+void LCD_Gradient_Form_A(char FormName[])
+{
+   GradientFormA(1, DispWidth, 1, DispHeight, 25, WindowFrameThickness, WindowFrameColor, WindowBarHColor, WindowBarLColor, WindowColor, WindowTextColor, FormName);
+}
+void LCD_Gradient_Form_B(char FormName[])
+{
+   GradientFormB(1, DispWidth, 1, DispHeight, 25, WindowFrameThickness, WindowFrameColor, WindowBarHColor, WindowBarLColor, WindowColor, WindowTextColor, FormName);
+}
 
-void LCD_Fill_Rectangle(D_Fill_Rectangle *FR)
-{
-    Fill_Rectangle(FR->Color, FR->X1, FR->X2, FR->Y1, FR->Y2);
-}
-void LCD_HLine(D_HLine *hline)
-{
-	HLine(hline->Color, hline->X1, hline->X2, hline->Y1, hline->Thickness);
-}
-void LCD_VLine(D_VLine *vline)
-{
-	VLine(vline->Color, vline->X1, vline->Y1, vline->Y2, vline->Thickness);
-}
-uint8 LCD_FramePanel(D_FramePanel *framePanel)
-{
-	uint8 TouchDet = GetCursorPosition();
-	FramePanel(framePanel->FrameColor, framePanel->FillColor, framePanel->X1, framePanel->X2, framePanel->Y1, framePanel->Y2, framePanel->Thickness);
-	if(CrPosX1 >= framePanel->X1 && CrPosX1 <= framePanel->X2 && CrPosY1 >= framePanel->Y1 && CrPosY1 <= framePanel->Y2 && TouchDet == Clicked)
-	{
-		framePanel->Is_pressed = Clicked;
-	 	return Clicked;
-	}
-	else
-	{
-		if(TouchDet == NotClicked)
-		{
-		    if(CrPosX1 >= framePanel->X1 && CrPosX1 <= framePanel->X2 && CrPosY1 >= framePanel->Y1 && CrPosY1 <= framePanel->Y2 && TouchDet == NotClicked)
-		    {
-		    	if(framePanel->Is_pressed == Clicked)
-		    	{
-		    		framePanel->Is_pressed = NotClicked;
-			        return Unclicked;
-		    	}
-		    }
-	    }
-		else
-		{
-			framePanel->Is_pressed = NotClicked;
-			return NotClicked;
-		}
-	}
-	return NotClicked;
-}
-void LCD_Circle(D_Circle *circle)
-{
-	Circle(circle->X1, circle->Y1, circle->R, circle->Color, circle->Thickness);
-}
-void LCD_Line(D_Line *line)
-{
-    Line(line->X1, line->Y1, line->X2, line->Y2, line->Color, line->Thickness);
-}
-void LCD_FillCircle(D_FillCircle *fillCircle)
-{
-	FillCircle(fillCircle->X1, fillCircle->Y1, fillCircle->R, fillCircle->Color);
-}
-void LCD_ProgressBar(D_ProgressBar *ProgressBar)
-{
-	Progress_bar(ProgressBar->X1, ProgressBar->X2, ProgressBar->Y1, ProgressBar->Y2, ProgressBar->StartValue, ProgressBar->StopValue, ProgressBar->CurrentValue, ProgressBar->FrameColor, ProgressBar->FillColor, ProgressBar->BarColor, ProgressBar->Thickness, ProgressBar->Orientation);
-}
-uint8 LCD_TrackBar(D_TrackBar *trackBar)
-{
-//	uint8 TouchDet = GetCursorPosition();
-//	uint16 Xdif, ValDif;
-	TrackBar(trackBar->X1, trackBar->X2, trackBar->Y1, trackBar->Y2, trackBar->StartValue, trackBar->StopValue, trackBar->CurrentValue, trackBar->FrameColor, trackBar->BackColor, trackBar->TrackerColor, trackBar->Orientation, trackBar->Radius);
-//	if(CursorX >= trackBar->X1 && CursorX <= trackBar->X2 && CursorY >= trackBar->Y1 && CursorY <= trackBar->Y2 && TouchDet == Clicked)
-//	{
-//		if(trackBar->Orientation == Horisontal)
-//		{
-//		    trackBar->Is_pressed = Clicked;
-//		    Xdif = trackBar->X2 - trackBar->X1;
-//		    ValDif = trackBar->StopValue - trackBar->StartValue;
-//		    trackBar->CurrentValue = (CursorX - trackBar->X1) * ValDif / Xdif;
-//		    if(CursorX <= trackBar->X2 && CursorX >= trackBar->X2 - 3)
-//		    {trackBar->CurrentValue = trackBar->StopValue;}
-//	 	    return Clicked;
-//	    }
-//		else
-//		{
-//		    trackBar->Is_pressed = Clicked;
-//		    Xdif = trackBar->Y2 - trackBar->Y1;
-//		    ValDif = trackBar->StopValue - trackBar->StartValue;
-//		    trackBar->CurrentValue = trackBar->StopValue - ((CursorY - trackBar->Y1) * ValDif / Xdif);
-//		    if(CursorY <= trackBar->Y2 && CursorY >= trackBar->Y2 - 3)
-//		    {trackBar->CurrentValue = trackBar->StartValue;}
-//	 	    return Clicked;
-//		}
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= trackBar->X1 && CursorX <= trackBar->X2 && CursorY >= trackBar->Y1 - 5 && CursorY <= trackBar->Y1 + 5 && TouchDet == NotClicked)
-//		    {
-//		    	if(trackBar->Is_pressed == Clicked)
-//		    	{
-//		    		trackBar->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
-uint8 LCD_VGradient(D_VGradient *VGradient)
-{
-	//uint8 TouchDet = GetCursorPosition();
-	VGradA(VGradient->X1, VGradient->X2, VGradient->Y1, VGradient->Y2, VGradient->ColorH, VGradient->ColorL);
-
-//	if(CursorX >= VGradient->X1 && CursorX <= VGradient->X2 && CursorY >= VGradient->Y1 && CursorY <= VGradient->Y2 && TouchDet == Clicked)
-//	{
-//		VGradient->Is_pressed = Clicked;
-//	 	return Clicked;
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= VGradient->X1 && CursorX <= VGradient->X2 && CursorY >= VGradient->Y1 && CursorY <= VGradient->Y2 && TouchDet == NotClicked)
-//		    {
-//		    	if(VGradient->Is_pressed == Clicked)
-//		    	{
-//		    		VGradient->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
-uint8 LCD_HGradient(D_HGradient *HGradient)
-{
-//	uint8 TouchDet = GetCursorPosition();
-	HGradA(HGradient->X1, HGradient->X2, HGradient->Y1, HGradient->Y2, HGradient->ColorH, HGradient->ColorL);
-//	if(CursorX >= HGradient->X1 && CursorX <= HGradient->X2 && CursorY >= HGradient->Y1 && CursorY <= HGradient->Y2 && TouchDet == Clicked)
-//	{
-//		HGradient->Is_pressed = Clicked;
-//	 	return Clicked;
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= HGradient->X1 && CursorX <= HGradient->X2 && CursorY >= HGradient->Y1 && CursorY <= HGradient->Y2 && TouchDet == NotClicked)
-//		    {
-//		    	if(HGradient->Is_pressed == Clicked)
-//		    	{
-//		    		HGradient->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
-uint8 LCD_DualVGradient(D_DualVGradient *DualVGradient)
-{
-//	uint8_t TouchDet = GetCursorPosition();
-	VGradB(DualVGradient->X1, DualVGradient->X2, DualVGradient->Y1, DualVGradient->Y2, DualVGradient->ColorH, DualVGradient->ColorC, DualVGradient->ColorL);
-//	if(CursorX >= DualVGradient->X1 && CursorX <= DualVGradient->X2 && CursorY >= DualVGradient->Y1 && CursorY <= DualVGradient->Y2 && TouchDet == Clicked)
-//	{
-//		DualVGradient->Is_pressed = Clicked;
-//	 	return Clicked;
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= DualVGradient->X1 && CursorX <= DualVGradient->X2 && CursorY >= DualVGradient->Y1 && CursorY <= DualVGradient->Y2 && TouchDet == NotClicked)
-//		    {
-//		    	if(DualVGradient->Is_pressed == Clicked)
-//		    	{
-//		    		DualVGradient->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
-uint8 LCD_DualHGradient(D_DualHGradient *DualHGradient)
-{
-//	uint8_t TouchDet = GetCursorPosition();
-	HGradB(DualHGradient->X1, DualHGradient->X2, DualHGradient->Y1, DualHGradient->Y2, DualHGradient->ColorH, DualHGradient->ColorC, DualHGradient->ColorL);
-//	if(CursorX >= DualHGradient->X1 && CursorX <= DualHGradient->X2 && CursorY >= DualHGradient->Y1 && CursorY <= DualHGradient->Y2 && TouchDet == Clicked)
-//	{
-//		DualHGradient->Is_pressed = Clicked;
-//	 	return Clicked;
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= DualHGradient->X1 && CursorX <= DualHGradient->X2 && CursorY >= DualHGradient->Y1 && CursorY <= DualHGradient->Y2 && TouchDet == NotClicked)
-//		    {
-//		    	if(DualHGradient->Is_pressed == Clicked)
-//		    	{
-//		    		DualHGradient->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
-void LCD_Label(D_Label *label, char Text[])
-{
-    Label(label->X, label->Y, label->Color, Text);
-}
-uint8 LCD_Form(D_Form *form, char Text[])
-{
-	//uint8 TouchDet = GetCursorPosition();
-	Form(form->X1, form->X2, form->Y1, form->Y2, form->YBar, form->Thickness, form->FrameColor, form->BarColor, form->WindowColor, form->TextColor, Text);
-//	if(CursorX >= form->X1 && CursorX <= form->X2 && CursorY >= form->Y1 && CursorY <= form->YBar && TouchDet == Clicked)
-//	{
-//		form->Is_pressed = Clicked;
-//	 	return Clicked;
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= form->X1 && CursorX <= form->X2 && CursorY >= form->Y1 && CursorY <= form->YBar && TouchDet == NotClicked)
-//		    {
-//		    	if(form->Is_pressed == Clicked)
-//		    	{
-//		    		form->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			form->Is_pressed = NotClicked;
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
-uint8 LCD_Button(D_Button *button, char Text[])
-{
-//	uint8 TouchDet = GetCursorPosition();
-//	if(CursorX >= button->X1 && CursorX <= button->X2 && CursorY >= button->Y1 && CursorY <= button->Y2 && TouchDet == Clicked)
-//	{
-//		button->Is_pressed = Clicked;
-//		Button(button->X1, button->X2, button->Y1, button->Y2, button->Thickness, button->FrameColor, button->PressedColor, Text, button->TextColor);
-//	 	return Clicked;
-//	}
-//	else
-//	{
-		Button(button->X1, button->X2, button->Y1, button->Y2, button->Thickness, button->FrameColor, button->FillColor, Text, button->TextColor);
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= button->X1 && CursorX <= button->X2 && CursorY >= button->Y1 && CursorY <= button->Y2 && TouchDet == NotClicked)
-//		    {
-//		    	if(button->Is_pressed == Clicked)
-//		    	{
-//		    		button->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
-uint8 LCD_HGradientForm(D_HGradientForm *HGradientForm, char Text[])
-{
-	//uint8 TouchDet = GetCursorPosition();
-	GradientFormA(HGradientForm->X1, HGradientForm->X2, HGradientForm->Y1, HGradientForm->Y2, HGradientForm->YBar, HGradientForm->Thickness, HGradientForm->FrameColor, HGradientForm->BarColorH, HGradientForm->BarColorL, HGradientForm->WindowColor, HGradientForm->TextColor, Text);
-//	if(CursorX >= HGradientForm->X1 && CursorX <= HGradientForm->X2 && CursorY >= HGradientForm->Y1 && CursorY <= HGradientForm->YBar && TouchDet == Clicked)
-//	{
-//		HGradientForm->Is_pressed = Clicked;
-//	 	return Clicked;
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= HGradientForm->X1 && CursorX <= HGradientForm->X2 && CursorY >= HGradientForm->Y1 && CursorY <= HGradientForm->YBar && TouchDet == NotClicked)
-//		    {
-//		    	if(HGradientForm->Is_pressed == Clicked)
-//		    	{
-//		    		HGradientForm->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			HGradientForm->Is_pressed = NotClicked;
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
-uint8 LCD_VGradientForm(D_VGradientForm *VGradientForm, char Text[])
-{
-	//uint8 TouchDet = GetCursorPosition();
-	GradientFormB(VGradientForm->X1, VGradientForm->X2, VGradientForm->Y1, VGradientForm->Y2, VGradientForm->YBar, VGradientForm->Thickness, VGradientForm->FrameColor, VGradientForm->BarColorH, VGradientForm->BarColorL, VGradientForm->WindowColor, VGradientForm->TextColor, Text);
-//	if(CursorX >= VGradientForm->X1 && CursorX <= VGradientForm->X2 && CursorY >= VGradientForm->Y1 && CursorY <= VGradientForm->YBar && TouchDet == Clicked)
-//	{
-//		VGradientForm->Is_pressed = Clicked;
-//	 	return Clicked;
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= VGradientForm->X1 && CursorX <= VGradientForm->X2 && CursorY >= VGradientForm->Y1 && CursorY <= VGradientForm->YBar && TouchDet == NotClicked)
-//		    {
-//		    	if(VGradientForm->Is_pressed == Clicked)
-//		    	{
-//		    		VGradientForm->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			VGradientForm->Is_pressed = NotClicked;
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
-void LCD_ProgressBarVGradient(D_ProgressBarVGradient *ProgressBarVGradient)
-{
-   Progress_bar_gradientB_V(ProgressBarVGradient->X1, ProgressBarVGradient->X2, ProgressBarVGradient->Y1, ProgressBarVGradient->Y2, ProgressBarVGradient->StartValue, ProgressBarVGradient->StopValue, ProgressBarVGradient->CurrentValue, ProgressBarVGradient->FrameColor, ProgressBarVGradient->FillColor, ProgressBarVGradient->BarColorH, ProgressBarVGradient->BarColorC, ProgressBarVGradient->Thickness, ProgressBarVGradient->Orientation);
-}
-uint8 LCD_TextBox(D_TextBox *textBox, char Text[])
-{
-//	uint8 TouchDet = GetCursorPosition();
-	TextBox(textBox->X1, textBox->X2, textBox->Y1, textBox->Thickness, textBox->FrameColor, textBox->FillColor, textBox->TextColor, Text);
-//	if(CursorX >= textBox->X1 && CursorX <= textBox->X2 && CursorY >= textBox->Y1 && CursorY <= textBox->Y1+7 && TouchDet == Clicked)
-//	{
-//		textBox->Is_pressed = Clicked;
-//	 	return Clicked;
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= textBox->X1 && CursorX <= textBox->X2 && CursorY >= textBox->Y1 && CursorY <= textBox->Y1+7 && TouchDet == NotClicked)
-//		    {
-//		    	if(textBox->Is_pressed == Clicked)
-//		    	{
-//		    		textBox->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			textBox->Is_pressed = NotClicked;
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-
-}
-uint8 LCD_CheckBox(D_CheckBox *ctrl, char Name[])
-{
-//	uint8 TouchDet = GetCursorPosition();
-
-	CheckBox(ctrl->X1, ctrl->X2, ctrl->Y1, ctrl->Y2, ctrl->FrameColor, ctrl->BackColor, ctrl->CheckColor, ctrl->Checked, ctrl->TextColor, Name);
-
-
-	/*if(CursorX >= ctrl->X1 && CursorX <= ctrl->X2 && CursorY >= ctrl->Y1 && CursorY <= ctrl->Y2 && TouchDet == Clicked)
-	{
-		ctrl->Is_pressed = Clicked;
-	 	return Clicked;
-	}
-	else
-	{
-		if(TouchDet == NotClicked)
-		{
-		    if(CursorX >= ctrl->X1 && CursorX <= ctrl->X2 && CursorY >= ctrl->Y1 && CursorY <= ctrl->Y2 && TouchDet == NotClicked)
-		    {
-		    	if(ctrl->Is_pressed == Clicked)
-		    	{
-		    		if(ctrl->Checked == 0)
-		    		{ctrl->Checked = 1;}
-		    		else
-		    		{ctrl->Checked = 0;}
-		    		ctrl->Is_pressed = NotClicked;
-			        return Unclicked;
-		    	}
-		    }
-	    }
-		else
-		{
-			return NotClicked;
-		}
-	}*/
-	return NotClicked;
-}
-uint8 LCD_RadioButton(D_RadioButton *RadioButton, char Name[])
-{
-//	uint8 TouchDet = GetCursorPosition();
-	Radiobutton(RadioButton->X, RadioButton->Y, RadioButton->Radius, RadioButton->ExCirColor, RadioButton->InCirColor, RadioButton->BackColor,
-			RadioButton->Transp_key, RadioButton->Checked);
-	Label(RadioButton->X + RadioButton->Radius + 6, RadioButton->Y - (RadioButton->Radius * 2), RadioButton->TextColor, Name);
-//	if(CursorX >= RadioButton->X - RadioButton->Radius && CursorX <= RadioButton->X + RadioButton->Radius && CursorY >= RadioButton->Y - RadioButton->Radius && CursorY <= RadioButton->Y + RadioButton->Radius && TouchDet == Clicked)
-//	{
-//		RadioButton->Is_pressed = Clicked;
-//	 	return Clicked;
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= RadioButton->X - RadioButton->Radius && CursorX <= RadioButton->X + RadioButton->Radius && CursorY >= RadioButton->Y - RadioButton->Radius && CursorY <= RadioButton->Y + RadioButton->Radius && TouchDet == NotClicked)
-//		    {
-//		    	if(RadioButton->Is_pressed == Clicked)
-//		    	{
-//		    		if(RadioButton->Checked == 0)
-//		    		{RadioButton->Checked = 1;}
-//		    		else
-//		    		{RadioButton->Checked = 0;}
-//		    		RadioButton->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
-void LCD_Graph(D_Graph *Gr)
-{
-	if(Gr->Unvisible == 0)
-	{
-	   Graph(Gr->X1, Gr->X2, Gr->Y1, Gr->Y2, Gr->FillColor, Gr->FrameColor, Gr->Thickness, Gr->LinesColor, Gr->StepX, Gr->StepY, Gr->XMax, Gr->XMin, Gr->YMax, Gr->YMin);
-	}
-}
-void LCD_GraphLine(D_Graph *Gr, D_GraphLine *GrL, int data[])
-{
-	if(GrL->Unvisible == 0)
-	{
-	   GraphLine(Gr->X1, Gr->X2, Gr->Y1, Gr->Y2, GrL->LineColor, Gr->Thickness, Gr->StepX, Gr->StepY, Gr->XMax, Gr->XMin, Gr->YMax, Gr->YMin, data, GrL->Points_count, GrL->Thickness);
-	}
-}
-uint8 LCD_RichTextBox(D_RichTextBox *richTextBox, char Text[])
-{
-	//uint8 TouchDet = GetCursorPosition();
-	RichTextBox(richTextBox->X1, richTextBox->X2, richTextBox->Y1, richTextBox->Y2, richTextBox->Thickness, richTextBox->FrameColor, richTextBox->FillColor, richTextBox->TextColor, Text);
-//	if(CursorX >= richTextBox->X1 && CursorX <= richTextBox->X2 && CursorY >= richTextBox->Y1 && CursorY <= richTextBox->Y2 && TouchDet == Clicked)
-//	{
-//		richTextBox->Is_pressed = Clicked;
-//	 	return Clicked;
-//	}
-//	else
-//	{
-//		if(TouchDet == NotClicked)
-//		{
-//		    if(CursorX >= richTextBox->X1 && CursorX <= richTextBox->X2 && CursorY >= richTextBox->Y1 && CursorY <= richTextBox->Y2 && TouchDet == NotClicked)
-//		    {
-//		    	if(richTextBox->Is_pressed == Clicked)
-//		    	{
-//		    		richTextBox->Is_pressed = NotClicked;
-//			        return Unclicked;
-//		    	}
-//		    }
-//	    }
-//		else
-//		{
-//			return NotClicked;
-//		}
-//	}
-	return NotClicked;
-}
 
 
 

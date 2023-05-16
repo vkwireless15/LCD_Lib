@@ -47,7 +47,7 @@ void Fill_rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32
 	}
 }
 
-void MemPoint(int32 x, int32 y, int32 Color) //Отрисовка одного пикселя
+void MemPoint(int32 x, int32 y, uint32 Color) //Отрисовка одного пикселя
 {
 	*(__IO uint16*) (LCD_FRAME_BUFFER0 + (2*(y*DispWidth + x))) = Color;
 }
