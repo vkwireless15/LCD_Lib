@@ -1141,35 +1141,26 @@ void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Thickness, ui
 
     for(int i = 0; i < Sym_count; i++)
     {
-//       if((Text[i] >= 0x20) | (Text[i] == 10))
-//       {
-//          if(Text[i] == 10)
-//          {
-//     	     y = Ny;
-//     	     x = x1 + Tolshina;
-//          }
-//          else
-//          {
-//        	  Symbol(x, y,TextColor, Text[i]);
-//
-//        	  if(y + ChH + Tolshina >= y2)
-//        	  {
-//        	    break;
-//        	  }
-//
-//        	  if(Nx + ChWt + Tolshina >= x2)
-//        	  {
-//        	     y = Ny;
-//        	     x = x1 + Tolshina;
-//        	  }
-//        	  else
-//        	  {
-//        	    x = Nx;
-//        	  }
-//        	  SymbolParameters(x, y, &Nx, &Ny, &ChWt, &ChH, Text[i]);
-//          }
+       if((Text[i] >= 0x20) | (Text[i] == 10))
+       {
+          if(Text[i] == 10)
+          {
+     	     y = Ny;
+     	     x = x1 + Thickness;
+          }
+          else
+          {
+        	  SymbolParameters(x, y, &Nx, &Ny, &ChWt, &ChH, Text[i]);
 
-//       }
+        	  if()
+        	  {
+
+        	  }
+
+        	  Symbol(x, y,TextColor, Text[i]);
+          }
+
+       }
     }
 }
 
