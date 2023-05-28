@@ -1083,25 +1083,13 @@ void GraphLine(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint32 Color, uint8 T
 	//Line(160, 140, 260, 40, green | 0xff000000, 2);
 	//Line(270, 40, 170, 140, green | 0xff000000, 2);
 }
-void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Tolshina, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[] )//++
-{
-    uint16 Sym_count = 0;
-    uint16 Nx = 0, Ny = 0;
-    uint16 x = 0, y = 0;
-    uint8 ChWt = 0;
-    uint8 ChH = 0;
 
-    x = x1 + Tolshina;
-    y = y1;
-    while(Text[Sym_count]!=0)
-    {
-      Sym_count++;
-    }
+//void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Tolshina, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[] )//++
+//{
 
-    FramePanel(BColor,FloodColor,x1,x2,y1,y2,Tolshina);
 
-    for(int i = 0; i < Sym_count; i++)
-    {
+//    for(int i = 0; i < Sym_count; i++)
+//    {
 //       if((Text[i] >= 0x20) | (Text[i] == 10))
 //       {
 //          if(Text[i] == 10)
@@ -1129,10 +1117,10 @@ void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Tolshina, uin
 //        	  }
 //        	  SymbolParameters(x, y, &Nx, &Ny, &ChWt, &ChH, Text[i]);
 //          }
-
+//
 //       }
-    }
-}
+
+
 
 
 
@@ -1605,7 +1593,7 @@ void LCD_GraphLine(D_Graph *Gr, D_GraphLine *GrL, int data[])
 	   GraphLine(Gr->X1, Gr->X2, Gr->Y1, Gr->Y2, GrL->LineColor, Gr->Thickness, Gr->StepX, Gr->StepY, Gr->XMax, Gr->XMin, Gr->YMax, Gr->YMin, data, GrL->Points_count, GrL->Thickness);
 	}
 }
-uint8 LCD_RichTextBox(D_RichTextBox *richTextBox, char Text[])
+/*uint8 LCD_RichTextBox(D_RichTextBox *richTextBox, char Text[])
 {
 	//uint8 TouchDet = GetCursorPosition();
 	RichTextBox(richTextBox->X1, richTextBox->X2, richTextBox->Y1, richTextBox->Y2, richTextBox->Thickness, richTextBox->FrameColor, richTextBox->FillColor, richTextBox->TextColor, Text);
@@ -1633,7 +1621,34 @@ uint8 LCD_RichTextBox(D_RichTextBox *richTextBox, char Text[])
 //		}
 //	}
 	return NotClicked;
+}*/
+
+uint8 LCD_RichTextBox(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint8 Thickness, uint16 FrameColor, uint16 FillColor, uint16 TextColor, char Text[])
+{
+//    uint16 i, j;
+//    uint16 TextLineStart = 0;
+//    uint16 LineWidth = X2 - X1 - (Thickness << 1); // вычисляем ширину текстовой строки
+//
+//    // Рисуем рамку
+//    Draw_Rectangle(X1, Y1, X2, Y2, Thickness, FrameColor, FillColor);
+//
+//    // Рисуем текст
+//    for (i = 0; Text[i] != '\0'; i++) {
+//        if (Text[i] == '\n' || Text[i] == '\r' || i - TextLineStart >= LineWidth) {
+//            // Если встретился символ перевода строки или достигнут конец строки,
+//            // рисуем текущую строку текста и переходим на следующую строку
+//            Draw_Text(X1 + Thickness + 1, Y1 + Thickness + 1 + (j * (Get_Char_Height() + 2)), &Text[TextLineStart], (i - TextLineStart), TextColor, FillColor);
+//            TextLineStart = i + 1;
+//            j++;
+//        }
+//    }
+//
+//    // Рисуем последнюю строку текста
+//    if (TextLineStart < i) {
+//        Draw_Text(X1 + Thickness + 1, Y1 + Thickness + 1 + (j * (Get_Char_Height() + 2)), &Text[TextLineStart], (i - TextLineStart), TextColor, FillColor);
+//    }
 }
+
 
 
 

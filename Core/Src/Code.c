@@ -290,36 +290,50 @@ void MainFunc ()
 
 
 
-     char S[] = {"wwwWWWW\nPrivet Iulia!! Davai pisi diplomnuiu rabotu, a to budesh aiaiai\n123456789\nQWERTYUIOP{}ASDFGHJKL:ZXCVBNM<>?"};
-
-    uint16 i = 0;
-
+//     char S[] = {"Abcdefghigklmnopqrstuvwxyz"};
+//
+//    uint16 i = 0;
+//
 	while(1) // бесконечный цикл
 	{
 
-//		LCD_Graph(&gr);
-//		int data[] = {90, 80, 70, 60, 50, 40, 30, 20, 10, 0};
-//		LCD_GraphLine(&gr, &grL, data);
-//		HAL_Delay(3000);
-//
-//		Fill_Display(black);
-//		LCD_Fill_Rectangle(&kv);
-//		HAL_Delay(3000);
-//
-//		LCD_FramePanel(&pan);
-//		HAL_Delay(3000);
-//
-//		Fill_Display(black);
-//		LCD_Fill_Rectangle(&rec);
-//	    HAL_Delay(3000);
-//
-//		Fill_Display(black);
-//		LCD_HLine(&line);
-//		HAL_Delay(3000);
-//
-//		Fill_Display(black);
-//		LCD_FillCircle(&ball);
-//		HAL_Delay(3000);
+		LCD_Graph(&gr);
+		int data[] = {90, 80, 70, 60, 50, 40, 30, 20, 10, 0};
+		LCD_GraphLine(&gr, &grL, data);
+		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_Fill_Rectangle(&kv);
+		HAL_Delay(3000);
+
+		LCD_FramePanel(&pan);
+		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_Fill_Rectangle(&rec);
+	    HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_HLine(&line);
+		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_FillCircle(&ball);
+		HAL_Delay(3000);
+
+		Fill_Display(green);
+		LCD_Form(&fr, "Form1");
+		LCD_HGradient(&hgr);
+		HAL_Delay(5000);
+
+		Fill_Display(black);
+		LCD_Circle(&round);
+		HAL_Delay(3000);
+
+		Fill_Display(black);
+		LCD_RadioButton(&rb, "Radiobutton1");
+		LCD_CheckBox(&check, "CheckButton1");
+		HAL_Delay(3000);
 //
 //		vgr.X1 = 240;
 //		vgr.X2 = 340;
@@ -335,12 +349,12 @@ void MainFunc ()
 //		lb.Y = 60;
 //		lb.Color = black;
 
-		RTB.X1 = 10;
-		RTB.X2 = 20;
-		RTB.Y2 = 40;
-
-		for(i = 0; i < 220; i++)
-		{
+//		RTB.X1 = 10;
+//		RTB.X2 = 20;
+//		RTB.Y2 = 40;
+//
+////		for(i = 0; i < 220; i++)
+//		{
 //			p.CurrentValue = i;
 //			pa.CurrentValue = i;
 //			tr.CurrentValue = i;
@@ -364,18 +378,15 @@ void MainFunc ()
 //		    LCD_DualVGradient(&dvgr);
 //		    LCD_Label(&lb, "Hello!");
 //		    LCD_Button(&bt, "Butt1");
-		    LCD_RichTextBox(&RTB, S);
-		    HAL_Delay(300);
-
-		    RTB.X2+=1;
-		    RTB.Y2+=1;
-		}
-//		HAL_Delay(300);
+//		    LCD_RichTextBox(&RTB, S);
+//		    HAL_Delay(300);
 //
-//		Fill_Display(black);
-//		LCD_RadioButton(&rb, "Radiobutton1");
-//		LCD_CheckBox(&check, "CheckButton 1");
-//		HAL_Delay(3000);
+//		    RTB.X2+=1;
+//		    RTB.Y2+=1;
+//		}
+
+
+
 //
 //
 //		vgr.X1 = 2;
@@ -392,14 +403,7 @@ void MainFunc ()
 //		LCD_VGradient(&vgr);
 //		HAL_Delay(1000);
 //
-//		Fill_Display(green);
-//		LCD_Form(&fr, "Form1");
-//		LCD_HGradient(&hgr);
-//		HAL_Delay(5000);
-//
-//		Fill_Display(black);
-//		LCD_Circle(&round);
-//		HAL_Delay(3000);
+
 
 
 
