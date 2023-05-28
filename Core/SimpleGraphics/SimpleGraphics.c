@@ -1130,8 +1130,9 @@ void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Thickness, ui
     uint8 ChWt = 0;
     uint8 ChH = 0;
 
+    y = y1 + Thickness;
     x = x1 + Thickness;
-    y = y1;
+
     while(Text[Sym_count]!=0)
     {
       Sym_count++;
@@ -1139,27 +1140,37 @@ void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Thickness, ui
 
     FramePanel(BColor,FloodColor,x1,x2,y1,y2,Thickness);
 
+    if(Sym_count > 0)
+    SymbolParameters(x, y, &Nx, &Ny, &ChWt, &ChH, Text[0]);
+
     for(int i = 0; i < Sym_count; i++)
     {
        if((Text[i] >= 0x20) | (Text[i] == 10))
        {
-          if(Text[i] == 10)
-          {
-     	     y = Ny;
-     	     x = x1 + Thickness;
-          }
-          else
-          {
-        	  SymbolParameters(x, y, &Nx, &Ny, &ChWt, &ChH, Text[i]);
+           SymbolParameters(x, y, &Nx, &Ny, &ChWt, &ChH, Text[i]);
+           if(Ny < y2 - Thickness)
+           {
+               if(Text[i] == 10)
+               {
+          	     y = Ny;
+          	     x = x1 + Thickness;
+               }
+               else
+               {
+                   if(Nx > x2 - Thickness)
+            	   {
+            		  x = x1 + Thickness;
+            		  y = Ny;
+            		  Symbol(x, y, TextColor, Text[i]);
+            	   }
+            	   else
+            	   {
+            		   Symbol(x, y, TextColor, Text[i]);
+            		   x = Nx;
+           		   }
+               }
 
-        	  if()
-        	  {
-
-        	  }
-
-        	  Symbol(x, y,TextColor, Text[i]);
-          }
-
+       	   }
        }
     }
 }
