@@ -181,7 +181,6 @@ uint8 Inverse(uint8 S)
 }
 
 
-
 void Graphics_Init(DisplayConfig *dcf) //Инициализация самой бибиллиотеки а также инициализация графических устройств(дисплей, графические ускорители, тач-панели)
 {
 	DispHeight = dcf->Display_Height;
@@ -274,6 +273,7 @@ void Fill_Rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32
 		}
 	}
 }
+/*4 ый этап */
 void HLine(uint32 Color, int16 x1, int16 x2, int16 y1, uint8 Thickness)//
 {
     if(Thickness > 0)
@@ -290,15 +290,7 @@ void VLine(uint32 Color, int16 x1, int16 y1, int16 y2, uint8 Thickness)
 		Fill_Rectangle(Color, x1, x1+Thickness, y1, y2);
 	}
 }
-void FramePanel(uint32 BorderColor, uint32 FloodColor, int16 x1, int16 x2, int16 y1, int16 y2, uint8 Thickness)
-{
-	Thickness --;
-	Fill_Rectangle(FloodColor,x1,x2,y1,y2);
-    HLine(BorderColor,x1,x2,y1,Thickness + 1);
-    HLine(BorderColor,x1,x2,y2 - Thickness,Thickness +1);
-    VLine(BorderColor,x1,y1,y2,Thickness + 1);
-    VLine(BorderColor,x2 - Thickness,y1,y2,Thickness + 1);
-}
+
 void Line(int16 x1, int16 y1, int16 x2, int16 y2, uint32 Color, uint16 Thickness)//++
 {
    uint16 y = 0, k = 0;
@@ -647,6 +639,19 @@ void HGradB(int16 x1, int16 x2, int16 y1, int16 y2, uint32 ColorH, uint32 ColorC
  HGradA(x1,x1+((x2 - x1)/2),y1,y2,ColorH,ColorC);
  HGradA(x1+((x2 - x1)/2),x2,y1,y2,ColorC,ColorL);
 }
+
+/*5ый этап*/
+
+void FramePanel(uint32 BorderColor, uint32 FloodColor, int16 x1, int16 x2, int16 y1, int16 y2, uint8 Thickness)
+{
+	Thickness --;
+	Fill_Rectangle(FloodColor,x1,x2,y1,y2);
+    HLine(BorderColor,x1,x2,y1,Thickness + 1);
+    HLine(BorderColor,x1,x2,y2 - Thickness,Thickness +1);
+    VLine(BorderColor,x1,y1,y2,Thickness + 1);
+    VLine(BorderColor,x2 - Thickness,y1,y2,Thickness + 1);
+}
+
 void Progress_bar(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint32 BorderColor, uint32 FloodColor, uint32 BarColor, uint16 Thickness, uint8 Orient)
 {
   uint16 Tr = Thickness - 1;
@@ -1140,42 +1145,41 @@ void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Thickness, ui
 
     FramePanel(BColor,FloodColor,x1,x2,y1,y2,Thickness);
 
-    if(Sym_count > 0)
-    SymbolParameters(x, y, &Nx, &Ny, &ChWt, &ChH, Text[0]);
-
     for(int i = 0; i < Sym_count; i++)
     {
        if((Text[i] >= 0x20) | (Text[i] == 10))
        {
            SymbolParameters(x, y, &Nx, &Ny, &ChWt, &ChH, Text[i]);
-           if(Ny < y2 - Thickness)
-           {
-               if(Text[i] == 10)
-               {
-          	     y = Ny;
-          	     x = x1 + Thickness;
-               }
-               else
-               {
-                   if(Nx > x2 - Thickness)
-            	   {
-            		  x = x1 + Thickness;
-            		  y = Ny;
-            		  Symbol(x, y, TextColor, Text[i]);
-            	   }
-            	   else
-            	   {
-            		   Symbol(x, y, TextColor, Text[i]);
-            		   x = Nx;
-           		   }
-               }
 
-       	   }
+           if(Text[i] == 10)
+           {
+        	   x = x1 + Thickness;
+        	   y = Ny;
+           }
+           else
+           {
+        	   if(y + ChH < y2 - Thickness)
+        	   {
+        	      if(x + ChWt > x2 - Thickness)
+        	      {
+        		      x = x1 + Thickness;
+        		      y = Ny;
+
+        	      }
+        	      else
+        	      {
+        	    	  Symbol(x, y, TextColor, Text[i]);
+        	    	  x = Nx;
+        	      }
+
+        	   }
+           }
+
        }
     }
 }
 
-
+/*6ой этап*/
 
 void LCD_FramePanel()
 {
@@ -1213,6 +1217,7 @@ void LCD_Gradient_Form_B(char FormName[])
 {
    GradientFormB(1, DispWidth, 1, DispHeight, 25, WindowFrameThickness, WindowFrameColor, WindowBarHColor, WindowBarLColor, WindowColor, WindowTextColor, FormName);
 }
+
 
 
 
