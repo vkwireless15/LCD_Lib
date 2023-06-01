@@ -11,6 +11,11 @@ typedef int int32;
 #define Error 0
 #define Ok 1
 
+//Режимы цвета
+#define Color565 0
+#define Color888 1
+#define Color_A888 2
+
 //для работы с тачпадом
 #define NotClicked 0
 #define Clicked 1
@@ -165,10 +170,6 @@ typedef int int32;
 #define white 0xFFFFFF
 
 // ---------------------------
-
-#define Color565 0
-#define Color888 1
-#define Color_A888 2
 
 typedef struct
 {

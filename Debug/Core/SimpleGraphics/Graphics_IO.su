@@ -1,5 +1,6 @@
-../Core/SimpleGraphics/Graphics_IO.c:21:6:Init_Graphics_System	0	static
-../Core/SimpleGraphics/Graphics_IO.c:28:6:Fill_all	0	static
-../Core/SimpleGraphics/Graphics_IO.c:36:6:Fill_rectangle	16	static
-../Core/SimpleGraphics/Graphics_IO.c:50:6:MemPoint	0	static
-../Core/SimpleGraphics/Graphics_IO.c:55:6:Backlight	8	static
+../Core/SimpleGraphics/Graphics_IO.c:24:6:Init_Graphics_System	8	static
+../Core/SimpleGraphics/Graphics_IO.c:32:6:Fill_all	0	static
+../Core/SimpleGraphics/Graphics_IO.c:40:6:Fill_rectangle	16	static
+../Core/SimpleGraphics/Graphics_IO.c:54:6:MemPoint	0	static
+../Core/SimpleGraphics/Graphics_IO.c:59:6:Backlight	8	static
+../Core/SimpleGraphics/Graphics_IO.c:71:6:GetCursor	0	static

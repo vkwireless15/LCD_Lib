@@ -4,9 +4,10 @@
 
 
 
- uint32 DispHeight = 0, DispWidth = 0;
+ uint32 DispHeight = 240, DispWidth = 320;
  uint8 ColorType = Color565;
  uint16 CrPosX1 = 0, CrPosX2 = 0, CrPosX3 = 0, CrPosX4 = 0, CrPosX5 = 0, CrPosY1 = 0, CrPosY2 = 0, CrPosY3 = 0, CrPosY4 = 0, CrPosY5 = 0;
+ uint8 CrStatus = 0;
 
  uint8 Current_Layer;
 

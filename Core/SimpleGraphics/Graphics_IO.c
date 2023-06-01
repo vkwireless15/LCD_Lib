@@ -4,6 +4,7 @@
 
 //Пользовательские include and define
 #include "main.h"
+#include "Touch.h"
 #define TransferDelay 100
 #define LOW 0
 
@@ -13,15 +14,18 @@ extern DMA2D_HandleTypeDef hdma2d;
 
 
 extern uint32 DispHeight, DispWidth;
+extern uint16 CrPosX1, CrPosX2, CrPosX3, CrPosX4, CrPosX5, CrPosY1, CrPosY2, CrPosY3, CrPosY4, CrPosY5;
+extern uint8 CrStatus;
 uint32 LCD_FRAME_BUFFER0 = 0;
 uint32 LCD_FRAME_BUFFER1 = 0;
-uint32 LCD_FRAME_BUFFER3 = 0;
+uint32 LCD_FRAME_BUFFER2 = 0;
 
 
 void Init_Graphics_System(uint32 LCD_RAM_START_ADDRESS, uint8 Layers, uint8 ColorType) //Инициализация драйвера дисплея, графического ускорителя и т.п.
 {
     LCD_FRAME_BUFFER0 = LCD_RAM_START_ADDRESS;
-    //Пользовательский кодинициализации дисплея
+
+    Touch_Init();
 
 }
 
@@ -64,4 +68,7 @@ void Backlight(uint32 Brightness, uint8 State) //Управление подсв
 	}
 }
 
+void GetCursor()
+{
 
+}
