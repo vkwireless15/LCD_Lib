@@ -9,6 +9,6 @@ void Fill_rectangle(uint32 Color, int32 StartX, int32 StopX, int32 StartY, int32
 void MemPoint(int32 x, int32 y, uint32 Color);
 void Show(uint8 Layer);
 void Backlight(uint32 Brightness, uint8 State);
-uint8 GetCursorPosition();
+void GetCursor();
 
 #endif

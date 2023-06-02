@@ -11,6 +11,7 @@
 //Пользовательские переменные и т.п.
 extern LTDC_HandleTypeDef hltdc;
 extern DMA2D_HandleTypeDef hdma2d;
+TS_StateTypeDef TS_State;
 
 
 extern uint32 DispHeight, DispWidth;
@@ -70,5 +71,43 @@ void Backlight(uint32 Brightness, uint8 State) //Управление подсв
 
 void GetCursor()
 {
+    TS_GetState(&TS_State);
+    if(TS_State.touchDetected)
+    {
+    	CrPosX1 = TS_State.touchX[0];
+		CrPosY1 = TS_State.touchY[0];
 
+		CrPosX2 = TS_State.touchX[1];
+		CrPosY2 = TS_State.touchY[1];
+
+		CrPosX3 = TS_State.touchX[2];
+		CrPosY3 = TS_State.touchY[2];
+
+		CrPosX4 = TS_State.touchX[3];
+		CrPosY4 = TS_State.touchY[3];
+
+		CrPosX5 = TS_State.touchX[4];
+		CrPosY5 = TS_State.touchY[4];
+
+		CrStatus = Clicked;
+    }
+    else
+    {
+    	CrPosX1 = 0;
+		CrPosY1 = 0;
+
+		CrPosX2 = 0;
+		CrPosY2 = 0;
+
+		CrPosX3 = 0;
+		CrPosY3 = 0;
+
+		CrPosX4 = 0;
+		CrPosY4 = 0;
+
+		CrPosX5 = 0;
+		CrPosY5 = 0;
+
+		CrStatus = NotClicked;
+    }
 }

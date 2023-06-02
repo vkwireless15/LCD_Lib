@@ -180,6 +180,45 @@ uint8 Inverse(uint8 S)
 	}
 	return K;
 }
+uint8 isTouch()
+{
+	static uint8 CrSt=0;
+	static uint16 x1=0,y1=0,x2=0,y2=0,x3=0,y3=0,x4=0,y4=0,x5=0,y5=0;
+	GetCursor();
+	if(CrStatus == Clicked)
+	{
+		if(CrSt == NotClicked)
+		{
+			x1 = CrPosX1;
+			x2 = CrPosX2;
+			x3 = CrPosX3;
+			x4 = CrPosX4;
+			x5 = CrPosX5;
+
+			y1 = CrPosY1;
+			y2 = CrPosY2;
+			y3 = CrPosY3;
+			y4 = CrPosY4;
+			y5 = CrPosY5;
+
+			CrSt = Clicked;
+		}
+		else
+		{
+
+		}
+	}
+	else
+	{
+		if(CrSt != NotClicked)
+		{
+			CrSt = NotClicked;
+			return Unclicked;
+		}
+	}
+	return NotClicked;
+}
+
 
 
 void Graphics_Init(DisplayConfig *dcf) //Инициализация самой бибиллиотеки а также инициализация графических устройств(дисплей, графические ускорители, тач-панели)
@@ -652,7 +691,6 @@ void FramePanel(uint32 BorderColor, uint32 FloodColor, int16 x1, int16 x2, int16
     VLine(BorderColor,x1,y1,y2,Thickness + 1);
     VLine(BorderColor,x2 - Thickness,y1,y2,Thickness + 1);
 }
-
 void Progress_bar(uint16 XStart, uint16 XEnd, uint16 YStart, uint16 YEnd, uint16 StartPos, uint16 StopPos, uint16 CurrPos, uint32 BorderColor, uint32 FloodColor, uint32 BarColor, uint16 Thickness, uint8 Orient)
 {
   uint16 Tr = Thickness - 1;

@@ -52,6 +52,8 @@ void MainFunc ()
 			  //Fill_Display(black);
 		      RichTextBox(1, i*2, 1, i, 3, red, white, darkBlue3, "-\nEnter,\n0,1,2,3,4,5,6,7,8,9,10,11\nABCDEFGHJKLMNOPQRST\nabcdefghjkhvhgvhgvhgvgvhgvhgvghvghvhvhgvhgvhg\n123");
 		      HAL_Delay(300);
+
+		      isTouch();
 		  }
 
 

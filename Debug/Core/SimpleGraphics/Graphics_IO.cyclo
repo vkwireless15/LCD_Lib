@@ -1,6 +1,6 @@
-Graphics_IO.c:24:6:Init_Graphics_System	1
-Graphics_IO.c:32:6:Fill_all	2
-Graphics_IO.c:40:6:Fill_rectangle	3
-Graphics_IO.c:54:6:MemPoint	1
-Graphics_IO.c:59:6:Backlight	2
-Graphics_IO.c:71:6:GetCursor	1
+Graphics_IO.c:25:6:Init_Graphics_System	1
+Graphics_IO.c:33:6:Fill_all	2
+Graphics_IO.c:41:6:Fill_rectangle	3
+Graphics_IO.c:55:6:MemPoint	1
+Graphics_IO.c:60:6:Backlight	2
+Graphics_IO.c:72:6:GetCursor	2

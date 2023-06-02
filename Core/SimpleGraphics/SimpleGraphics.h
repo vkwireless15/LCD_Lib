@@ -221,7 +221,7 @@ void LCD_Gradient_Form_B(char FormName[]);
 
 void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Thickness, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[] );
 
-
+uint8 isTouch();
 
 
 
