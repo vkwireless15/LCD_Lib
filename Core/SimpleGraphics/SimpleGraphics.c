@@ -6,8 +6,10 @@
 
  uint32 DispHeight = 240, DispWidth = 320;
  uint8 ColorType = Color565;
- uint16 CrPosX1 = 0, CrPosX2 = 0, CrPosX3 = 0, CrPosX4 = 0, CrPosX5 = 0, CrPosY1 = 0, CrPosY2 = 0, CrPosY3 = 0, CrPosY4 = 0, CrPosY5 = 0;
+
+ int16 CrPosX1 = 0, CrPosX2 = 0, CrPosX3 = 0, CrPosX4 = 0, CrPosX5 = 0, CrPosY1 = 0, CrPosY2 = 0, CrPosY3 = 0, CrPosY4 = 0, CrPosY5 = 0;
  uint8 CrStatus = 0;
+ int16 CrStep = 0;
 
  uint8 Current_Layer;
 
@@ -180,45 +182,155 @@ uint8 Inverse(uint8 S)
 	}
 	return K;
 }
+
+uint8 TouchCnt()
+{
+	uint8 TC = 0;
+
+	if(CrPosX1>0 && CrPosY1>0)
+		TC++;
+
+	if(CrPosX2>0 && CrPosY2>0)
+			TC++;
+
+	if(CrPosX3>0 && CrPosY3>0)
+			TC++;
+
+	if(CrPosX4>0 && CrPosY4>0)
+			TC++;
+
+	if(CrPosX5>0 && CrPosY5>0)
+			TC++;
+
+	return TC;
+}
 uint8 isTouch()
 {
-	static uint8 CrSt=0;
-	static uint16 x1=0,y1=0,x2=0,y2=0,x3=0,y3=0,x4=0,y4=0,x5=0,y5=0;
+	static uint8 CrSt;
+	static int16 x1,y1;
+	static int16 Dist;
+
+	uint8 RetSt = NotClicked;
+	int16 X1_move = 0, Y1_move = 0;
+
 	GetCursor();
 	if(CrStatus == Clicked)
 	{
-		if(CrSt == NotClicked)
+		CrSt = Clicked;
+		RetSt = Clicked;
+
+		if(TouchCnt() == 1)
 		{
-			x1 = CrPosX1;
-			x2 = CrPosX2;
-			x3 = CrPosX3;
-			x4 = CrPosX4;
-			x5 = CrPosX5;
+            if(x1 != 0)
+            {
+            	X1_move = CrPosX1 - x1;
+                Y1_move = CrPosY1 - y1;
 
-			y1 = CrPosY1;
-			y2 = CrPosY2;
-			y3 = CrPosY3;
-			y4 = CrPosY4;
-			y5 = CrPosY5;
+                if(X1_move > 3)
+                {
+                	if(Y1_move < 0)
+                	{ Y1_move = y1 - CrPosY1; }
 
-			CrSt = Clicked;
+                	if(X1_move > Y1_move)
+                	{ RetSt = RightSwap; CrStep = X1_move;}
+                }
+                if(X1_move < -3)
+                {
+                	if(Y1_move < 0)
+                	{ Y1_move = y1 - CrPosY1; }
+
+                	X1_move = x1 - CrPosX1;
+
+                	if(X1_move > Y1_move)
+                	{ RetSt = LeftSwap; CrStep = X1_move;}
+                }
+
+                if(Y1_move > 3)
+                {
+                	if(X1_move < 0)
+                	{ X1_move = x1 - CrPosX1; }
+
+                	if(Y1_move > X1_move)
+                	{ RetSt = DownSwap; CrStep = Y1_move; }
+                }
+                if(Y1_move < -3)
+                {
+                	if(X1_move < 0)
+                	{ X1_move = x1 - CrPosX1; }
+
+                	Y1_move = y1 - CrPosY1;
+
+                	if(Y1_move > X1_move)
+                	{ RetSt = UpSwap; CrStep = Y1_move;}
+                }
+            }
+            x1 = CrPosX1;
+            y1 = CrPosY1;
 		}
-		else
+
+		if(TouchCnt() == 2)
 		{
+			CrSt = Clicked;
+			RetSt = Clicked;
+
+			if(Dist != 0 && Dist > 0)
+			{
+				if((CrPosX2 - CrPosX1) + (CrPosY2 - CrPosY1) > Dist)
+				{
+					CrStep = (CrPosX2 - CrPosX1) + (CrPosY2 - CrPosY1) - Dist;
+					RetSt = ZoomOut;
+				}
+				else
+				{
+					CrStep = Dist - (CrPosX2 - CrPosX1) + (CrPosY2 - CrPosY1);
+					RetSt = ZoomOut;
+				}
+			}
+
+			if(Dist != 0 && Dist < 0)
+			{
+				if((CrPosX2 - CrPosX1) + (CrPosY2 - CrPosY1) < Dist)
+				{
+					CrStep = Dist - (CrPosX2 - CrPosX1) + (CrPosY2 - CrPosY1);
+					RetSt = ZoomIn;
+				}
+				else
+				{
+					CrStep = (CrPosX2 - CrPosX1) + (CrPosY2 - CrPosY1) - Dist;
+					RetSt = ZoomOut;
+				}
+			}
+
+			Dist = (CrPosX2 - CrPosX1) + (CrPosY2 - CrPosY1);
 
 		}
 	}
 	else
 	{
-		if(CrSt != NotClicked)
+		x1 = 0;
+	    y1 = 0;
+
+	    Dist = 0;
+	    CrStep = 0;
+
+		if(CrSt == Clicked)
 		{
 			CrSt = NotClicked;
-			return Unclicked;
+			RetSt = Unclicked;
+		}
+		else
+		{
+			RetSt = NotClicked;
 		}
 	}
-	return NotClicked;
-}
 
+	return RetSt;
+
+}
+int16 TransitionValue()
+{
+	return CrStep;
+}
 
 
 void Graphics_Init(DisplayConfig *dcf) //Инициализация самой бибиллиотеки а также инициализация графических устройств(дисплей, графические ускорители, тач-панели)

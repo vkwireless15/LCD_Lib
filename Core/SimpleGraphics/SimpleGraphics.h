@@ -18,10 +18,18 @@ typedef int int32;
 
 //для работы с тачпадом
 #define NotClicked 0
-#define Clicked 1
-#define Unclicked 2
-#define Horisontal 3
-#define Vertical 4
+#define Clicked    1
+#define Unclicked  2
+#define UpSwap     3
+#define DownSwap   4
+#define LeftSwap   5
+#define RightSwap  6
+#define ZoomIn     7
+#define ZoomOut    8
+
+
+#define Horisontal 0
+#define Vertical 1
 
 
 //argb цвета
@@ -222,6 +230,7 @@ void LCD_Gradient_Form_B(char FormName[]);
 void RichTextBox(uint16 x1, uint16 x2, uint16 y1, uint16 y2,uint16 Thickness, uint32 BColor, uint32 FloodColor, uint32 TextColor, char Text[] );
 
 uint8 isTouch();
+int16 TransitionValue();
 
 
 

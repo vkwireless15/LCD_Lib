@@ -15,7 +15,7 @@ TS_StateTypeDef TS_State;
 
 
 extern uint32 DispHeight, DispWidth;
-extern uint16 CrPosX1, CrPosX2, CrPosX3, CrPosX4, CrPosX5, CrPosY1, CrPosY2, CrPosY3, CrPosY4, CrPosY5;
+extern int16 CrPosX1, CrPosX2, CrPosX3, CrPosX4, CrPosX5, CrPosY1, CrPosY2, CrPosY3, CrPosY4, CrPosY5;
 extern uint8 CrStatus;
 uint32 LCD_FRAME_BUFFER0 = 0;
 uint32 LCD_FRAME_BUFFER1 = 0;
@@ -107,6 +107,21 @@ void GetCursor()
 
 		CrPosX5 = 0;
 		CrPosY5 = 0;
+
+    	TS_State.touchX[0] = 0;
+		TS_State.touchY[0] = 0;
+
+    	TS_State.touchX[1] = 0;
+		TS_State.touchY[1] = 0;
+
+    	TS_State.touchX[2] = 0;
+		TS_State.touchY[2] = 0;
+
+    	TS_State.touchX[3] = 0;
+		TS_State.touchY[3] = 0;
+
+    	TS_State.touchX[4] = 0;
+		TS_State.touchY[4] = 0;
 
 		CrStatus = NotClicked;
     }
