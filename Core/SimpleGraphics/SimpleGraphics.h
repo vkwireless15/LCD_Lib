@@ -223,7 +223,7 @@ void LCD_Progress_bar_gradient(uint16 X1, uint16 X2, uint16 Y1, uint16 Y2, uint1
 void LCD_Label(uint16 X, uint16 Y, char String[]);
 void LCD_TextBox(uint16 x1, uint16 x2, uint16 y1, char Text[]);
 void LCD_Form(char FormName[]);
-void LCD_Button(uint16 x1, uint16 x2, uint16 y1, uint16 y2, char Text[]);
+uint8 LCD_Button(uint16 x1, uint16 x2, uint16 y1, uint16 y2, char Text[]);
 void LCD_Gradient_Form_A(char FormName[]);
 void LCD_Gradient_Form_B(char FormName[]);
 

@@ -331,7 +331,49 @@ int16 TransitionValue()
 {
 	return CrStep;
 }
+uint8 isInRange(int16 x1, int16 x2, int16 y1, int16 y2)
+{
+	if(CrPosX1 >= x1 && CrPosX1 <= x2)
+	{
+		if(CrPosY1 >= y1 && CrPosY1 <= y2)
+		{
+			return Ok;
+		}
+	}
 
+	if(CrPosX2 >= x1 && CrPosX2 <= x2)
+	{
+		if(CrPosY2 >= y1 && CrPosY2 <= y2)
+		{
+			return Ok;
+		}
+	}
+
+	if(CrPosX3 >= x1 && CrPosX3 <= x2)
+	{
+		if(CrPosY3 >= y1 && CrPosY3 <= y2)
+		{
+			return Ok;
+		}
+	}
+
+	if(CrPosX4 >= x1 && CrPosX4 <= x2)
+	{
+		if(CrPosY4 >= y1 && CrPosY4 <= y2)
+		{
+			return Ok;
+		}
+	}
+
+	if(CrPosX5 >= x1 && CrPosX5 <= x2)
+	{
+		if(CrPosY5 >= y1 && CrPosY5 <= y2)
+		{
+			return Ok;
+		}
+	}
+	return Error;
+}
 
 void Graphics_Init(DisplayConfig *dcf) //Инициализация самой бибиллиотеки а также инициализация графических устройств(дисплей, графические ускорители, тач-панели)
 {
@@ -1356,9 +1398,41 @@ void LCD_Form(char FormName[])
 {
    Form(1, DispWidth, 1, DispHeight, 25, WindowFrameThickness, WindowFrameColor, WindowBarColor, WindowColor, WindowTextColor, FormName);
 }
-void LCD_Button(uint16 x1, uint16 x2, uint16 y1, uint16 y2, char Text[])
+uint8 LCD_Button(uint16 x1, uint16 x2, uint16 y1, uint16 y2, char Text[])
 {
-   Button(x1, x2, y1, y2, WindowFrameThickness, ButtonFrameColor, ButtonColor, Text, ButtonTextColor);
+	uint8 TouchSt = isTouch();
+	uint8 RetVal = NotClicked;
+	static uint8 isRange;
+
+	if(CrStatus == Clicked)
+	{
+	   if(isInRange(x1, x2, y1, y2) == Ok)
+	   {
+	      if(TouchSt == Clicked)
+	      {
+		      Button(x1, x2, y1, y2, WindowFrameThickness, ButtonFrameColor, ButtonSelectedColor, Text, ButtonTextColor);
+		      isRange = 1;
+		      return Clicked;
+	      }
+       }
+	   else
+	   {
+		   isRange = 0;
+	   }
+    }
+
+    if(TouchSt == Unclicked && isRange == 1)
+	{
+        RetVal = Unclicked;
+        isRange = 0;
+	}
+
+	if(TouchSt == NotClicked)
+	{ RetVal = NotClicked; }
+
+	Button(x1, x2, y1, y2, WindowFrameThickness, ButtonFrameColor, ButtonColor, Text, ButtonTextColor);
+
+	return RetVal;
 }
 void LCD_Gradient_Form_A(char FormName[])
 {
